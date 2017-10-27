@@ -1,7 +1,6 @@
 package com.zjrb.sjzsw.ui.fragment;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,14 +16,16 @@ import android.widget.Toast;
  */
 
 public abstract class BaseFragment extends Fragment {
-    private ProgressDialog progressDialog;
     protected Context context;
 
     /**
      * 获取跟布局资源ID
+     *
      * @return
      */
     protected abstract int getLayoutId();
+
+    protected abstract void init(View view, @Nullable Bundle savedInstanceState);
 
     @Override
     public void onAttach(Context context) {
@@ -36,32 +37,13 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(getLayoutId(), container, false);
+        init(rootView, savedInstanceState);
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public void showWaiteDialog() {
-        progressDialog = ProgressDialog.show(context, "Loading...", "加载中，请稍后……");
-        progressDialog.setCancelable(true);
-    }
-
-    public void hideWaiteDialog() {
-        if (null != progressDialog && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (null != progressDialog) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
     }
 
     /**

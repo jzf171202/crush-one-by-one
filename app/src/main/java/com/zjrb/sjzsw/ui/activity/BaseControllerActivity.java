@@ -9,7 +9,7 @@ import com.zjrb.sjzsw.controller.LifecycleManage;
  */
 
 public abstract class BaseControllerActivity extends BaseActivity {
-    protected LifecycleManage lifecycleManage = new LifecycleManage();
+    private LifecycleManage lifecycleManage = new LifecycleManage();
 
     /**
      * 注册控制器
@@ -28,7 +28,7 @@ public abstract class BaseControllerActivity extends BaseActivity {
      * @param key
      * @return
      */
-    public <Controller extends BaseController> Controller getController(String key) {
+    protected  <Controller extends BaseController> Controller getController(String key) {
         return (Controller) lifecycleManage.get(key);
     }
 

@@ -2,8 +2,8 @@ package com.zjrb.sjzsw.controller;
 
 import com.zjrb.sjzsw.listener.LifeCycle;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Created by jinzifu on 2017/9/1.
@@ -15,12 +15,10 @@ public class LifecycleManage implements LifeCycle {
     private Map<String, LifeCycle> lifeCycleMap;
 
     public LifecycleManage() {
-        //WeakHashMap当系统内存不足时，垃圾收集器会自动的清除没有在任何其他地方被引用的键值对。
-        lifeCycleMap = new WeakHashMap<String, LifeCycle>();
+        lifeCycleMap = new HashMap<String, LifeCycle>();
     }
 
     public void register(String key, LifeCycle lifeCycle) {
-        //只有put、get、size()方法来可以触发WeakHashMap来进行处理ReferenceQueue。
         lifeCycleMap.put(key, lifeCycle);
     }
 
@@ -63,7 +61,6 @@ public class LifecycleManage implements LifeCycle {
             entry.getValue().onDestroy();
         }
         lifeCycleMap.clear();//移除所有ctrl元素，但并未置空对象引用与回收对象内存
-
     }
 
     public LifeCycle get(String key) {

@@ -15,15 +15,19 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * 获取根布局的资源ID
+     *
      * @return
      */
     protected abstract int getLayoutId();
+
+    protected abstract void init(@Nullable Bundle savedInstanceState);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         context = this;
+        init(savedInstanceState);
     }
 
     /**
