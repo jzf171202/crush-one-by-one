@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends BaseControllerActivity {
+public class MainActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private SmartRefreshLayout smartRefreshLayout;
 

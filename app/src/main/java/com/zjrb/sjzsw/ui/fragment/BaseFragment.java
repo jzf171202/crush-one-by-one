@@ -1,6 +1,5 @@
 package com.zjrb.sjzsw.ui.fragment;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,12 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.zjrb.sjzsw.controller.BaseController;
+import com.zjrb.sjzsw.controller.LifecycleManage;
+
 /**
- * Created by jinzifu on 2017/8/25.
- * Fragment基类
+ * Created by jinzifu on 2017/9/1.
+ * 业务控制fragment基类
  */
 
 public abstract class BaseFragment extends Fragment {
+    protected LifecycleManage lifecycleManage = new LifecycleManage();
+
     protected Context context;
 
     /**
@@ -41,11 +45,6 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     /**
      * 通用toast展示
      *
@@ -55,4 +54,54 @@ public abstract class BaseFragment extends Fragment {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 注册控制器
+     *
+     * @param controller
+     */
+    protected void registerController(BaseController controller) {
+        if (controller != null) {
+            lifecycleManage.register(controller.getClass().getSimpleName(), controller);
+        }
+    }
+
+    /**
+     * 获取注册的控制器
+     *
+     * @param key
+     * @return
+     */
+    public <Controller extends BaseController> Controller getController(String key) {
+        return (Controller) lifecycleManage.get(key);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lifecycleManage.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        lifecycleManage.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        lifecycleManage.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lifecycleManage.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        lifecycleManage.onDestroy();
+    }
 }

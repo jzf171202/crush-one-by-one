@@ -10,7 +10,7 @@ import com.zjrb.sjzsw.R;
  * Created by Thinkpad on 2017/10/27.
  */
 
-public class TestActivity extends BaseControllerActivity{
+public class TestActivity extends BaseActivity {
     private Button button;
     @Override
     protected int getLayoutId() {
