@@ -20,21 +20,21 @@ public class ActivityStackManager {
     /**
      * 添加Activity到堆栈
      */
-    protected static void addActivity(Activity activity) {
+    public static void addActivity(Activity activity) {
         activityStack.push(activity);
     }
 
     /**
      * 获取当前Activity（堆栈中最后一个压入的）
      */
-    protected static Activity currentActivity() {
+    public static Activity currentActivity() {
         return activityStack.lastElement();
     }
 
     /**
      * 结束当前Activity（堆栈中最后一个压入的）
      */
-    protected static void finishCurrentActivity() {
+    public static void finishCurrentActivity() {
         Activity activity = activityStack.pop();
         activity.finish();
     }
@@ -42,7 +42,7 @@ public class ActivityStackManager {
     /**
      * 结束指定的Activity
      */
-    protected static void finishActivity(Activity activity) {
+    public static void finishActivity(Activity activity) {
         if (activity != null) {
             activityStack.remove(activity);
             if (!activity.isFinishing()) {
@@ -54,7 +54,7 @@ public class ActivityStackManager {
     /**
      * 结束指定类名的Activity
      */
-    protected static void finishActivity(Class<?> cls) {
+    public static void finishActivity(Class<?> cls) {
         for (Activity activity : activityStack) {
             if (activity.getClass().equals(cls)) {
                 finishActivity(activity);
@@ -65,7 +65,7 @@ public class ActivityStackManager {
     /**
      * 结束所有Activity
      */
-    protected static void finishAllActivity() {
+    public static void finishAllActivity() {
         for (Activity activity : activityStack) {
             if (activity != null) {
                 activity.finish();

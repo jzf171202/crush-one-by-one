@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 ActivityUtil.next(MainActivity.this, TestActivity.class);
-                finish();
             }
 
             @Override

@@ -1,6 +1,7 @@
 package com.zjrb.sjzsw.ui.fragment;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.controller.BaseController;
 import com.zjrb.sjzsw.controller.LifecycleManage;
+import com.zjrb.sjzsw.utils.ScreenUtil;
 
 /**
  * Created by jinzifu on 2017/9/1.
@@ -19,8 +22,9 @@ import com.zjrb.sjzsw.controller.LifecycleManage;
 
 public abstract class BaseFragment extends Fragment {
     protected LifecycleManage lifecycleManage = new LifecycleManage();
-
     protected Context context;
+    private View rootView;
+    private ViewGroup container;
 
     /**
      * 获取跟布局资源ID
@@ -39,10 +43,26 @@ public abstract class BaseFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(getLayoutId(), container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(getLayoutId(), viewGroup, false);
         init(rootView, savedInstanceState);
+        initStatusBar();
         return rootView;
+    }
+
+    /**
+     * fragment中沉浸式状态栏设置
+     */
+    private void initStatusBar() {
+        container = rootView.findViewById(R.id.container);
+        //低于API19的情况设置非偏移高度，不支持沉浸式状态栏
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            if (container != null) {
+                ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
+                layoutParams.height = ScreenUtil.dip2px(context, 50);
+                container.setLayoutParams(layoutParams);
+            }
+        }
     }
 
     /**
