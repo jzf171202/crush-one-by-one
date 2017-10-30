@@ -40,6 +40,11 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    protected void init(@Nullable Bundle savedInstanceState) {
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

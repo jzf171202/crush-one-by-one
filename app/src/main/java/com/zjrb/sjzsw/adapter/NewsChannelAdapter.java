@@ -106,10 +106,10 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
         NewsChannelViewHolder viewHolder = (NewsChannelViewHolder) holder;
         viewHolder.mNewsChannelTv.setText(newsChannelName);
 
-        if (position == 0) {
-            viewHolder.mNewsChannelTv.setTextColor(ContextCompat
-                    .getColor(App.getAppContext(), getColorId()));
-        }
+//        if (position == 0) {
+//            viewHolder.mNewsChannelTv.setTextColor(ContextCompat
+//                    .getColor(App.getAppContext(), getColorId()));
+//        }
     }
 
     private int getColorId() {
