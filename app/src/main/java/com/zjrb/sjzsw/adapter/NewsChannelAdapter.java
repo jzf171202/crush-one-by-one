@@ -117,7 +117,7 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
 //        if (MyUtils.isNightMode()) {
 //            colorId = R.color.alpha_40_white;
 //        } else {
-            colorId = R.color.alpha_40_black;
+            colorId = R.color.color_6b6b6b;
 //        }
         return colorId;
     }
