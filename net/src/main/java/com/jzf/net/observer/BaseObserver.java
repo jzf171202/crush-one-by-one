@@ -1,17 +1,20 @@
 package com.jzf.net.observer;
 
-import com.jzf.net.callback.OnResultCallBack;
 import com.jzf.net.exception.ApiException;
+import com.jzf.net.listener.OnResultCallBack;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 
-public class CommonObserver<T> implements Observer<T> {
+/**
+ * @author jinzifu
+ */
+public class BaseObserver<T> implements Observer<T> {
     private OnResultCallBack mOnResultListener;
     private Disposable mDisposable;
 
-    public CommonObserver(OnResultCallBack listener) {
+    public BaseObserver(OnResultCallBack listener) {
         this.mOnResultListener = listener;
     }
 

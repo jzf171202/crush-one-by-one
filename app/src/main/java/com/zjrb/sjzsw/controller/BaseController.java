@@ -2,6 +2,8 @@ package com.zjrb.sjzsw.controller;
 
 import android.content.Context;
 
+import com.jzf.net.observer.BaseObserver;
+import com.jzf.net.observer.ObserverLifeMange;
 import com.zjrb.sjzsw.listener.LifeCycle;
 
 /**
@@ -12,12 +14,35 @@ import com.zjrb.sjzsw.listener.LifeCycle;
  */
 
 public class BaseController implements LifeCycle {
-    protected Context context;
+    private ObserverLifeMange observerLifeMange = new ObserverLifeMange();
+    private Context context;
 
     public BaseController(Context context) {
         this.context = context;
     }
 
+    /**
+     * 注册observer控制器
+     *
+     * @param baseObserver
+     */
+    public BaseObserver registerObserver(BaseObserver baseObserver) {
+        if (null != baseObserver) {
+            observerLifeMange.register(baseObserver.getClass().getSimpleName(), baseObserver);
+        }
+        return baseObserver;
+    }
+
+    /**
+     * 反注册observer控制器
+     *
+     * @param baseObserver
+     */
+    public void removeObserver(BaseObserver baseObserver) {
+        if (null != baseObserver) {
+            observerLifeMange.unregister(baseObserver.getClass().getSimpleName());
+        }
+    }
 
     @Override
     public void onStart() {
@@ -41,6 +66,6 @@ public class BaseController implements LifeCycle {
 
     @Override
     public void onDestroy() {
-
+        observerLifeMange.onDestroy();
     }
 }
