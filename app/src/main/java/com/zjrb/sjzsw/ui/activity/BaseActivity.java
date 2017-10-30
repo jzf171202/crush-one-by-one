@@ -130,7 +130,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         lifecycleManage.onDestroy();
-//        ActivityStackManager.finishActivity(this);
+        ActivityStackManager.finishActivity(this);
     }
 
     /**

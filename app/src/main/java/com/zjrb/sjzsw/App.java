@@ -22,6 +22,7 @@ public class App extends Application {
 
     private static String THEME_KEY = "theme_mode";
     private boolean isNight;
+    private String test;
 
     public static App getAppContext() {
         if(sAppContext == null)

@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.SystemClock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,5 +96,18 @@ public class AppUtil {
         }
         //判断pName中是否有目标程序的包名，有TRUE，没有FALSE
         return pName.contains(packageName);
+    }
+
+    private static long mLastClickTime = 0;
+    private static final int SPACE_TIME = 500;
+
+    public static boolean isFastDoubleClick() {
+        long time = SystemClock.elapsedRealtime();
+        if (time - mLastClickTime <= SPACE_TIME) {
+            return true;
+        } else {
+            mLastClickTime = time;
+            return false;
+        }
     }
 }

@@ -16,21 +16,17 @@
  */
 package com.zjrb.sjzsw.adapter;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.zjrb.sjzsw.App;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.listener.OnItemClickListener;
-import com.zjrb.sjzsw.utils.ClickUtil;
+import com.zjrb.sjzsw.utils.AppUtil;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -91,7 +87,7 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
             newsChannelViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!ClickUtil.isFastDoubleClick()) {
+                    if (!AppUtil.isFastDoubleClick()) {
                         mOnItemClickListener.onItemClick(v, newsChannelViewHolder.getLayoutPosition());
                     }
                 }
