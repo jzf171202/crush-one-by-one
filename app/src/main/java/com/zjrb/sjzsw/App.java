@@ -19,7 +19,6 @@ import com.zjrb.sjzsw.utils.ConfigUtil;
 public class App extends Application {
 
     private static App sAppContext;
-
     private static String THEME_KEY = "theme_mode";
     private boolean isNight;
     private String test;
