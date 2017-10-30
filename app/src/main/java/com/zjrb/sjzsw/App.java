@@ -2,14 +2,15 @@ package com.zjrb.sjzsw;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.jzf.net.api.HttpClient;
 import com.squareup.leakcanary.LeakCanary;
-import com.zjrb.sjzsw.utils.ConfigUtil;
+import com.tencent.bugly.crashreport.CrashReport;
+import com.zjrb.sjzsw.utils.AppUtil;
+import com.zjrb.sjzsw.utils.SpUtil;
 
 
 /**
@@ -24,73 +25,80 @@ public class App extends Application {
     private String test;
 
     public static App getAppContext() {
-        if(sAppContext == null)
-        {
+        if (sAppContext == null) {
             sAppContext = new App();
         }
         return sAppContext;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         sAppContext = this;
         HttpClient.init(this);
 
+        //LeakCanary初始化
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
         LeakCanary.install(this);
-
-
+        //初始化主题模式
         initThemeMode();
+        //配置tencent.bugly,上报进程控制
+        initBugly();
+    }
 
+    /**
+     * 配置tencent.bugly,上报进程控制
+     */
+    private void initBugly() {
+        // 获取当前包名
+        String packageName = sAppContext.getPackageName();
+        // 获取当前进程名
+        String processName = AppUtil.getProcessName(android.os.Process.myPid());
+        // 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(sAppContext);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+        //tencent.bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。 8f699e3b6c为你申请的应用appid
+        CrashReport.initCrashReport(getApplicationContext(), "8f699e3b6c", true);
     }
 
     /**
      * 初始化主题模式：日间模式/夜间模式
      */
     private void initThemeMode() {
-        isNight = ConfigUtil.getBoolean(THEME_KEY, false);
-        if(isNight)
-        {
+        isNight = SpUtil.getBoolean(THEME_KEY, false);
+        if (isNight) {
             //夜间模式
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }else
-        {
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
 
-    public void setThemes(AppCompatActivity activity, boolean mode)
-    {
-        if(isNight == mode)
-        {
+    public void setThemes(AppCompatActivity activity, boolean mode) {
+        if (isNight == mode) {
             return;
         }
-        if(!mode)
-        {
+        if (!mode) {
             //白天模式
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             activity.getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-        else
-        {
+        } else {
             //夜间模式
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             activity.getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
         }
         isNight = mode;
-        ConfigUtil.putBoolean(THEME_KEY, isNight);
+        SpUtil.putBoolean(THEME_KEY, isNight);
         activity.recreate();
-
     }
 
     /**
      * 刷新UI_MODE模式
      */
     public void refreshResources(Activity activity) {
-        isNight = ConfigUtil.getBoolean(THEME_KEY, false);
+        isNight = SpUtil.getBoolean(THEME_KEY, false);
         if (isNight) {
             updateConfig(activity, Configuration.UI_MODE_NIGHT_YES);
         } else {

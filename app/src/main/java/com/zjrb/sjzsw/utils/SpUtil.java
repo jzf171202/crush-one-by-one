@@ -8,7 +8,7 @@ import com.zjrb.sjzsw.App;
 /**
  * Created by leo on 16/2/1.
  */
-public class ConfigUtil {
+public class SpUtil {
     private static SharedPreferences sharedPreferences;
     public static SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {

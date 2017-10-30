@@ -6,8 +6,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.text.TextUtils;
 import android.os.SystemClock;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +64,37 @@ public class AppUtil {
     }
 
 
+
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    public static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
     /**
      * 查询手机内所有支持分享的应用
      *
@@ -79,6 +114,7 @@ public class AppUtil {
 
     /**
      * 判断手机已安装某程序的方法
+     *
      * @param context
      * @param packageName 目标程序的包名
      * @return
@@ -101,6 +137,10 @@ public class AppUtil {
     private static long mLastClickTime = 0;
     private static final int SPACE_TIME = 500;
 
+    /**
+     * 防止过快重复点击 true为太快点击
+     * @return
+     */
     public static boolean isFastDoubleClick() {
         long time = SystemClock.elapsedRealtime();
         if (time - mLastClickTime <= SPACE_TIME) {
