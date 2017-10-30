@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.List;
  * Created by Thinkpad on 2017/10/27.
  */
 
-public class NewsActivity extends BaseActivity2 implements View.OnClickListener, Toolbar.OnMenuItemClickListener{
+public class NewsActivity extends AppCompatActivity implements View.OnClickListener, Toolbar.OnMenuItemClickListener{
 
     Toolbar toolbar;
     TabLayout tabs;
@@ -39,14 +40,20 @@ public class NewsActivity extends BaseActivity2 implements View.OnClickListener,
     private List<Fragment> mNewsFragmentList = new ArrayList<>();
     List<String> newsChannels = new ArrayList<>();
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_news;
-    }
+//    @Override
+//    protected int getLayoutId() {
+//        return R.layout.activity_news;
+//    }
+
+//    @Override
+//    protected void init(@Nullable Bundle savedInstanceState) {
+
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_news);
         initView();
 
         initViewPager(newsChannels);
@@ -91,7 +98,6 @@ public class NewsActivity extends BaseActivity2 implements View.OnClickListener,
         {
             //刷新操作
             String text = data.getStringExtra("type");
-            showToast(text);
             newsChannels.add("标签");
             initViewPager(newsChannels);
         }
@@ -181,5 +187,16 @@ public class NewsActivity extends BaseActivity2 implements View.OnClickListener,
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        App.getAppContext().refreshResources(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

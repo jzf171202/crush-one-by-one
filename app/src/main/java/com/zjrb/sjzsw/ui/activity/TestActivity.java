@@ -19,6 +19,6 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        button = findViewById(R.id.button);
+        button = (Button) findViewById(R.id.button);
     }
 }

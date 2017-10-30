@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +24,7 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制activity基类
  */
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     private LifecycleManage lifecycleManage = new LifecycleManage();
     protected Context context;
     private View rootView;
@@ -130,7 +130,7 @@ public abstract class BaseActivity extends FragmentActivity {
     public void onDestroy() {
         super.onDestroy();
         lifecycleManage.onDestroy();
-        ActivityStackManager.finishActivity(this);
+//        ActivityStackManager.finishActivity(this);
     }
 
     /**

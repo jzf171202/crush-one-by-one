@@ -41,16 +41,9 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         initView();
-
     }
+
 
     private void initView() {
         for(int i=0 ; i< 10 ; i++)
@@ -58,10 +51,10 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
             newsChannels_mine.add("标签" + i);
             newsChannels_more.add("未标" + i);
         }
-        back = findViewById(R.id.back);
+        back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(this);
-        mNewsChannelMineRv = findViewById(R.id.news_channel_mine_rv);
-        mNewsChannelMoreRv = findViewById(R.id.news_channel_more_rv);
+        mNewsChannelMineRv = (RecyclerView) findViewById(R.id.news_channel_mine_rv);
+        mNewsChannelMoreRv = (RecyclerView) findViewById(R.id.news_channel_more_rv);
         initRecycleViews(newsChannels_mine, newsChannels_more);
     }
 

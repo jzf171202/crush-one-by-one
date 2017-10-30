@@ -1,5 +1,6 @@
 package com.zjrb.sjzsw.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
+import com.zjrb.sjzsw.App;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.controller.MainController;
 import com.zjrb.sjzsw.entity.GirlList;
@@ -31,9 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener{
     private RecyclerView recyclerView;
     private SmartRefreshLayout smartRefreshLayout;
+
+    private TextView rightText;
 
     private MainController mainController;
     private List<GirlList.NewslistBean> beanList = new ArrayList<>();
@@ -54,8 +58,10 @@ public class MainActivity extends BaseActivity {
      * 初始化view
      */
     private void initView() {
-        recyclerView = findViewById(R.id.recycle_view);
-        smartRefreshLayout = findViewById(R.id.refreshLayout);
+        recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
+        smartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.refreshLayout);
+        rightText = (TextView) findViewById(R.id.rightText);
+        rightText.setOnClickListener(this);
 
         //初始化RecyclerView
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -125,4 +131,18 @@ public class MainActivity extends BaseActivity {
                 }))
         );
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.rightText:
+                Intent intent  = new Intent(this, NewsActivity.class);
+                startActivity(intent);
+                break;
+
+        }
+    }
+
+
 }
