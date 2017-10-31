@@ -22,7 +22,6 @@ public class App extends Application {
     private static App sAppContext;
     private static String THEME_KEY = "theme_mode";
     private boolean isNight;
-    private String test;
 
     public static App getAppContext() {
         if (sAppContext == null) {
@@ -61,6 +60,12 @@ public class App extends Application {
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
         //tencent.bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。 8f699e3b6c为你申请的应用appid
         CrashReport.initCrashReport(getApplicationContext(), "8f699e3b6c", true);
+    }
+
+    public boolean getThemes()
+    {
+        return SpUtil.getBoolean(THEME_KEY, false);
+
     }
 
     /**

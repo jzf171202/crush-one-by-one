@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private List<GirlList.NewslistBean> beanList = new ArrayList<>();
     private CommonAdapter commonAdapter = null;
 
+    private boolean isNight, isNight_new;
+    RelativeLayout container;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -52,12 +56,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void init(@Nullable Bundle savedInstanceState) {
         registerController(mainController = new MainController(this));
         initView();
+        isNight = App.getAppContext().getThemes();
+        System.out.println("isNight====" + isNight);
     }
 
     /**
      * 初始化view
      */
     private void initView() {
+        container = (RelativeLayout) findViewById(R.id.container);
         recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         smartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.refreshLayout);
         rightText = (TextView) findViewById(R.id.rightText);
@@ -144,5 +151,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        isNight_new = App.getAppContext().getThemes();
+        System.out.println("isNight====" + isNight_new);
+        if(isNight_new && !isNight)
+        {
+            container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            System.out.println("color====" + R.color.colorPrimary);
+            isNight = isNight_new;
 
+        }
+        else if(!isNight_new && isNight)
+        {
+            container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            System.out.println("color====" + R.color.colorPrimary);
+            isNight = isNight_new;
+        }
+
+    }
 }

@@ -92,8 +92,9 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != RESULT_OK)
+        if(resultCode != RESULT_OK) {
             return;
+        }
         if(requestCode == 0x001)
         {
             //刷新操作
