@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <include layout="@layout/layout_title_bar" />
+    <include layout="@layout/load_layout" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
