@@ -7,7 +7,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +39,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements View.OnClickListener{
     private RecyclerView recyclerView;
     private SmartRefreshLayout smartRefreshLayout;
+    private FrameLayout loadLayout;
+    private LinearLayout emptyLayout;
 
     private TextView rightText;
 
@@ -68,6 +72,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         smartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.refreshLayout);
         rightText = (TextView) findViewById(R.id.rightText);
+        loadLayout = (FrameLayout) findViewById(R.id.load_layout);
+        emptyLayout = (LinearLayout) findViewById(R.id.empty_layout);
+
         rightText.setOnClickListener(this);
 
         //初始化RecyclerView
@@ -109,6 +116,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 getGirls();
+
+                //加载反馈页面
+//                loadLayout.setVisibility(View.VISIBLE);
+//                emptyLayout.setVisibility(View.VISIBLE);
+//                emptyLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showToast("没有数据");
+//                    }
+//                });
             }
         });
     }
