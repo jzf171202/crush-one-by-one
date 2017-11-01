@@ -12,8 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.zjrb.sjzsw.App;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.adapter.NewsChannelAdapter;
+import com.zjrb.sjzsw.entity.NewsChannel;
+import com.zjrb.sjzsw.greendao.NewsChannelDao;
 import com.zjrb.sjzsw.listener.OnItemClickListener;
 
 import java.util.ArrayList;
@@ -28,11 +31,13 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
     ImageView back;
     RecyclerView mNewsChannelMineRv, mNewsChannelMoreRv;
 
-    List<String> newsChannels_mine = new ArrayList<>();
-    List<String> newsChannels_more = new ArrayList<>();
+    List<NewsChannel> newsChannels_mine = new ArrayList<>();
+    List<NewsChannel> newsChannels_more = new ArrayList<>();
 
     private NewsChannelAdapter mNewsChannelAdapterMine;
     private NewsChannelAdapter mNewsChannelAdapterMore;
+
+    private NewsChannelDao newsChannelDao;
 
     @Override
     protected int getLayoutId() {
@@ -41,15 +46,20 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
+        newsChannelDao = App.getAppContext().getDaoSession().getNewsChannelDao();
         initView();
     }
 
 
     private void initView() {
+        newsChannels_mine = newsChannelDao.loadAll();
         for(int i=0 ; i< 10 ; i++)
         {
-            newsChannels_mine.add("标签" + i);
-            newsChannels_more.add("未标" + i);
+            NewsChannel channel = new NewsChannel();
+            channel.setNewsChannelId("channel_no" + i);
+            channel.setNewsChannelName("未标" + i);
+            channel.setNewsChannelType("2");
+            newsChannels_more.add(channel);
         }
         back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(this);
@@ -58,12 +68,12 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
         initRecycleViews(newsChannels_mine, newsChannels_more);
     }
 
-    private void initRecycleViews(List<String> newsChannels_mine, List<String> newsChannels_more) {
+    private void initRecycleViews(List<NewsChannel> newsChannels_mine, List<NewsChannel> newsChannels_more) {
         initRecycleView(mNewsChannelMineRv, newsChannels_mine, true);
         initRecycleView(mNewsChannelMoreRv, newsChannels_more, false);
     }
 
-    private void initRecycleView(RecyclerView recyclerView, List<String> newsChannels, boolean isChannelMine) {
+    private void initRecycleView(RecyclerView recyclerView, List<NewsChannel> newsChannels, boolean isChannelMine) {
         // !!!加上这句将不能动态增加列表大小。。。
 //        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
@@ -88,10 +98,11 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
         mNewsChannelAdapterMine.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String newsChannel = mNewsChannelAdapterMine.getData().get(position);
+                NewsChannel newsChannel = mNewsChannelAdapterMine.getData().get(position);
                 newsChannels_more.add(newsChannel);
                 mNewsChannelAdapterMore.notifyDataSetChanged();
                 newsChannels_mine.remove(position);
+                newsChannelDao.delete(newsChannel);
                 mNewsChannelAdapterMine.notifyDataSetChanged();
 
 
@@ -105,7 +116,8 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
         mNewsChannelAdapterMore.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String newsChannel = mNewsChannelAdapterMore.getData().get(position);
+                NewsChannel newsChannel = mNewsChannelAdapterMore.getData().get(position);
+                newsChannelDao.insert(newsChannel);
                 newsChannels_mine.add(newsChannel);
                 mNewsChannelAdapterMine.notifyDataSetChanged();
                 newsChannels_more.remove(position);
@@ -124,6 +136,8 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
                 intent.putExtra("type", "change");
                 setResult(RESULT_OK, intent);
                 finish();
+                break;
+            default:
                 break;
         }
     }

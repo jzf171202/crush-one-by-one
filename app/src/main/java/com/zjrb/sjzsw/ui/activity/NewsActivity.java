@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import com.zjrb.sjzsw.App;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.adapter.pageadapter.NewsFragmentPagerAdapter;
+import com.zjrb.sjzsw.common.Constant;
+import com.zjrb.sjzsw.entity.NewsChannel;
+import com.zjrb.sjzsw.greendao.NewsChannelDao;
 import com.zjrb.sjzsw.ui.fragment.NewsFragment;
 import com.zjrb.sjzsw.utils.Utils;
 
@@ -38,7 +41,10 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     private String mCurrentViewPagerName;
     private List<String> mChannelNames;
     private List<Fragment> mNewsFragmentList = new ArrayList<>();
-    List<String> newsChannels = new ArrayList<>();
+    List<NewsChannel> newsChannels = new ArrayList<>();
+    List<String> newsChannelnames = new ArrayList<>();
+
+    private NewsChannelDao newsChannelDao;
 
 //    @Override
 //    protected int getLayoutId() {
@@ -54,15 +60,24 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        newsChannelDao = App.getAppContext().getDaoSession().getNewsChannelDao();
         initView();
 
         initViewPager(newsChannels);
     }
 
     private void initView() {
-        for(int i=0 ; i<3 ; i++)
-        {
-            newsChannels.add("新闻" + i);
+
+        newsChannels = newsChannelDao.loadAll();
+        if(newsChannels.size() == 0) {
+            for (int i = 0; i < 3; i++) {
+                NewsChannel channel = new NewsChannel();
+                channel.setNewsChannelId("channel" + i);
+                channel.setNewsChannelName("标签" + i);
+                channel.setNewsChannelType("1");
+                newsChannels.add(channel);
+                newsChannelDao.insert(channel);
+            }
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.toolbar_menu);
@@ -86,6 +101,8 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, NewsChannelActivity.class);
                 startActivityForResult(intent, 0x001);
                 break;
+            default:
+                break;
         }
     }
 
@@ -98,46 +115,50 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
         if(requestCode == 0x001)
         {
             //刷新操作
-            String text = data.getStringExtra("type");
-            newsChannels.add("标签");
+            newsChannels.clear();
+            newsChannels = newsChannelDao.loadAll();
             initViewPager(newsChannels);
         }
     }
 
-    private void initViewPager(List<String> newsChannels) {
+    private void initViewPager(List<NewsChannel> newsChannels) {
         if (newsChannels != null) {
-            setNewsList(newsChannels);
-            setViewPager(newsChannels);
+            setNewsList(newsChannels, newsChannelnames);
+            setViewPager(newsChannelnames);
         }
     }
 
-    private void setNewsList(List<String> newsChannels) {
+    private void setNewsList(List<NewsChannel> newsChannels, List<String> newsChannelnames) {
         mNewsFragmentList.clear();
-        for(String newsChannel : newsChannels)
+        newsChannelnames.clear();
+        for(NewsChannel newsChannel : newsChannels)
         {
             NewsFragment newsFragment = creatFragment(newsChannel);
             mNewsFragmentList.add(newsFragment);
+            newsChannelnames.add(newsChannel.getNewsChannelName());
 
         }
     }
 
-    private NewsFragment creatFragment(String newsChannel) {
+    private NewsFragment creatFragment(NewsChannel newsChannel) {
         NewsFragment fragment = new NewsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("title", newsChannel);
+        bundle.putString(Constant.NEWS_ID, newsChannel.getNewsChannelId());
+        bundle.putString(Constant.NEWS_TYPE, newsChannel.getNewsChannelType());
+        bundle.putInt(Constant.CHANNEL_POSITION, newsChannel.getNewsChannelIndex());
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    private void setViewPager(List<String> newsChannels) {
+    private void setViewPager(List<String> newsChannelnames) {
 
         NewsFragmentPagerAdapter adapter = new NewsFragmentPagerAdapter(
-                getSupportFragmentManager(), newsChannels, mNewsFragmentList);
+                getSupportFragmentManager(), newsChannelnames, mNewsFragmentList);
         view_pager.setAdapter(adapter);
         tabs.setupWithViewPager(view_pager);
         Utils.dynamicSetTabLayoutMode(tabs);
         setPageChangeListener();
-        mChannelNames = newsChannels;
+        mChannelNames = newsChannelnames;
 
         int currentViewPagerPosition = getCurrentViewPagerPosition();
         view_pager.setCurrentItem(currentViewPagerPosition, false);

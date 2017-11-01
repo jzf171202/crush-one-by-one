@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.entity.NewsChannel;
 import com.zjrb.sjzsw.listener.OnItemClickListener;
 import com.zjrb.sjzsw.utils.AppUtil;
 
@@ -34,7 +35,7 @@ import java.util.List;
  * @author 咖枯
  * @version 1.0 2016/6/30
  */
-public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
+public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannel>
          {
     private static final int TYPE_CHANNEL_FIXED = 0;
     private static final int TYPE_CHANNEL_NO_FIXED = 1;
@@ -47,11 +48,11 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
     }
 
 
-    public NewsChannelAdapter(List<String> newsChannelTableList) {
+    public NewsChannelAdapter(List<NewsChannel> newsChannelTableList) {
         super(newsChannelTableList);
     }
 
-    public List<String> getData() {
+    public List<NewsChannel> getData() {
         return mList;
     }
 
@@ -97,7 +98,7 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<String>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final String newsChannel = mList.get(position);
+        final String newsChannel = mList.get(position).getNewsChannelName();
         String newsChannelName = newsChannel;
         NewsChannelViewHolder viewHolder = (NewsChannelViewHolder) holder;
         viewHolder.mNewsChannelTv.setText(newsChannelName);
