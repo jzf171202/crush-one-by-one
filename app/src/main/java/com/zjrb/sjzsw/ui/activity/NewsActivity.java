@@ -207,6 +207,11 @@ public class NewsActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.night:
                 App.getAppContext().setThemes(this, true);
                 break;
+            case R.id.jsoup:
+                startActivity(new Intent(NewsActivity.this, NewsDetailActivity.class));
+                break;
+            default:
+                break;
         }
         return false;
     }

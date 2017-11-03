@@ -1,5 +1,8 @@
 package com.zjrb.sjzsw.entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+
 import java.util.List;
 
 /**
@@ -7,7 +10,6 @@ import java.util.List;
  * Email:jinzifu123@163.com
  * 类描述:
  */
-
 public class GirlList {
     private int code;
     private String msg;
