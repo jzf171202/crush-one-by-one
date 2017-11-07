@@ -51,7 +51,7 @@ dependencies {
     //数据库  使用帮助http://blog.csdn.net/myrssq/article/details/78425780
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.0'
-    compile 'net.zetetic:android-database-sqlcipher:3.5.2'
+//    compile 'net.zetetic:android-database-sqlcipher:3.5.2'
     //jsoup抓包工具  使用帮助  http://blog.csdn.net/myrssq/article/details/78425911
     compile 'org.jsoup:jsoup:1.10.3'
 }
