@@ -54,12 +54,8 @@ public class App extends Application {
             return;
         }
         LeakCanary.install(this);
-        //初始化主题模式
-//        initThemeMode();
         //配置tencent.bugly,上报进程控制
         initBugly();
-//        初始化数据库
-//        setDatabase();
     }
 
     /**
@@ -77,54 +73,8 @@ public class App extends Application {
         CrashReport.initCrashReport(getApplicationContext(), "8f699e3b6c", true);
     }
 
-    public boolean getThemes()
-    {
-        return SpUtil.getBoolean(THEME_KEY, false);
 
-    }
 
-    /**
-     * 初始化主题模式：日间模式/夜间模式
-     */
-    private void initThemeMode() {
-        isNight = SpUtil.getBoolean(THEME_KEY, false);
-        if (isNight) {
-            //夜间模式
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-    }
-
-    public void setThemes(AppCompatActivity activity, boolean mode) {
-        if (isNight == mode) {
-            return;
-        }
-        if (!mode) {
-            //白天模式
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            activity.getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else {
-            //夜间模式
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            activity.getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        isNight = mode;
-        SpUtil.putBoolean(THEME_KEY, isNight);
-        activity.recreate();
-    }
-
-    /**
-     * 刷新UI_MODE模式
-     */
-    public void refreshResources(Activity activity) {
-        isNight = SpUtil.getBoolean(THEME_KEY, false);
-        if (isNight) {
-            updateConfig(activity, Configuration.UI_MODE_NIGHT_YES);
-        } else {
-            updateConfig(activity, Configuration.UI_MODE_NIGHT_NO);
-        }
-    }
 
 
     /**

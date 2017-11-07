@@ -157,8 +157,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         switch (view.getId())
         {
             case R.id.rightText:
-                Intent intent  = new Intent(this, NewsActivity.class);
-                startActivity(intent);
                 break;
 
         }
