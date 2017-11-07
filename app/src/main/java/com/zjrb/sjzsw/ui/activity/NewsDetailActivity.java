@@ -64,6 +64,7 @@ public class NewsDetailActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
 
+
         leftImage = (ImageButton) findViewById(R.id.leftImage);
         leftImage.setOnClickListener(this);
         rightText = (TextView) findViewById(R.id.rightText);
