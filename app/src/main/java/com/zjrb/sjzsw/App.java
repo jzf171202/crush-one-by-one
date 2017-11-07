@@ -7,14 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.github.yuweiguocn.library.greendao.MigrationHelper;
 import com.jzf.net.api.HttpClient;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.zjrb.sjzsw.greendao.DaoMaster;
 import com.zjrb.sjzsw.greendao.DaoSession;
+import com.zjrb.sjzsw.greendao.MySQLiteOpenHelper;
 import com.zjrb.sjzsw.greendao.NewsChannelDao;
 import com.zjrb.sjzsw.utils.AppUtil;
 import com.zjrb.sjzsw.utils.SpUtil;
+
+import org.greenrobot.greendao.database.Database;
 
 
 /**
@@ -23,7 +27,7 @@ import com.zjrb.sjzsw.utils.SpUtil;
 
 public class App extends Application {
 
-    private DaoMaster.DevOpenHelper mHelper;
+    private MySQLiteOpenHelper mHelper;
     private SQLiteDatabase db;
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
@@ -141,12 +145,25 @@ public class App extends Application {
         // 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。
         // 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
         // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
-        mHelper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+//        mHelper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        // 初始化
+        MigrationHelper.DEBUG = true; //如果你想查看日志信息，请将 DEBUG 设置为 true
+        mHelper = new MySQLiteOpenHelper(this, "notes-db", null);
+        //不加密数据库
         db = mHelper.getWritableDatabase();
+
         // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
         mDaoMaster = new DaoMaster(db);
         mDaoSession = mDaoMaster.newSession();
+
+
+
     }
+
+    public MySQLiteOpenHelper getHelper() {
+        return mHelper;
+    }
+
     public DaoSession getDaoSession() {
         return mDaoSession;
     }

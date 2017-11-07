@@ -10,4 +10,8 @@
         android:id="@+id/night"
         android:title="夜间模式"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/jsoup"
+        android:title="Jsoup"
+        app:showAsAction="never" />
 </menu>

@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,6 +19,7 @@ import com.zjrb.sjzsw.adapter.NewsChannelAdapter;
 import com.zjrb.sjzsw.entity.NewsChannel;
 import com.zjrb.sjzsw.greendao.NewsChannelDao;
 import com.zjrb.sjzsw.listener.OnItemClickListener;
+import com.zjrb.sjzsw.widget.ItemDragHelperCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +86,7 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
             recyclerView.setAdapter(mNewsChannelAdapterMine);
             setChannelMineOnItemClick();
 
+            initItemDragHelper();
         }
         else
         {
@@ -125,6 +128,15 @@ public class NewsChannelActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
+    }
+
+    private void initItemDragHelper() {
+        ItemDragHelperCallback itemDragHelperCallback = new ItemDragHelperCallback(mNewsChannelAdapterMine);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragHelperCallback);
+        itemTouchHelper.attachToRecyclerView(mNewsChannelMineRv);
+
+        mNewsChannelAdapterMine.setItemDragHelperCallback(itemDragHelperCallback);
+//        itemDragHelperCallback.onSwiped();
     }
 
     @Override

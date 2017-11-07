@@ -18,18 +18,25 @@ import org.greenrobot.greendao.identityscope.IdentityScopeType;
  *
  * 使用 greenDAO 的入口点。DaoMaster 负责管理数据库对象(SQLiteDatabase)和 DAO 类(对象)，
  * 我们可以通过它内部类 OpenHelper 和 DevOpenHelper SQLiteOpenHelper 创建不同模式的 SQLite 数据库。
+ * Master of DAO (schema version 4): knows all DAOs.
  */
 public class DaoMaster extends AbstractDaoMaster {
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 4;
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         NewsChannelDao.createTable(db, ifNotExists);
+        GreenDaoTestDao.createTable(db, ifNotExists);
+        GreenDaoTest2Dao.createTable(db, ifNotExists);
+        greenDaoUpdateTestDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         NewsChannelDao.dropTable(db, ifExists);
+        GreenDaoTestDao.dropTable(db, ifExists);
+        GreenDaoTest2Dao.dropTable(db, ifExists);
+        greenDaoUpdateTestDao.dropTable(db, ifExists);
     }
 
     /**
@@ -49,6 +56,9 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(NewsChannelDao.class);
+        registerDaoClass(GreenDaoTestDao.class);
+        registerDaoClass(GreenDaoTest2Dao.class);
+        registerDaoClass(greenDaoUpdateTestDao.class);
     }
 
     public DaoSession newSession() {

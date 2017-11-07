@@ -18,6 +18,7 @@ package com.zjrb.sjzsw.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,7 +28,9 @@ import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.entity.NewsChannel;
 import com.zjrb.sjzsw.listener.OnItemClickListener;
 import com.zjrb.sjzsw.utils.AppUtil;
+import com.zjrb.sjzsw.widget.ItemDragHelperCallback;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -35,18 +38,21 @@ import java.util.List;
  * @author 咖枯
  * @version 1.0 2016/6/30
  */
-public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannel>
-         {
-    private static final int TYPE_CHANNEL_FIXED = 0;
+public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannel> implements ItemDragHelperCallback.OnItemMoveListener {
     private static final int TYPE_CHANNEL_NO_FIXED = 1;
 
+    private ItemDragHelperCallback mItemDragHelperCallback;
 
     private OnItemClickListener mOnItemClickListener;
 
+    @Override
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
+    public void setItemDragHelperCallback(ItemDragHelperCallback itemDragHelperCallback) {
+        mItemDragHelperCallback = itemDragHelperCallback;
+    }
 
     public NewsChannelAdapter(List<NewsChannel> newsChannelTableList) {
         super(newsChannelTableList);
@@ -66,21 +72,16 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannel>
     }
 
     private void handleLongPress(final NewsChannelViewHolder newsChannelViewHolder) {
-//        if (mItemDragHelperCallback != null) {
-//            newsChannelViewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    NewsChannelTable newsChannel = mList.get(newsChannelViewHolder.getLayoutPosition());
-//                    boolean isChannelFixed = newsChannel.getNewsChannelFixed();
-//                    if (isChannelFixed) {
-//                        mItemDragHelperCallback.setLongPressEnabled(false);
-//                    } else {
-//                        mItemDragHelperCallback.setLongPressEnabled(true);
-//                    }
-//                    return false;
-//                }
-//            });
-//        }
+        if (mItemDragHelperCallback != null) {
+            newsChannelViewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    NewsChannel newsChannel = mList.get(newsChannelViewHolder.getLayoutPosition());
+                    mItemDragHelperCallback.setLongPressEnabled(true);
+                    return false;
+                }
+            });
+        }
     }
 
     private void handleOnClick(final NewsChannelViewHolder newsChannelViewHolder) {
@@ -129,10 +130,18 @@ public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannel>
 //        }
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+
+        Collections.swap(mList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        //通知数据库更改顺序
+
+        return true;
+    }
 
 
-
-    class NewsChannelViewHolder extends RecyclerView.ViewHolder {
+             class NewsChannelViewHolder extends RecyclerView.ViewHolder {
         TextView mNewsChannelTv;
 
         public NewsChannelViewHolder(View view) {
