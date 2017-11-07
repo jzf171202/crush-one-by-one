@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
 import com.jzf.net.api.HttpClient;
@@ -14,11 +12,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.zjrb.sjzsw.greendao.DaoMaster;
 import com.zjrb.sjzsw.greendao.DaoSession;
 import com.zjrb.sjzsw.greendao.MySQLiteOpenHelper;
-import com.zjrb.sjzsw.greendao.NewsChannelDao;
 import com.zjrb.sjzsw.utils.AppUtil;
-import com.zjrb.sjzsw.utils.SpUtil;
-
-import org.greenrobot.greendao.database.Database;
 
 
 /**
@@ -32,8 +26,6 @@ public class App extends Application {
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
     private static App sAppContext;
-    private static String THEME_KEY = "theme_mode";
-    private boolean isNight;
 
 
     public static App getAppContext() {

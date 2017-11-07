@@ -1,7 +1,7 @@
 package com.zjrb.sjzsw.api;
 
 
-import com.zjrb.sjzsw.entity.GirlList;
+import com.zjrb.sjzsw.entity.HomeBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -21,6 +21,6 @@ public interface ApiService {
      * @return
      */
     @GET("meinv/")
-    Observable<GirlList> getGirls(@Query("key") String key, @Query("num") int num);
+    Observable<HomeBean> getGirls(@Query("key") String key, @Query("num") int num);
 
 }

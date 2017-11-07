@@ -1,6 +1,7 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,10 +18,8 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.controller.MainController;
-import com.zjrb.sjzsw.entity.GirlList;
+import com.zjrb.sjzsw.entity.HomeBean;
 import com.zjrb.sjzsw.widget.recyclerview.CommonAdapter;
-import com.zjrb.sjzsw.widget.recyclerview.DividerGridItemDecoration;
-import com.zjrb.sjzsw.widget.recyclerview.MultiItemTypeAdapter;
 import com.zjrb.sjzsw.widget.recyclerview.base.MyViewHolder;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class MainActivity extends BaseActivity {
     SmartRefreshLayout refreshLayout;
 
     private MainController mainController;
-    private List<GirlList.NewslistBean> beanList = new ArrayList<>();
+    private List<HomeBean> beanList = new ArrayList<>();
     private CommonAdapter commonAdapter = null;
 
     @Override
@@ -65,49 +64,99 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         registerController(mainController = new MainController(this));
+        initData();
         initView();
+    }
+
+    private void initData() {
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "开始直播", "开始：8月21日 14：30", "结束：8月21日 16：30"));
+        beanList.add(new HomeBean("UC 创始人何小鹏退役现场", "", "开始：8月21日 14：30", "结束：8月21日 16：30"));
     }
 
     /**
      * 初始化view
      */
     private void initView() {
+        leftImage.setImageResource(R.drawable.homepage_set_up);
+        rightImage.setVisibility(View.VISIBLE);
+        rightImage.setImageResource(R.drawable.homepage_establish_btn);
+        titleText.setText("移动直播");
         recycleView.setLayoutManager(new LinearLayoutManager(this));
-        recycleView.addItemDecoration(new DividerGridItemDecoration(this));
-        recycleView.setAdapter(commonAdapter = new CommonAdapter<GirlList.NewslistBean>(this, R.layout.item_main_list, beanList) {
+        recycleView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        final View.OnClickListener myClickListener = new View.OnClickListener() {
             @Override
-            protected void convert(MyViewHolder holder, GirlList.NewslistBean newslistBean, int position) {
-//                TextView tv = holder.getView(R.id.item_title);
-//                ImageView itemImg = holder.getView(R.id.item_img);
-//
-//                tv.setText(newslistBean.getTitle());
-//                Glide.with(context).load(newslistBean.getPicUrl()).centerCrop().placeholder(R.mipmap.img_defult).into(itemImg);
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.item_layout:
+                        showToast("item_layout");
+                        break;
+                    case R.id.status_bt:
+                        showToast("status_bt");
+                        break;
+                    case R.id.preview_bt:
+                        showToast("preview_bt");
+                        break;
+                    case R.id.modify_bt:
+                        showToast("modify_bt");
+                        break;
+                    default:
+                        break;
+                }
             }
-        });
-        commonAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+        };
+        recycleView.setAdapter(commonAdapter = new CommonAdapter<HomeBean>(this, R.layout.item_main_list, beanList) {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-            }
+            protected void convert(MyViewHolder holder, HomeBean homeBean, int position) {
+                RelativeLayout itemLayout = holder.getView(R.id.item_layout);
+                TextView itemTitle = holder.getView(R.id.item_title);
+                TextView statusText = holder.getView(R.id.status_text);
+                TextView statusBt = holder.getView(R.id.status_bt);
+                TextView timeStart = holder.getView(R.id.time_start);
+                TextView timeEnd = holder.getView(R.id.time_end);
+                TextView previewBt = holder.getView(R.id.preview_bt);
+                TextView modifyBt = holder.getView(R.id.modify_bt);
+                RelativeLayout bottomLayout = holder.getView(R.id.item_bottom_layout);
 
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
+                itemTitle.setText(homeBean.getTitle());
+                statusText.setText(homeBean.getStatus());
+                timeStart.setText(homeBean.getStarttime());
+                timeEnd.setText(homeBean.getEndtime());
+                itemLayout.setOnClickListener(myClickListener);
+                statusBt.setOnClickListener(myClickListener);
+                previewBt.setOnClickListener(myClickListener);
+                modifyBt.setOnClickListener(myClickListener);
+                if (!"开始直播".equals(homeBean.getStatus())) {
+                    bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
+
 
         //初始化SmartRefreshLayout
-        refreshLayout.autoRefresh();
-        refreshLayout.autoLoadmore();
+//        refreshLayout.autoRefresh();
+//        refreshLayout.autoLoadmore();
         refreshLayout.setRefreshHeader(new ClassicsHeader(this));
         refreshLayout.setRefreshFooter(new ClassicsFooter(this));
         refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
+                refreshLayout.finishLoadmore();
             }
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-
+                refreshLayout.finishRefresh();
                 //加载反馈页面
 //                loadLayout.setVisibility(View.VISIBLE);
 //                emptyLayout.setVisibility(View.VISIBLE);

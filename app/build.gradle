@@ -52,10 +52,8 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.0'
 //    compile 'net.zetetic:android-database-sqlcipher:3.5.2'
-    //jsoup抓包工具  使用帮助  http://blog.csdn.net/myrssq/article/details/78425911
-    compile 'org.jsoup:jsoup:1.10.3'
 
-    //butterknife 8.6.0
+    //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 
