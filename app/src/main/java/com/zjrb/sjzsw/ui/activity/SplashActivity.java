@@ -14,8 +14,6 @@ import butterknife.ButterKnife;
  */
 
 public class SplashActivity extends BaseActivity {
-    @BindView(R.id.name)
-    TextView name;
 
     @Override
     protected int getLayoutId() {
@@ -31,14 +29,13 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     start();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-        start();
     }
 
     private void start() {
