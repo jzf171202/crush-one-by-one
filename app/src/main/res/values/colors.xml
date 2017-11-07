@@ -7,7 +7,7 @@
     <color name="item_text_color">#0e0e0e</color>
     <color name="item_text_bg">#eceded</color>
     <color name="layout_bg">#f4f4f4</color>
-
+    <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="transparent_half">#a0000000</color>

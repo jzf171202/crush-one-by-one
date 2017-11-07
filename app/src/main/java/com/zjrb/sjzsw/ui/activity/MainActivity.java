@@ -48,7 +48,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private List<GirlList.NewslistBean> beanList = new ArrayList<>();
     private CommonAdapter commonAdapter = null;
 
-    private boolean isNight, isNight_new;
     RelativeLayout container;
 
     @Override
@@ -60,8 +59,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void init(@Nullable Bundle savedInstanceState) {
         registerController(mainController = new MainController(this));
         initView();
-        isNight = App.getAppContext().getThemes();
-        System.out.println("isNight====" + isNight);
     }
 
     /**
@@ -93,7 +90,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         commonAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                ActivityUtil.next(MainActivity.this, TestActivity.class);
             }
 
             @Override
@@ -171,21 +167,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        isNight_new = App.getAppContext().getThemes();
-        System.out.println("isNight====" + isNight_new);
-        if(isNight_new && !isNight)
-        {
-            container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            System.out.println("color====" + R.color.colorPrimary);
-            isNight = isNight_new;
-
-        }
-        else if(!isNight_new && isNight)
-        {
-            container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            System.out.println("color====" + R.color.colorPrimary);
-            isNight = isNight_new;
-        }
 
     }
 }

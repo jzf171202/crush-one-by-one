@@ -55,10 +55,11 @@ public class App extends Application {
         }
         LeakCanary.install(this);
         //初始化主题模式
-        initThemeMode();
+//        initThemeMode();
         //配置tencent.bugly,上报进程控制
         initBugly();
-        setDatabase();
+//        初始化数据库
+//        setDatabase();
     }
 
     /**

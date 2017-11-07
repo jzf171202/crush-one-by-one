@@ -2,23 +2,21 @@ package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.Button;
 
 import com.zjrb.sjzsw.R;
 
 /**
- * Created by Thinkpad on 2017/10/27.
+ * Created by Thinkpad on 2017/11/7.
  */
 
-public class TestActivity extends BaseActivity {
-    private Button button;
+public class SplashActivity extends BaseActivity{
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_test;
+        return R.layout.splash;
     }
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        button = (Button) findViewById(R.id.button);
+
     }
 }
