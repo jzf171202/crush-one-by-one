@@ -37,13 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract int getLayoutId();
 
-    /**
-     * 初始化数据
-     *
-     * @param savedInstanceState
-     */
-    protected abstract void init(@Nullable Bundle savedInstanceState);
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActivityStackManager.addActivity(this);
         context = this;
         initStatusBar();
-        init(savedInstanceState);
     }
 
 

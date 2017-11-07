@@ -1,7 +1,6 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,14 +28,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    protected void init(@Nullable Bundle savedInstanceState) {
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
 

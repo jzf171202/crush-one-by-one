@@ -33,8 +33,6 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract int getLayoutId();
 
-    protected abstract void init(View view, @Nullable Bundle savedInstanceState);
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -45,7 +43,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(getLayoutId(), viewGroup, false);
-        init(rootView, savedInstanceState);
         initStatusBar();
         return rootView;
     }
