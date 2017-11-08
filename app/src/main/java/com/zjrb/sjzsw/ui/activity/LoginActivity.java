@@ -1,16 +1,25 @@
 package com.zjrb.sjzsw.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jzf.net.exception.ApiException;
+import com.jzf.net.listener.OnResultCallBack;
+import com.jzf.net.observer.BaseObserver;
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.controller.LoginController;
+import com.zjrb.sjzsw.entity.LoginBean;
 import com.zjrb.sjzsw.utils.ActivityUtil;
+import com.zjrb.sjzsw.utils.SpUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +50,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.connect)
     TextView connect;
 
+    private LoginController loginController;
+
     @Override
     protected int getLayoutId() {
         return R.layout.login;
@@ -50,7 +61,15 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        registerController(loginController = new LoginController(this));
         setTextChangedListener();
+        initData();
+    }
+
+    private void initData() {
+        account.setText(SpUtil.getString("account"));
+        account.setSelection(account.getText().toString().length());
+        password.setText(SpUtil.getString("password"));
     }
 
     private void setTextChangedListener() {
@@ -97,6 +116,48 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    private void login() {
+        //"chenshaohua", "12345678"
+        loginController.login(account.getText().toString(), password.getText().toString(),
+                loginController.registerObserver(new BaseObserver(new OnResultCallBack<LoginBean>() {
+                    @Override
+                    public void onSuccess(LoginBean loginBean) {
+                        Log.d("loginBean", "" + loginBean.getCode());
+                        if(loginBean.getCode().equals("0"))
+                        {
+                            SpUtil.putString("account", account.getText().toString());
+                            SpUtil.putString("password", password.getText().toString());
+                            ActivityUtil.next(LoginActivity.this, MainActivity.class);
+                        }
+                        else
+                        {
+                            showToast(loginBean.getMsg());
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(ApiException.ResponeThrowable e) {
+                        Log.e("onError", "" + e.getMessage());
+                    }
+                })));
+
+    }
+
+    /**
+     * 调用拨号界面
+     * @param phone 电话号码
+     */
+    private void call(String phone) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.icon, R.id.login, R.id.connect})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -109,12 +170,13 @@ public class LoginActivity extends BaseActivity {
                 } else if (password.getText().toString().isEmpty()) {
                     showToast(getString(R.string.enter_psw));
                 } else {
-                    ActivityUtil.next(LoginActivity.this, MainActivity.class);
+                    login();
                 }
 
                 break;
             case R.id.connect:
                 //联系我们
+                call("12345678");
                 break;
             default:
                 break;

@@ -18,6 +18,8 @@ public class BaseObserver<T> implements Observer<T> {
         this.mOnResultListener = listener;
     }
 
+
+
     @Override
     public void onSubscribe(Disposable d) {
         mDisposable = d;

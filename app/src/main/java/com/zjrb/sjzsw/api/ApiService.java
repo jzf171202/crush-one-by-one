@@ -2,9 +2,14 @@ package com.zjrb.sjzsw.api;
 
 
 import com.zjrb.sjzsw.entity.HomeBean;
+import com.zjrb.sjzsw.entity.LoginBean;
 
 import io.reactivex.Observable;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
@@ -22,5 +27,11 @@ public interface ApiService {
      */
     @GET("meinv/")
     Observable<HomeBean> getGirls(@Query("key") String key, @Query("num") int num);
+
+
+    @FormUrlEncoded
+    @POST("login")
+    Observable<LoginBean>  login(@Field("username") String username, @Field("password") String password);
+
 
 }
