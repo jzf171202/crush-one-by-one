@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#414b61</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="pg_background">#f6f6f6</color>
+
     <color name="green_blue">#0076FF</color>
     <color name="item_text_color">#0e0e0e</color>
     <color name="black">#000000</color>
