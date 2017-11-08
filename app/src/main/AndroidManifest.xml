@@ -34,11 +34,14 @@
         <activity
             android:name=".ui.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            />
         <activity
             android:name=".ui.activity.WebViewActivity"
             android:configChanges="keyboardHidden|orientation"
