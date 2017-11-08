@@ -43,13 +43,13 @@ public class SplashActivity extends BaseActivity {
 
     private void start() {
         //判断距离上次操作是否超出30分钟，如果超出，则跳到登录界面
-        if(SpUtil.containsKey("currenttime") && System.currentTimeMillis() - SpUtil.getLong("currenttime", 0) > 30*60*1000)
-        {
+//        if(SpUtil.containsKey("currenttime") && System.currentTimeMillis() - SpUtil.getLong("currenttime", 0) > 30*60*1000)
+//        {
         ActivityUtil.next(SplashActivity.this, LoginActivity.class);
-        }
-        else
-        {
-            ActivityUtil.next(SplashActivity.this, MainActivity.class);
-        }
+//        }
+//        else
+//        {
+//            ActivityUtil.next(SplashActivity.this, MainActivity.class);
+//        }
     }
 }

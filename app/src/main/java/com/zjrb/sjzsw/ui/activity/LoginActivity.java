@@ -1,11 +1,13 @@
 package com.zjrb.sjzsw.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -123,14 +125,11 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onSuccess(LoginBean loginBean) {
                         Log.d("loginBean", "" + loginBean.getCode());
-                        if(loginBean.getCode().equals("0"))
-                        {
+                        if (loginBean.getCode().equals("0")) {
                             SpUtil.putString("account", account.getText().toString());
                             SpUtil.putString("password", password.getText().toString());
                             ActivityUtil.next(LoginActivity.this, MainActivity.class);
-                        }
-                        else
-                        {
+                        } else {
                             showToast(loginBean.getMsg());
                         }
                     }
@@ -150,12 +149,36 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * 调用拨号界面
+     *
      * @param phone 电话号码
      */
-    private void call(String phone) {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phone));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void call(final String phone) {
+
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.show();
+        dialog.getWindow().setContentView(R.layout.dialog_call);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        TextView phone_num = dialog.findViewById(R.id.phone);
+        phone_num.setText(phone);
+        TextView cancel = dialog.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        TextView ensure = dialog.findViewById(R.id.ensure);
+        ensure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+
     }
 
     @OnClick({R.id.icon, R.id.login, R.id.connect})
