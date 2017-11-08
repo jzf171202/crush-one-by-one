@@ -3,10 +3,9 @@ package com.zjrb.sjzsw.utils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.support.design.widget.TabLayout;
-import android.view.View;
+import android.text.TextUtils;
 
-import com.zjrb.sjzsw.App;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by jinzifu on 2016/11/22.
@@ -15,6 +14,7 @@ import com.zjrb.sjzsw.App;
 public class Utils {
     /**
      * 渠道名称
+     *
      * @param context
      * @return
      */
@@ -29,28 +29,20 @@ public class Utils {
         return value;
     }
 
-    public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
-        int tabWidth = calculateTabWidth(tabLayout);
-        int screenWidth = getScreenWith();
 
-        if (tabWidth <= screenWidth) {
-            tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        } else {
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+    /**
+     * 获取现在时间
+     *
+     * @param time
+     * @param type 返回短时间格式
+     * @return 默认格式为“yyyy-MM-dd HH:mm:ss”
+     */
+    public static String getNowDate(String type, Long time) {
+        if (TextUtils.isEmpty(type)) {
+            type = "yyyy-MM-dd HH:mm:ss";
         }
-    }
-
-    private static int calculateTabWidth(TabLayout tabLayout) {
-        int tabWidth = 0;
-        for (int i = 0; i < tabLayout.getChildCount(); i++) {
-            final View view = tabLayout.getChildAt(i);
-            view.measure(0, 0); // 通知父view测量，以便于能够保证获取到宽高
-            tabWidth += view.getMeasuredWidth();
-        }
-        return tabWidth;
-    }
-
-    public static int getScreenWith() {
-        return App.getAppContext().getResources().getDisplayMetrics().widthPixels;
+        SimpleDateFormat formatter = new SimpleDateFormat(type);
+        String dateString = formatter.format(time*1000L);
+        return dateString;
     }
 }

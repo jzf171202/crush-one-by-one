@@ -1,11 +1,10 @@
 package com.zjrb.sjzsw.api;
 
 
-import com.zjrb.sjzsw.entity.HomeBean;
+import com.zjrb.sjzsw.entity.TopicBean;
 import com.zjrb.sjzsw.entity.LoginBean;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -20,13 +19,13 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     /**
-     * 获取美女列表
-     * @param key
-     * @param num
+     * 获取直播节目列表
+     * @param page
+     * @param pageSize
      * @return
      */
-    @GET("meinv/")
-    Observable<HomeBean> getGirls(@Query("key") String key, @Query("num") int num);
+    @GET("api/live/list")//page=1&pageSize=10
+    Observable<TopicBean> getProgramList(@Query("page") int page, @Query("pageSize") String pageSize);
 
 
     @FormUrlEncoded

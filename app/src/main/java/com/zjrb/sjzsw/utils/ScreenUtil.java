@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.support.design.widget.TabLayout;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.zjrb.sjzsw.App;
 
 /**
  * 获得屏幕相关的辅助类(包括截图)
@@ -134,5 +137,26 @@ public class ScreenUtil {
         return (int) (pxValue / scale + 0.5f);
     }
 
+
+    public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
+        int tabWidth = calculateTabWidth(tabLayout);
+        int screenWidth = getScreenWidth(App.getAppContext());
+
+        if (tabWidth <= screenWidth) {
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        } else {
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+    }
+
+    private static int calculateTabWidth(TabLayout tabLayout) {
+        int tabWidth = 0;
+        for (int i = 0; i < tabLayout.getChildCount(); i++) {
+            final View view = tabLayout.getChildAt(i);
+            view.measure(0, 0); // 通知父view测量，以便于能够保证获取到宽高
+            tabWidth += view.getMeasuredWidth();
+        }
+        return tabWidth;
+    }
 
 }

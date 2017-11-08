@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.zjrb.sjzsw.listener.OnChildViewClickListener;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by jinzifu on 2017/6/5.
  */
@@ -32,6 +34,7 @@ public abstract class BaseLinearLayout extends LinearLayout {
         if (layoutId() != 0) {
             this.context = context;
             LayoutInflater.from(context).inflate(layoutId(), this, true);
+            ButterKnife.bind(this);
             initView();
             initListener();
             initData();

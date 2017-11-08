@@ -1,14 +1,11 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.manager.ThreadManager;
 import com.zjrb.sjzsw.utils.ActivityUtil;
-import com.zjrb.sjzsw.utils.SpUtil;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**

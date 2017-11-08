@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.zjrb.sjzsw.listener.OnChildViewClickListener;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by jinzifu on 2017/6/10.
  */
@@ -35,6 +37,7 @@ public abstract class BaseFrameLayout extends FrameLayout {
         if (layoutId() != 0) {
             this.context = context;
             LayoutInflater.from(context).inflate(layoutId(), this, true);
+            ButterKnife.bind(this);
             initView();
             initListener();
             initData();
@@ -46,7 +49,7 @@ public abstract class BaseFrameLayout extends FrameLayout {
     }
 
     /**
-     * 实现此方法在业务类中处理点击事件
+     * 实现此方法以在业务类中处理点击事件
      * @param childView
      * @param action
      * @param obj

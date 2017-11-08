@@ -18,14 +18,7 @@ public class MainController extends BaseController {
         super(context);
     }
 
-    /**
-     * 获取美女列表
-     *
-     * @param s              userkey
-     * @param i              每页个数
-     * @param commonObserver
-     */
-    public void getGrils(String s, int i, BaseObserver commonObserver) {
-        HttpClient.getInstance().execute(ApiManager.getApiService().getGirls(s, i), commonObserver);
+    public void getProgramList(int pageNo, BaseObserver baseObserver) {
+        HttpClient.getInstance().execute(ApiManager.getApiService().getProgramList(pageNo, "10"), baseObserver);
     }
 }

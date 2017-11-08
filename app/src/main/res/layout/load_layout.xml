@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/load_layout"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:visibility="gone"
     android:layout_height="match_parent">
 
     <!--空数据页面-->
@@ -27,7 +25,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:maxLines="1"
-            android:text="空空如也～"
+            android:text="没有更多结果"
             android:textColor="@color/color_b2b2b2"
             android:textSize="@dimen/dp_12" />
     </LinearLayout>
@@ -58,4 +56,4 @@
             android:textColor="@color/color_b2b2b2"
             android:textSize="@dimen/dp_12" />
     </LinearLayout>
-</FrameLayout>
+</merge>

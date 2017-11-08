@@ -2,7 +2,6 @@ package com.jzf.net;
 
 
 public class Constant {
-//    public static final String BASE_URL="http://api.huceo.com/";
     public static final String BASE_URL="http://121.43.160.180/";
     public static final String SP_FILE_NAME="zjrb";
 
