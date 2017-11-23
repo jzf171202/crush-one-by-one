@@ -1,7 +1,6 @@
 package com.zjrb.sjzsw;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.jzf.net.api.HttpClient;
 import com.squareup.leakcanary.LeakCanary;
@@ -10,20 +9,11 @@ import com.zjrb.sjzsw.utils.AppUtil;
 
 
 /**
- * Created by shiwei on 2017/3/21.
+ * @author jinzifu
  */
-
 public class App extends Application {
 
     private static App sAppContext;
-
-
-    public static App getAppContext() {
-        if (sAppContext == null) {
-            sAppContext = new App();
-        }
-        return sAppContext;
-    }
 
     @Override
     public void onCreate() {
@@ -36,6 +26,7 @@ public class App extends Application {
             return;
         }
         LeakCanary.install(this);
+
         //配置tencent.bugly,上报进程控制
         initBugly();
     }
@@ -55,10 +46,12 @@ public class App extends Application {
         CrashReport.initCrashReport(getApplicationContext(), "8f699e3b6c", true);
     }
 
-
-
-
-
+    public static App getAppContext() {
+        if (sAppContext == null) {
+            sAppContext = new App();
+        }
+        return sAppContext;
+    }
 }
 
 

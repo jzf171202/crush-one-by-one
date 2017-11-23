@@ -7,7 +7,9 @@ import com.jzf.net.observer.BaseObserver;
 import com.zjrb.sjzsw.api.ApiManager;
 
 /**
- * Created by jinzifu on 2017/10/18.
+ *
+ * @author jinzifu
+ * @date 2017/10/18
  * Email:jinzifu123@163.com
  * 类描述:
  */
@@ -19,6 +21,6 @@ public class MainController extends BaseController {
     }
 
     public void getProgramList(int pageNo, BaseObserver baseObserver) {
-        HttpClient.getInstance().execute(ApiManager.getApiService().getProgramList(pageNo, "10"), baseObserver);
+        HttpClient.getInstance().execute(ApiManager.getApiService().getProgramList(pageNo, "100"), baseObserver);
     }
 }

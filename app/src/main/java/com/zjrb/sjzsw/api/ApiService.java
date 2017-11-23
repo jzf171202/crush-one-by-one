@@ -1,8 +1,12 @@
 package com.zjrb.sjzsw.api;
 
 
-import com.zjrb.sjzsw.entity.TopicBean;
-import com.zjrb.sjzsw.entity.LoginBean;
+import com.jzf.net.api.BaseResponse;
+import com.zjrb.sjzsw.entity.LoginEntity;
+import com.zjrb.sjzsw.entity.ProgramListEntity;
+import com.zjrb.sjzsw.entity.SuccessEntity;
+
+import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -10,9 +14,11 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
- * Created by jinzifu on 2017/10/16.
+ * @author jinzifu
+ * @date 2017/10/16
  * Email:jinzifu123@163.com
  * 类描述:自定义API接口类型
  */
@@ -20,17 +26,32 @@ public interface ApiService {
 
     /**
      * 获取直播节目列表
+     *
      * @param page
      * @param pageSize
      * @return
      */
-    @GET("api/live/list")//page=1&pageSize=10
-    Observable<TopicBean> getProgramList(@Query("page") int page, @Query("pageSize") String pageSize);
+    @GET("/api/live/app/list")
+    Observable<BaseResponse<ProgramListEntity>> getProgramList(@Query("page") int page, @Query("pageSize") String pageSize);
 
 
+    /**
+     * 新建直播页面数据
+     *
+     * @param maps
+     * @return
+     */
+    @POST("/api/live/new")
+    Observable<BaseResponse<SuccessEntity>> createProjectDetail(@QueryMap Map<String, String> maps);
+
+    /**
+     * 登录
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     @FormUrlEncoded
     @POST("login")
-    Observable<LoginBean>  login(@Field("username") String username, @Field("password") String password);
-
-
+    Observable<BaseResponse<LoginEntity>> login(@Field("username") String username, @Field("password") String password);
 }

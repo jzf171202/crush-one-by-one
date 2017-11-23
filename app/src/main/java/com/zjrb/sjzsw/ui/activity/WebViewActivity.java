@@ -133,6 +133,5 @@ public class WebViewActivity extends BaseActivity {
         webview.removeAllViews();
         webview.destroy();
         webview = null;
-        System.exit(0);
     }
 }

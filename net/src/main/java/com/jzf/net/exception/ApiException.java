@@ -70,6 +70,10 @@ public class ApiException {
             ex = new ResponeThrowable(e, ERROR.TIMEOUT_ERROR);
             ex.message = "连接超时";
             return ex;
+        }else if (e instanceof java.net.SocketException) {
+            ex = new ResponeThrowable(e, ERROR.TIMEOUT_ERROR);
+            ex.message = "网络异常";
+            return ex;
         } else {
             ex = new ResponeThrowable(e, ERROR.UNKNOWN);
             ex.message = "未知错误";
@@ -117,6 +121,11 @@ public class ApiException {
         public ResponeThrowable(Throwable throwable, int code) {
             super(throwable);
             this.code = code;
+        }
+
+        public ResponeThrowable(int code, String message) {
+            this.code = code;
+            this.message = message;
         }
     }
 

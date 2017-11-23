@@ -19,15 +19,14 @@ public class ActivityUtil {
         }
     }
 
-    public static void next(Context context, Class<? extends AppCompatActivity> actClas) {
+    public static void to(Context context, Class<? extends AppCompatActivity> actClas) {
         Intent intent = new Intent(context, actClas);
         start(context, intent);
     }
 
-    public static void nextWeb(Context context, String url) {
+    public static void toWeb(Context context, String url) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra("url", url);
         start(context, intent);
     }
-
 }

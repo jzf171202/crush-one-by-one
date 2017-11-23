@@ -6,21 +6,14 @@
 
     <include layout="@layout/layout_title_bar" />
 
-    <com.zjrb.sjzsw.widget.baselayout.LoadLayout
-        android:id="@+id/load_layout"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycle_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        android:layout_height="wrap_content" />
 </LinearLayout>

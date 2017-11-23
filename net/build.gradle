@@ -19,6 +19,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        create('all') {
+        }
+    }
+    publishNonDefault true
+}
+
+configurations {
+    allDebug
+    allRelease
 }
 
 dependencies {
@@ -37,5 +47,7 @@ dependencies {
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     //Okhttp-interceptor
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+
 
 }

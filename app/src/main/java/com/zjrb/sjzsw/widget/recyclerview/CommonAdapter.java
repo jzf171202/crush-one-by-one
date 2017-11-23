@@ -9,6 +9,7 @@ import com.zjrb.sjzsw.widget.recyclerview.base.MyViewHolder;
 import java.util.List;
 
 /**
+ * https://github.com/hongyangAndroid/baseAdapter
  * Created by zhy on 16/4/9.
  */
 public abstract class CommonAdapter<T> extends MultiItemTypeAdapter<T> {

@@ -27,6 +27,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * @author jinzifu
+ */
 public class HttpClient {
     private static final int DEFAULT_TIMEOUT = 5;
     private Retrofit mRetrofit;
@@ -35,10 +38,11 @@ public class HttpClient {
     private File httpCacheDirectory;
     private static Context context;
 
-    //静态内部类——饿汉式
+    /**
+     * 静态内部类——饿汉式
+     */
     private static SchedulersTransformer schedulersTransformer = new SchedulersTransformer();
     private static ErrorTransformer errorTransformer = new ErrorTransformer();
-    private static HttpResponseFunction httpResponseFunction = new HttpResponseFunction();
 
     private HttpClient() {
         //header追加
@@ -123,23 +127,27 @@ public class HttpClient {
         return mRetrofit.create(tClass);
     }
 
-    //处理线程调度
+    /**
+     * 处理线程调度
+     */
     private static class SchedulersTransformer<T> implements ObservableTransformer {
         @Override
         public ObservableSource apply(Observable observable) {
-            return ((Observable) observable).subscribeOn(Schedulers.io())
+            return ((Observable<T>) observable).subscribeOn(Schedulers.io())
                     .unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
         }
     }
 
-    //处理数据及异常
+    /**
+     * 处理数据及异常
+     */
     private static class ErrorTransformer<T> implements ObservableTransformer {
 
         @Override
         public ObservableSource apply(Observable observable) {
             //onErrorResumeNext当发生错误的时候，由另外一个Observable来代替当前的Observable并继续发射数据
-            return (Observable<T>) observable.onErrorResumeNext(httpResponseFunction);
+            return (Observable<T>) observable.map(new HandleFunction<T>()).onErrorResumeNext(new HttpResponseFunction<T>());
         }
     }
 
@@ -150,13 +158,10 @@ public class HttpClient {
         }
     }
 
-//    public static class HandleFunction<T> implements Function<BaseResponse<T>, T> {
-//        @Override
-//        public T apply(BaseResponse<T> response) throws Exception {
-//            if (!response.isOk()) {
-//                throw new RuntimeException(response.getCode() + "" + response.getMsg() != null ? response.getMsg() : "");
-//            }
-//            return response.getData();
-//        }
-//    }
+    public static class HandleFunction<T> implements Function<BaseResponse<T>, T> {
+        @Override
+        public T apply(BaseResponse<T> response) throws Exception {
+            return (T) response;
+        }
+    }
 }

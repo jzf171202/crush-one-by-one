@@ -1,9 +1,13 @@
 package com.jzf.net.api;
 
 
+import com.jzf.net.Constant;
+
 /**
  * 网络返回基类 支持泛型
- * Created by Tamic on 2016-06-06.
+ *
+ * @author jinzifu
+ * @date 2017-10-06
  */
 public class BaseResponse<T> {
 
@@ -36,7 +40,6 @@ public class BaseResponse<T> {
     }
 
     public boolean isOk() {
-        return code == 200;
+        return code == Constant.RESPONSE_SUCCESS_CODE;
     }
-
 }

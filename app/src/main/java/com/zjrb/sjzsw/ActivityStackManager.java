@@ -57,7 +57,20 @@ public class ActivityStackManager {
     public static void finishActivity(Class<?> cls) {
         for (Activity activity : activityStack) {
             if (activity.getClass().equals(cls)) {
-                finishActivity(activity);
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        }
+    }
+
+    /**
+     * 结束除指定类名外的所有Activity
+     */
+    public static void finishOtherActivity(Class<?> cls) {
+        for (Activity activity : activityStack) {
+            if (!activity.getClass().equals(cls)) {
+                activity.finish();
             }
         }
     }
