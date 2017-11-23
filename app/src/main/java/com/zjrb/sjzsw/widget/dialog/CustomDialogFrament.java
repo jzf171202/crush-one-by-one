@@ -42,7 +42,7 @@ public class CustomDialogFrament extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_dialog_fragment, null);
+        View view = inflater.inflate(R.layout.layout_dialog, null);
         rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_always);
         rotateAnimation.setInterpolator(new LinearInterpolator());
         ivLoading.startAnimation(rotateAnimation);

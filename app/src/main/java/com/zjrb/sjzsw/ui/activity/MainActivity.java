@@ -1,16 +1,13 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.support.v4.app.FragmentTransaction;
 
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.ui.fragment.ImageFragment;
+import com.zjrb.sjzsw.ui.fragment.NetFragment;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 /**
@@ -18,39 +15,36 @@ import butterknife.OnClick;
  */
 public class MainActivity extends BaseActivity {
 
-
-    @BindView(R.id.ok)
-    Button ok;
-    @BindView(R.id.text)
-    TextView text;
-    @BindView(R.id.leftImage)
-    ImageButton leftImage;
-    @BindView(R.id.titleText)
-    TextView titleText;
-
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_main;
+        return R.layout.ac_main;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.ac_main);
         ButterKnife.bind(this);
-        leftImage.setVisibility(View.INVISIBLE);
-        titleText.setText("各个击破");
+        selectFragment(1);
     }
 
-    @OnClick({R.id.ok, R.id.text})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.ok:
-                showToast("ok");
+    /**
+     * 切换不同的fragment
+     *
+     * @param type
+     */
+    private void selectFragment(int type) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        switch (type) {
+            case 1:
+                fragmentTransaction.replace(R.id.fragment_id, new ImageFragment());
                 break;
-            case R.id.text:
+            case 2:
+                fragmentTransaction.replace(R.id.fragment_id, new NetFragment());
                 break;
             default:
                 break;
         }
+        fragmentTransaction.commit();
     }
 }

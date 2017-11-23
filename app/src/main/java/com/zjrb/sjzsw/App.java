@@ -3,6 +3,8 @@ package com.zjrb.sjzsw;
 import android.app.Application;
 
 import com.jzf.net.api.HttpClient;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.zjrb.sjzsw.utils.AppUtil;
@@ -14,6 +16,13 @@ import com.zjrb.sjzsw.utils.AppUtil;
 public class App extends Application {
 
     private static App sAppContext;
+
+    public static App getAppContext() {
+        if (sAppContext == null) {
+            sAppContext = new App();
+        }
+        return sAppContext;
+    }
 
     @Override
     public void onCreate() {
@@ -29,6 +38,9 @@ public class App extends Application {
 
         //配置tencent.bugly,上报进程控制
         initBugly();
+
+        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(configuration);
     }
 
     /**
@@ -44,13 +56,6 @@ public class App extends Application {
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
         //tencent.bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。 8f699e3b6c为你申请的应用appid
         CrashReport.initCrashReport(getApplicationContext(), "8f699e3b6c", true);
-    }
-
-    public static App getAppContext() {
-        if (sAppContext == null) {
-            sAppContext = new App();
-        }
-        return sAppContext;
     }
 }
 

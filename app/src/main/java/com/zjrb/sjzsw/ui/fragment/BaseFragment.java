@@ -33,6 +33,14 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract int getLayoutId();
 
+    /**
+     * 初始化数据
+     *
+     * @param savedInstanceState
+     * @return
+     */
+    protected abstract void init(@Nullable Bundle savedInstanceState);
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -45,6 +53,12 @@ public abstract class BaseFragment extends Fragment {
         rootView = inflater.inflate(getLayoutId(), viewGroup, false);
         initStatusBar();
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        init(savedInstanceState);
     }
 
     /**
@@ -72,7 +86,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 注册控制器
+     * 注册业务类控制器
      *
      * @param controller
      */
