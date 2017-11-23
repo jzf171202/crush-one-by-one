@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         leftImage.setVisibility(View.INVISIBLE);
-        titleText.setText("测试小功能");
+        titleText.setText("各个击破");
     }
 
     @OnClick({R.id.ok, R.id.text})
