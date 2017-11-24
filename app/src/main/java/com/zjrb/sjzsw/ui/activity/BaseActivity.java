@@ -1,10 +1,13 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,7 +21,11 @@ import com.zjrb.sjzsw.ActivityStackManager;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.controller.BaseController;
 import com.zjrb.sjzsw.controller.LifecycleManage;
+import com.zjrb.sjzsw.utils.ListUtil;
 import com.zjrb.sjzsw.utils.ScreenUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jinzifu on 2017/9/3.
@@ -124,6 +131,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         lifecycleManage.onDestroy();
         ActivityStackManager.finishActivity(this);
+    }
+
+    /**
+     * 动态监测权限
+     *
+     * @param permission
+     * @param code
+     */
+    public void checkPermission(String[] permission, int code) {
+        if (permission != null && permission.length > 0) {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < permission.length; i++) {
+                if (ContextCompat.checkSelfPermission(this, permission[i]) != PackageManager.PERMISSION_GRANTED) {
+                    list.add(permission[i]);
+                }
+            }
+            if (!ListUtil.isListEmpty(list)) {
+                ActivityCompat.requestPermissions(this, list.toArray(new String[list.size()]), code);
+            }
+        }
     }
 
     /**

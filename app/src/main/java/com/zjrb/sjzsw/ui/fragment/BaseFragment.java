@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,15 +78,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 通用toast展示
-     *
-     * @param string
-     */
-    protected void showToast(String string) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * 注册业务类控制器
      *
      * @param controller
@@ -134,5 +126,18 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         lifecycleManage.onDestroy();
+    }
+
+    /**
+     * 通用toast展示
+     *
+     * @param string
+     */
+    protected void showToast(String string) {
+        if (!getActivity().isFinishing()) {
+            Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 }

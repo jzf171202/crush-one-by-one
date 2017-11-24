@@ -2,6 +2,7 @@ package com.zjrb.sjzsw;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.Utils;
 import com.jzf.net.api.HttpClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -41,6 +42,9 @@ public class App extends Application {
 
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(configuration);
+
+        //初始化APP工具类
+        Utils.init(this);
     }
 
     /**

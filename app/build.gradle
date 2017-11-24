@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 
-
 android {
 
     compileSdkVersion 26
@@ -9,8 +8,8 @@ android {
         applicationId "com.zjrb.sjzsw"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 101
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,9 +54,9 @@ dependencies {
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
-
-
     //https://github.com/nostra13/Android-Universal-Image-Loader
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //https://github.com/Blankj/AndroidUtilCode
+    compile 'com.blankj:utilcode:1.9.8'
+
 }
