@@ -1,5 +1,7 @@
 package com.zjrb.sjzsw.common;
 
+import android.Manifest;
+
 /**
  * @author Thinkpad
  * @date 2017/11/1
@@ -15,6 +17,12 @@ public class Constant {
      */
     public static final String ACTION_REFRESH_MAINACTIVITY = "ACTION_REFRESH_MAINACTIVITY";
 
+
+    public static final String[] permissionArray = new String[]{
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     /**
      * 权限申请列表

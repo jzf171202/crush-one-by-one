@@ -1,20 +1,24 @@
 package com.zjrb.sjzsw.ui.activity;
 
-import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.view.View;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.common.Constant;
 import com.zjrb.sjzsw.utils.ActivityUtil;
+import com.zjrb.sjzsw.utils.ListUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 类描述：
@@ -30,10 +34,6 @@ public class LaunchActivity extends BaseActivity {
     @BindView(R.id.lauch_text)
     TextView lauchText;
     private Handler hander = new Handler();
-    private String[] permissionArray = new String[]{
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     @Override
     protected int getLayoutId() {
@@ -45,8 +45,11 @@ public class LaunchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
+        if (!checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
+            toNext();
+        }
 //        boolean flag = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE);
-//        if (flag) {
+//        if (flag) {//小米手机上只要拒绝一次，都是返回false，因此兼容思路可以在进行危险权限的代码里加try-catch，并在catch异常里弹出重新申请权限的对话框
 //            showToast("您应该申请此权限，否则APP无法正常使用");
 //        }
     }
@@ -61,15 +64,27 @@ public class LaunchActivity extends BaseActivity {
         }, 2000);
     }
 
-    @OnClick({R.id.launch_img, R.id.lauch_text})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.launch_img:
-                checkPermission(permissionArray, Constant.PERMISSION_CODE_ALL);
-                break;
-            case R.id.lauch_text:
-                break;
+    /**
+     * 动态监测权限并批量申请
+     *
+     * @param permission
+     * @param code
+     * @return false表示没有权限需要申请
+     */
+    public boolean checkPermission(String[] permission, int code) {
+        if (permission != null && permission.length > 0) {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < permission.length; i++) {
+                if (ContextCompat.checkSelfPermission(this, permission[i]) != PackageManager.PERMISSION_GRANTED) {
+                    list.add(permission[i]);
+                }
+            }
+            if (!ListUtil.isListEmpty(list)) {
+                ActivityCompat.requestPermissions(this, list.toArray(new String[list.size()]), code);
+                return true;
+            }
         }
+        return false;
     }
 
     @Override
@@ -77,20 +92,7 @@ public class LaunchActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case Constant.PERMISSION_CODE_ALL:
-                if (grantResults != null && grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        switch (grantResults[i]) {
-                            case 0:
-                                showToast("" + permissionArray[i] + "权限申请成功");
-                                break;
-                            case -1:
-                                showToast("" + permissionArray[i] + "权限申请失败");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
+                toNext();
                 break;
             default:
                 break;
