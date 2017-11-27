@@ -45,13 +45,9 @@ public class LaunchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        if (!checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
+        if (checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
             toNext();
         }
-//        boolean flag = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE);
-//        if (flag) {//小米手机上只要拒绝一次，都是返回false，因此兼容思路可以在进行危险权限的代码里加try-catch，并在catch异常里弹出重新申请权限的对话框
-//            showToast("您应该申请此权限，否则APP无法正常使用");
-//        }
     }
 
     private void toNext() {
@@ -69,7 +65,7 @@ public class LaunchActivity extends BaseActivity {
      *
      * @param permission
      * @param code
-     * @return false表示没有权限需要申请
+     * @return true表示没有权限需要申请
      */
     public boolean checkPermission(String[] permission, int code) {
         if (permission != null && permission.length > 0) {
@@ -81,10 +77,10 @@ public class LaunchActivity extends BaseActivity {
             }
             if (!ListUtil.isListEmpty(list)) {
                 ActivityCompat.requestPermissions(this, list.toArray(new String[list.size()]), code);
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -92,7 +88,15 @@ public class LaunchActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case Constant.PERMISSION_CODE_ALL:
-                toNext();
+                boolean flag = true;
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] < 0) {
+                        flag = false;
+                    }
+                }
+                if (flag) {
+                    toNext();
+                }
                 break;
             default:
                 break;
