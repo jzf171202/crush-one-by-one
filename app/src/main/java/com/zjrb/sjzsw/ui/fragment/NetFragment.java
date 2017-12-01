@@ -8,16 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jzf.net.exception.ApiException;
+import com.jzf.net.listener.OnResultCallBack;
+import com.jzf.net.observer.BaseObserver;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.api.NetManager;
+import com.zjrb.sjzsw.controller.LoginController;
+import com.zjrb.sjzsw.entity.LoginEntity;
 import com.zjrb.sjzsw.listener.NetListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * Created by jinzifu on 2017/9/17.
+ * @author jinzifu
+ * @date 2017/9/17
  */
 
 public class NetFragment extends BaseFragment {
@@ -25,6 +32,7 @@ public class NetFragment extends BaseFragment {
     TextView infoShow;
     Unbinder unbinder;
     private String url = "http://apistore.baidu.com/microservice/weather?citypinyin=beijing";
+    private LoginController loginController;
 
     @Override
     protected int getLayoutId() {
@@ -33,23 +41,9 @@ public class NetFragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        NetManager.get(url, new NetListener() {
-            @Override
-            public void onResponseListener(final String string) {
-                infoShow.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        infoShow.setText(string);
-                    }
-                });
-            }
-
-            @Override
-            public void onErrorListener(int responseCode) {
-                Log.e("onErrorListener", "" + responseCode);
-            }
-        });
+        registerController(loginController = new LoginController(context));
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,5 +56,51 @@ public class NetFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick({R.id.net_load, R.id.retrofit_load})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.net_load:
+                NetManager.get(url, new NetListener() {
+                    @Override
+                    public void onResponseListener(final String string) {
+                        infoShow.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                infoShow.setText(string);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onErrorListener(int responseCode) {
+                        Log.e("onErrorListener", "" + responseCode);
+                    }
+                });
+                break;
+            case R.id.retrofit_load:
+                loginController.login("chenshaohua", "12345678", loginController.registerObserver(
+                        new BaseObserver(context, new OnResultCallBack<LoginEntity>() {
+
+                            @Override
+                            public void onSuccess(LoginEntity loginEntity) {
+                                showToast(loginEntity.getUser().getTruename());
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+
+                            @Override
+                            public void onError(ApiException.ResponeThrowable e) {
+                                Log.d("onError", e.getMessage());
+                            }
+                        })));
+                break;
+            default:
+                break;
+        }
     }
 }

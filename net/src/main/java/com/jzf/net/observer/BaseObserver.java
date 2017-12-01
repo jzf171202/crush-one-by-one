@@ -16,6 +16,8 @@ import io.reactivex.disposables.Disposable;
 
 /**
  * @author jinzifu
+ *         <p>
+ *         不支持rxjava 2.x背压的，不是好的网络库
  */
 public class BaseObserver<T> implements Observer<BaseResponse<T>> {
     private OnResultCallBack mOnResultListener;

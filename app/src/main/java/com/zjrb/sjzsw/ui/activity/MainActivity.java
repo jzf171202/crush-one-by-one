@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
+import com.zjrb.sjzsw.ui.fragment.Rxjava2Fragment;
 
 import butterknife.ButterKnife;
 
@@ -25,7 +26,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
         ButterKnife.bind(this);
-        selectFragment(1);
+        selectFragment(3);
     }
 
     /**
@@ -41,6 +42,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case 2:
                 fragmentTransaction.replace(R.id.fragment_id, new NetFragment());
+                break;
+            case 3:
+                fragmentTransaction.replace(R.id.fragment_id, new Rxjava2Fragment());
                 break;
             default:
                 break;
