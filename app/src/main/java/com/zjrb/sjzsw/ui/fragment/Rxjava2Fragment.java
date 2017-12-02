@@ -1,7 +1,9 @@
 package com.zjrb.sjzsw.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
 import butterknife.BindView;
@@ -41,6 +44,8 @@ public class Rxjava2Fragment extends BaseFragment {
     @BindView(R.id.ok)
     TextView ok;
     private Subscription subscription;
+    private String filePath = Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED) ?
+            Environment.getExternalStorageDirectory().getAbsolutePath() : "/mnt/sdcard";
 
     @Override
     protected int getLayoutId() {
@@ -49,54 +54,48 @@ public class Rxjava2Fragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        rxjavaSimple();
-//        rxjavaSimple3();
+//        rxjavaSimple();
+        readFile("test.txt");
     }
 
-    private void rxjavaSimple3() {
-        Flowable
-                .create(new FlowableOnSubscribe<String>() {
-                    @Override
-                    public void subscribe(FlowableEmitter<String> emitter) throws Exception {
-                        try {
-                            FileReader reader = new FileReader("test.txt");
-                            BufferedReader br = new BufferedReader(reader);
-
-                            String str;
-
-                            while ((str = br.readLine()) != null && !emitter.isCancelled()) {
-                                while (emitter.requested() == 0) {
-                                    if (emitter.isCancelled()) {
-                                        break;
-                                    }
-                                }
-                                emitter.onNext(str);
-                            }
-
-                            br.close();
-                            reader.close();
-
-                            emitter.onComplete();
-                        } catch (Exception e) {
-                            emitter.onError(e);
-                        }
-                    }
-                }, BackpressureStrategy.ERROR)
+    private void readFile(final String filename) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return;
+        }
+        Flowable.create(new FlowableOnSubscribe<String>() {
+            @Override
+            public void subscribe(FlowableEmitter<String> e) throws Exception {
+                File file = new File(Environment.getExternalStorageDirectory(), filename);
+                FileReader reader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                String string = "";
+                while (e.requested() > 0 && !TextUtils.isEmpty(string = bufferedReader.readLine())) {
+                    e.onNext(string);
+                }
+            }
+        }, BackpressureStrategy.DROP)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(new Subscriber<String>() {
-
+                    StringBuilder stringBuilder = new StringBuilder();
                     @Override
                     public void onSubscribe(Subscription s) {
                         subscription = s;
-                        s.request(1);
+                        subscription.request(1);
                     }
 
                     @Override
-                    public void onNext(String string) {
-                        Log.d(TAG, "" + string);
+                    public void onNext(final String s) {
+                        Log.d(TAG, s);
+                        stringBuilder.append(s+"\n");
+                        ok.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ok.setText(stringBuilder.toString());
+                            }
+                        });
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                             subscription.request(1);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -105,15 +104,16 @@ public class Rxjava2Fragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable t) {
-                        System.out.println(t);
+
                     }
 
                     @Override
                     public void onComplete() {
+
                     }
                 });
-    }
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,18 +129,18 @@ public class Rxjava2Fragment extends BaseFragment {
         Flowable.create(new FlowableOnSubscribe<Integer>() {
             @Override
             public void subscribe(FlowableEmitter<Integer> e) throws Exception {
-                Log.d(TAG, "e.requested() == "+e.requested());
-                    for (int i = 0; ; i++) {
-                        boolean flag = false;
-                        while (e.requested() == 0){
-                            if (!flag){
-                                Log.d(TAG, "e.requested() == "+e.requested());
-                                flag = true;
-                            }
+                Log.d(TAG, "e.requested() == " + e.requested());
+                for (int i = 0; ; i++) {
+                    boolean flag = false;
+                    while (e.requested() == 0) {
+                        if (!flag) {
+                            Log.d(TAG, "e.requested() == " + e.requested());
+                            flag = true;
                         }
-                        e.onNext(i + 1);
-                        Log.d(TAG, "已发送" + (i + 1) + "个——剩下" + e.requested());
                     }
+                    e.onNext(i + 1);
+                    Log.d(TAG, "已发送" + (i + 1) + "个——剩下" + e.requested());
+                }
             }
         }, BackpressureStrategy.ERROR)
                 .subscribeOn(Schedulers.io())
@@ -180,7 +180,7 @@ public class Rxjava2Fragment extends BaseFragment {
             case R.id.button:
                 if (subscription != null) {
                     subscription.request(96);
-                    Log.d(TAG,"下游请求了96个");
+                    Log.d(TAG, "下游请求了96个");
                 }
                 break;
             case R.id.ok:
