@@ -66,6 +66,10 @@ public class Rxjava2Fragment extends BaseFragment {
             @Override
             public void subscribe(FlowableEmitter<String> e) throws Exception {
                 File file = new File(Environment.getExternalStorageDirectory(), filename);
+                /**
+                 *  InputStreams和Reader都是抽象类，并不直接地从文件或者套接字（socket）中读取数据。
+                 *  InputStream用于读取二进制数据（字节流），Reader用于读取文本数据（字符流）。
+                 */
                 FileReader reader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 String string = "";
@@ -78,6 +82,7 @@ public class Rxjava2Fragment extends BaseFragment {
                 .observeOn(Schedulers.newThread())
                 .subscribe(new Subscriber<String>() {
                     StringBuilder stringBuilder = new StringBuilder();
+
                     @Override
                     public void onSubscribe(Subscription s) {
                         subscription = s;
@@ -87,7 +92,7 @@ public class Rxjava2Fragment extends BaseFragment {
                     @Override
                     public void onNext(final String s) {
                         Log.d(TAG, s);
-                        stringBuilder.append(s+"\n");
+                        stringBuilder.append(s + "\n");
                         ok.post(new Runnable() {
                             @Override
                             public void run() {

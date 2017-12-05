@@ -7,6 +7,7 @@ import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
 import com.zjrb.sjzsw.ui.fragment.Rxjava2Fragment;
+import com.zjrb.sjzsw.ui.fragment.ThreadFragment;
 
 import butterknife.ButterKnife;
 
@@ -26,7 +27,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
         ButterKnife.bind(this);
-        selectFragment(3);
+        selectFragment(4);
     }
 
     /**
@@ -45,6 +46,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case 3:
                 fragmentTransaction.replace(R.id.fragment_id, new Rxjava2Fragment());
+                break;
+            case 4:
+                fragmentTransaction.replace(R.id.fragment_id, new ThreadFragment());
                 break;
             default:
                 break;
