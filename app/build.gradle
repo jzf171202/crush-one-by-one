@@ -8,8 +8,8 @@ android {
         applicationId "com.zjrb.sjzsw"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 104
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

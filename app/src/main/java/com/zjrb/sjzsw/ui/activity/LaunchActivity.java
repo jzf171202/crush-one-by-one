@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.common.Constant;
 import com.zjrb.sjzsw.utils.ActivityUtil;
@@ -44,7 +45,8 @@ public class LaunchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-
+        String  versionName = AppUtils.getAppVersionName("com.zjrb.sjzsw");
+        lauchText.setText("V "+versionName);
         if (checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
             toNext();
         }
