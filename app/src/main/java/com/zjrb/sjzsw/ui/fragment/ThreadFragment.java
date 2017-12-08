@@ -9,7 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.manager.ThreadPoolManager;
+import com.zjrb.sjzsw.entity.SycnListEntity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,9 +32,15 @@ import butterknife.Unbinder;
 
 public class ThreadFragment extends BaseFragment {
     private final String TAG = "ThreadFragment";
+    //Vector
     @BindView(R.id.text)
     TextView text;
     Unbinder unbinder;
+    private ExecutorService executorService;
+    private int number = 10;
+    private MyRunnable myRunnable;
+    private SycnListEntity sycnListEntity;
+    private List<Integer> integerList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
     @Override
     protected int getLayoutId() {
@@ -37,7 +49,9 @@ public class ThreadFragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-
+        myRunnable = new MyRunnable();
+        sycnListEntity = new SycnListEntity(integerList);
+        executorService = Executors.newFixedThreadPool(2);
     }
 
     @Override
@@ -51,7 +65,8 @@ public class ThreadFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ok1:
-                ThreadPoolManager.getInstance().execute(new MyRunnable(10));
+                executorService.execute(myRunnable);
+                executorService.execute(myRunnable);
                 break;
             case R.id.ok2:
                 break;
@@ -60,23 +75,34 @@ public class ThreadFragment extends BaseFragment {
         }
     }
 
-    class MyRunnable implements Runnable {
-        private int count;
-
-        public MyRunnable(int i) {
-            this.count = i;
+    private void syncUpdateEntity() {
+        synchronized (SycnListEntity.class) {
+            sycnListEntity.removeItem();
         }
+    }
+
+    class MyRunnable implements Runnable {
 
         @Override
         public void run() {
-            for (int i = 0; i < count; i++) {
+            while (true) {
+                sycnUpdateNum();
                 try {
-                    Thread.sleep(1000);
-                    Log.d(TAG, "" + i);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * 同步更新number值
+     */
+    private synchronized void sycnUpdateNum() {
+        if (number > 0) {
+            Log.d(TAG, "执行任务=" + number);
+            number = number - 1;
         }
     }
 

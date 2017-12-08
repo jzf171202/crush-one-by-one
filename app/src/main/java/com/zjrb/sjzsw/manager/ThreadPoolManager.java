@@ -53,7 +53,7 @@ public class ThreadPoolManager {
 
     /**
      * 配置线程池属性
-     * 参考AsyncTask的配置设计
+     * 部分参考AsyncTask的配置设计
      */
     private void init() {
         corePoolSize = CPU_COUNT + 1;
@@ -63,7 +63,7 @@ public class ThreadPoolManager {
                 maximumPoolSize,
                 keepAliveTime,
                 timeUnit,
-                new LinkedBlockingDeque<Runnable>(128),
+                new LinkedBlockingDeque<Runnable>(),
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
     }
@@ -78,6 +78,7 @@ public class ThreadPoolManager {
             threadPoolExecutor.execute(runnable);
         }
     }
+
 
     /**
      * 从线程池移除任务
