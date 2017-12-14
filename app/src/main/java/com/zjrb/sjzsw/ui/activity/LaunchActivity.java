@@ -56,7 +56,7 @@ public class LaunchActivity extends BaseActivity {
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ActivityUtil.to(LaunchActivity.this, MainActivity.class);
+                ActivityUtil.to(LaunchActivity.this, AudioVideoActivity.class);
                 finish();
             }
         }, 2000);
@@ -98,6 +98,8 @@ public class LaunchActivity extends BaseActivity {
                 }
                 if (flag) {
                     toNext();
+                }else {
+                    showToast("请打开相应权限，否则会影响APP正常使用");
                 }
                 break;
             default:
