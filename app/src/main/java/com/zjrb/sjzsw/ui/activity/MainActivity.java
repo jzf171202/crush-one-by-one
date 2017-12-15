@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
         ButterKnife.bind(this);
-        selectFragment(4);
+        selectFragment(1);
     }
 
     /**
