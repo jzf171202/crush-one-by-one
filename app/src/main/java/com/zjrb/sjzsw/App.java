@@ -4,8 +4,8 @@ import android.app.Application;
 
 import com.blankj.utilcode.util.Utils;
 import com.jzf.net.api.HttpClient;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.jzf.image.core.ImageLoader;
+import com.jzf.image.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.zjrb.sjzsw.utils.AppUtil;
