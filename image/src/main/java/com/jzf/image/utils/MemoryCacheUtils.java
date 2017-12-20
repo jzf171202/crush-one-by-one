@@ -15,6 +15,8 @@
  *******************************************************************************/
 package com.jzf.image.utils;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.jzf.image.cache.memory.MemoryCache;
@@ -72,6 +74,11 @@ public final class MemoryCacheUtils {
 			}
 		}
 		return values;
+	}
+	public static int getMemoryCacheSize(Context context) {
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		int memoryClass = am.getMemoryClass();
+		return memoryClass * 1024 * 1024;
 	}
 
 	/**

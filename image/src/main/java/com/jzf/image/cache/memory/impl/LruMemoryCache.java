@@ -58,10 +58,14 @@ public class LruMemoryCache implements MemoryCache {
 			throw new NullPointerException("key == null || value == null");
 		}
 
+		//同一时刻对同一资源进行CRUD最好是加上同步锁
 		synchronized (this) {
+			//每次缓存bitmap，则缓存的size大小追加bitmap自身的字节大小（每行的字节数*高度（行数））
 			size += sizeOf(key, value);
+			//如果之前存在该key对应的bitmap，就覆盖并返回之前的bitmap。
 			Bitmap previous = map.put(key, value);
 			if (previous != null) {
+				//如果该key之前就缓存了bitmap,我们需要将之前的bitmap减掉去。
 				size -= sizeOf(key, previous);
 			}
 		}
@@ -88,6 +92,7 @@ public class LruMemoryCache implements MemoryCache {
 					break;
 				}
 
+				//这是在size > maxSize的情况下,通过Map.entrySet使用iterator遍历key和value，每次都是先获取第一个。remove之后循环下一次。
 				Map.Entry<String, Bitmap> toEvict = map.entrySet().iterator().next();
 				if (toEvict == null) {
 					break;

@@ -61,12 +61,13 @@ public class LimitedAgeMemoryCache implements MemoryCache {
 	@Override
 	public Bitmap get(String key) {
 		Long loadingDate = loadingDates.get(key);
+		Bitmap bitmap = cache.get(key);
+		//在获取值的时候检测时间是否超出缓存时限，若超出则移除。
 		if (loadingDate != null && System.currentTimeMillis() - loadingDate > maxAge) {
 			cache.remove(key);
 			loadingDates.remove(key);
 		}
-
-		return cache.get(key);
+		return bitmap;
 	}
 
 	@Override

@@ -103,7 +103,9 @@ public class UsingFreqLimitedMemoryCache extends LimitedMemoryCache {
 					leastUsedValue = entry.getKey();
 					minUsageCount = entry.getValue();
 				} else {
+					//lastValueUsage本次（最后、最新）循环内的使用次数值，minUsageCount不为null时表示上次循环时赋的值。
 					Integer lastValueUsage = entry.getValue();
+					//如果检索出更小使用次数时，则将该循环内的entry.getKey()和entry.getValue()赋值给leastUsedValue和minUsageCount。
 					if (lastValueUsage < minUsageCount) {
 						minUsageCount = lastValueUsage;
 						leastUsedValue = entry.getKey();
@@ -111,6 +113,7 @@ public class UsingFreqLimitedMemoryCache extends LimitedMemoryCache {
 				}
 			}
 		}
+		//检索完毕之后，移除使用频率最低的那个值。
 		usingCounts.remove(leastUsedValue);
 		return leastUsedValue;
 	}

@@ -18,7 +18,11 @@ package com.jzf.image.cache.memory;
 import android.graphics.Bitmap;
 
 import java.lang.ref.Reference;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Base memory cache. Implements common functionality for memory cache. Provides object references (
@@ -31,12 +35,12 @@ public abstract class BaseMemoryCache implements MemoryCache {
 
 	/** Stores not strong references to objects */
 	private final Map<String, Reference<Bitmap>> softMap = Collections.synchronizedMap(new HashMap<String, Reference<Bitmap>>());
-
 	@Override
 	public Bitmap get(String key) {
 		Bitmap result = null;
 		Reference<Bitmap> reference = softMap.get(key);
 		if (reference != null) {
+			//获取存储在该引用类型中的强引用bitmap
 			result = reference.get();
 		}
 		return result;

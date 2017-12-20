@@ -68,6 +68,7 @@ final class DisplayBitmapTask implements Runnable {
 		} else {
 			L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
 			displayer.display(bitmap, imageAware, loadedFrom);
+			//从map中移除保存的memoryCacheKey
 			engine.cancelDisplayTaskFor(imageAware);
 			listener.onLoadingComplete(imageUri, imageAware.getWrappedView(), bitmap);
 		}

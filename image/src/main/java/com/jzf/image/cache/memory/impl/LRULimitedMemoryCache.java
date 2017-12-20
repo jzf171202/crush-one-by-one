@@ -86,6 +86,7 @@ public class LRULimitedMemoryCache extends LimitedMemoryCache {
 	protected Bitmap removeNext() {
 		Bitmap mostLongUsedValue = null;
 		synchronized (lruCache) {
+			//移除最近最少使用的那个，数据结构是LinkedHashMap，存储是有序的。
 			Iterator<Entry<String, Bitmap>> it = lruCache.entrySet().iterator();
 			if (it.hasNext()) {
 				Entry<String, Bitmap> entry = it.next();

@@ -233,6 +233,8 @@ public class ImageLoader {
 	 */
 	public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
 			ImageSize targetSize, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
+
+		//检测 ImageLoaderConfiguration 是否初始化，ImageLoaderConfiguration的初始化是在 Application 中进行的。
 		checkConfiguration();
 		if (imageAware == null) {
 			throw new IllegalArgumentException(ERROR_WRONG_ARGUMENTS);
@@ -255,34 +257,45 @@ public class ImageLoader {
 			listener.onLoadingComplete(uri, imageAware.getWrappedView(), null);
 			return;
 		}
-
+	//	ImageView的宽高封装成ImageSize对象，如果获取ImageView的宽高为0，就会使用手机屏幕的宽高作为ImageView的宽高。
 		if (targetSize == null) {
 			targetSize = ImageSizeUtils.defineTargetSizeForView(imageAware, configuration.getMaxImageSize());
 		}
+        //通过key从LruMemoryCache缓存（默认）中获取bitmap，这里的key是url_widthXheight的形式拼接的。
 		String memoryCacheKey = MemoryCacheUtils.generateKey(uri, targetSize);
+        //加载前将图片的key记录在map中，避免重复加载同一个图片。
 		engine.prepareDisplayTaskFor(imageAware, memoryCacheKey);
 
+        //加载回调
 		listener.onLoadingStarted(uri, imageAware.getWrappedView());
+
 
 		Bitmap bmp = configuration.memoryCache.get(memoryCacheKey);
 		if (bmp != null && !bmp.isRecycled()) {
 			L.d(LOG_LOAD_IMAGE_FROM_MEMORY_CACHE, memoryCacheKey);
 
+			//BitmapProcessor是用来对bitmap进行处理，如将图片设置成圆形。
 			if (options.shouldPostProcess()) {
 				ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri, imageAware, targetSize, memoryCacheKey,
 						options, listener, progressListener, engine.getLockForUri(uri));
-				ProcessAndDisplayImageTask displayTask = new ProcessAndDisplayImageTask(engine, bmp, imageLoadingInfo,
-						defineHandler(options));
+				ProcessAndDisplayImageTask displayTask = new ProcessAndDisplayImageTask(
+						engine, bmp, imageLoadingInfo, defineHandler(options));
 				if (options.isSyncLoading()) {
+                    //同步就直接run，异步就放线程/线程池里execute
 					displayTask.run();
 				} else {
 					engine.submit(displayTask);
 				}
 			} else {
+				/**
+				 * getDisplayer()方法得到默认的SimpleBitmapDisplayer，用于简单展示图片。
+				 * 还有其他的如 FadeInBitmapDisplayer,CircleBitmapDisplayer,RoundedBitmapDisplayer。
+				 */
 				options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE);
 				listener.onLoadingComplete(uri, imageAware.getWrappedView(), bmp);
 			}
 		} else {
+			// 是否在下载过程中展示图片
 			if (options.shouldShowImageOnLoading()) {
 				imageAware.setImageDrawable(options.getImageOnLoading(configuration.resources));
 			} else if (options.isResetViewBeforeLoading()) {

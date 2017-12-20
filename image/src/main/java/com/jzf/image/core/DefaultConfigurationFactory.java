@@ -20,6 +20,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+
 import com.jzf.image.cache.disc.DiskCache;
 import com.jzf.image.cache.disc.impl.UnlimitedDiskCache;
 import com.jzf.image.cache.disc.impl.ext.LruDiskCache;
@@ -114,10 +115,12 @@ public class DefaultConfigurationFactory {
 	public static MemoryCache createMemoryCache(Context context, int memoryCacheSize) {
 		if (memoryCacheSize == 0) {
 			ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+			//获取可使用的最大内存,单位MB
 			int memoryClass = am.getMemoryClass();
 			if (hasHoneycomb() && isLargeHeap(context)) {
 				memoryClass = getLargeMemoryClass(am);
 			}
+			//将最大内存的1/8转变成字节单位，1MB  = 1024KB = 1024* 1024B(字节);1B = 8bit(8位，即8位二进制数)
 			memoryCacheSize = 1024 * 1024 * memoryClass / 8;
 		}
 		return new LruMemoryCache(memoryCacheSize);

@@ -117,9 +117,24 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
 	@Override
 	public void run() {
+		/**
+		 * waitIfPaused：判断在使用ListView，GridView去加载图片的时候，
+		 * 有时候为了滑动更加的流畅，我们会选择手指在滑动或者猛地一滑动的时候不去加载图片。
+		 */
 		if (waitIfPaused()) return;
+        //任务被终止后就返回.
 		if (delayIfNeed()) return;
 
+		/**
+		 * ReentrantLock锁机制，典型写法：
+		 *		Lock lock = new ReentrantLock();
+		 		lock.lock();
+		 		try {
+		 			// update object state
+		 		}finally {
+		 			lock.unlock();
+		 		}
+		 */
 		ReentrantLock loadFromUriLock = imageLoadingInfo.loadFromUriLock;
 		L.d(LOG_START_DISPLAY_IMAGE_TASK, memoryCacheKey);
 		if (loadFromUriLock.isLocked()) {
@@ -132,6 +147,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 			checkTaskNotActual();
 
 			bmp = configuration.memoryCache.get(memoryCacheKey);
+			//如果缓存中没有bitmap，则从sd卡获取，最后还没有会从网络加载
 			if (bmp == null || bmp.isRecycled()) {
 				bmp = tryLoadBitmap();
 				if (bmp == null) return; // listener callback already was fired
@@ -215,6 +231,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		Bitmap bitmap = null;
 		try {
 			File imageFile = configuration.diskCache.get(uri);
+            //检测本地sd卡是否有图片
 			if (imageFile != null && imageFile.exists() && imageFile.length() > 0) {
 				L.d(LOG_LOAD_IMAGE_FROM_DISK_CACHE, memoryCacheKey);
 				loadedFrom = LoadedFrom.DISC_CACHE;
@@ -222,6 +239,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 				checkTaskNotActual();
 				bitmap = decodeImage(Scheme.FILE.wrap(imageFile.getAbsolutePath()));
 			}
+			//如果没有则从网络下载图片
 			if (bitmap == null || bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
 				L.d(LOG_LOAD_IMAGE_FROM_NETWORK, memoryCacheKey);
 				loadedFrom = LoadedFrom.NETWORK;
@@ -259,6 +277,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 	}
 
 	private Bitmap decodeImage(String imageUri) throws IOException {
+        //获取图片显示类型及转码基类
 		ViewScaleType viewScaleType = imageAware.getScaleType();
 		ImageDecodingInfo decodingInfo = new ImageDecodingInfo(memoryCacheKey, imageUri, uri, targetSize, viewScaleType,
 				getDownloader(), options);
@@ -401,6 +420,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 	 * doesn't match to image URI which is actual for current ImageAware at this moment)); <b>false</b> - otherwise
 	 */
 	private boolean isTaskNotActual() {
+		//isViewCollected避免view被gc回收；isViewReused避免view被重用。
 		return isViewCollected() || isViewReused();
 	}
 
@@ -413,6 +433,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
 	/** @return <b>true</b> - if target ImageAware is collected by GC; <b>false</b> - otherwise */
 	private boolean isViewCollected() {
+		//todo 如何判断对象被gc？
 		if (imageAware.isCollected()) {
 			L.d(LOG_TASK_CANCELLED_IMAGEAWARE_COLLECTED, memoryCacheKey);
 			return true;
