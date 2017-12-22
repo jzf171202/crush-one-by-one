@@ -194,7 +194,7 @@ final class DiskLruCache implements Closeable {
 	 * Opens the cache in {@code directory}, creating a cache if none exists
 	 * there.
 	 *
-	 * @param directory a writable directory
+	 * @param directory a writable directory，for example," /sdcard/Android/data/<application package>/cache"
 	 * @param valueCount the number of values per cache entry. Must be positive.
 	 * @param maxSize the maximum number of bytes this cache should use to store
 	 * @param maxFileCount the maximum file count this cache should store

@@ -296,7 +296,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 				int height = configuration.maxImageHeightForDiskCache;
 				if (width > 0 || height > 0) {
 					L.d(LOG_RESIZE_CACHED_IMAGE_FILE, memoryCacheKey);
-					resizeAndSaveImage(width, height); // TODO : process boolean result
+					resizeAndSaveImage(width, height);
 				}
 			}
 		} catch (IOException e) {
@@ -433,7 +433,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
 	/** @return <b>true</b> - if target ImageAware is collected by GC; <b>false</b> - otherwise */
 	private boolean isViewCollected() {
-		//todo 如何判断对象被gc？
+		//如何判断对象被gc？
 		if (imageAware.isCollected()) {
 			L.d(LOG_TASK_CANCELLED_IMAGEAWARE_COLLECTED, memoryCacheKey);
 			return true;

@@ -129,13 +129,17 @@ public final class StorageUtils {
 	 */
 	public static File getOwnCacheDirectory(Context context, String cacheDir) {
 		File appCacheDir = null;
+		/**
+		 * 		当有sd卡挂载或不可被移除时，调用getExternalStorageDirectory获取缓存路径，
+		 * 		否则就调用getCacheDir获取缓存路径。
+		 */
 		if (MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && hasExternalStoragePermission(context)) {
 			appCacheDir = new File(Environment.getExternalStorageDirectory(), cacheDir);
 		}
 		if (appCacheDir == null || (!appCacheDir.exists() && !appCacheDir.mkdirs())) {
 			appCacheDir = context.getCacheDir();
 		}
-		return appCacheDir;
+		return appCacheDir;//+ File.separator + uniqueName就构成文件路径了。
 	}
 
 	/**
@@ -167,7 +171,7 @@ public final class StorageUtils {
 			}
 			try {
 				new File(appCacheDir, ".nomedia").createNewFile();
-			} catch (IOException e) {
+			} catch (IOException e)                                                                                                                                    {
 				L.i("Can't create \".nomedia\" file in application external cache directory");
 			}
 		}
