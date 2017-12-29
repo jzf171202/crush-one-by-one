@@ -10,12 +10,11 @@ import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.entity.SycnListEntity;
+import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +35,6 @@ public class ThreadFragment extends BaseFragment {
     @BindView(R.id.text)
     TextView text;
     Unbinder unbinder;
-    private ExecutorService executorService;
     private int number = 10;
     private MyRunnable myRunnable;
     private SycnListEntity sycnListEntity;
@@ -51,7 +49,6 @@ public class ThreadFragment extends BaseFragment {
     protected void init(@Nullable Bundle savedInstanceState) {
         myRunnable = new MyRunnable();
         sycnListEntity = new SycnListEntity(integerList);
-        executorService = Executors.newFixedThreadPool(2);
     }
 
     @Override
@@ -65,8 +62,8 @@ public class ThreadFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ok1:
-                executorService.execute(myRunnable);
-                executorService.execute(myRunnable);
+                ThreadPoolManager.getInstance().execute(myRunnable);
+                ThreadPoolManager.getInstance().execute(myRunnable);
                 break;
             case R.id.ok2:
                 break;

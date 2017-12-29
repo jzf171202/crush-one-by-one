@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jzf.image.cache.disc.impl.ext;
+package com.jzf.image.cache.disc.impl.ext.libcore.io;
+
+import com.jzf.image.cache.disc.impl.ext.StrictLineReader;
+import com.jzf.image.cache.disc.impl.ext.Util;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -84,7 +87,7 @@ import java.util.regex.Pattern;
  * Callers should handle other problems by catching {@code IOException} and
  * responding appropriately.
  */
-final class DiskLruCache implements Closeable {
+public final class DiskLruCache implements Closeable {
 	static final String JOURNAL_FILE = "journal";
 	static final String JOURNAL_FILE_TEMP = "journal.tmp";
 	static final String JOURNAL_FILE_BACKUP = "journal.bkp";
@@ -162,6 +165,7 @@ final class DiskLruCache implements Closeable {
 	/** This cache uses a single background thread to evict entries. */
 	final ThreadPoolExecutor executorService =
 			new ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
 	private final Callable<Void> cleanupCallable = new Callable<Void>() {
 		public Void call() throws Exception {
 			synchronized (DiskLruCache.this) {
@@ -211,7 +215,6 @@ final class DiskLruCache implements Closeable {
 		if (valueCount <= 0) {
 			throw new IllegalArgumentException("valueCount <= 0");
 		}
-
 		// If a bkp file exists, use it instead.
 		File backupFile = new File(directory, JOURNAL_FILE_BACKUP);
 		if (backupFile.exists()) {

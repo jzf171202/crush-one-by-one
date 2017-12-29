@@ -1,6 +1,7 @@
 package com.zjrb.sjzsw.api;
 
 import com.zjrb.sjzsw.listener.NetListener;
+import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class NetManager {
      * @param paragm
      */
     public static void post(final String url, final String paragm, final NetListener netListener) {
-        new Thread(new Runnable() {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection httpURLConnection = null;
@@ -69,7 +70,7 @@ public class NetManager {
                     }
                 }
             }
-        }).start();
+        });
     }
 
     /**
@@ -79,7 +80,7 @@ public class NetManager {
      * @return
      */
     public static void get(final String url, final NetListener netListener) {
-        new Thread(new Runnable() {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection httpURLConnection = null;
@@ -118,7 +119,7 @@ public class NetManager {
                     }
                 }
             }
-        }).start();
+        });
     }
 
     /**

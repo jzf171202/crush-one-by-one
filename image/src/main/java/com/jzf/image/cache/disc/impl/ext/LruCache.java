@@ -1,4 +1,5 @@
 package com.jzf.image.cache.disc.impl.ext;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -7,14 +8,14 @@ import java.util.Map;
  * a value is accessed, it is moved to the head of a queue. When a value is
  * added to a full cache, the value at the end of that queue is evicted and may
  * become eligible for garbage collection.
- *
+ * <p>
  * <p>If your cached values hold resources that need to be explicitly released,
  * override {@link #entryRemoved}.
- *
+ * <p>
  * <p>If a cache miss should be computed on demand for the corresponding keys,
  * override {@link #create}. This simplifies the calling code, allowing it to
  * assume a value will always be returned, even when there's a cache miss.
- *
+ * <p>
  * <p>By default, the cache size is measured in the number of entries. Override
  * {@link #sizeOf} to size the cache in different units. For example, this cache
  * is limited to 4MiB of bitmaps:
@@ -25,7 +26,7 @@ import java.util.Map;
  *           return value.getByteCount();
  *       }
  *   }}</pre>
- *
+ * <p>
  * <p>This class is thread-safe. Perform multiple cache operations atomically by
  * synchronizing on the cache: <pre>   {@code
  *   synchronized (cache) {
@@ -33,11 +34,11 @@ import java.util.Map;
  *         cache.put(key, value);
  *     }
  *   }}</pre>
- *
+ * <p>
  * <p>This class does not allow null to be used as a key or value. A return
  * value of null from {@link #get}, {@link #put} or {@link #remove} is
  * unambiguous: the key was not in the cache.
- *
+ * <p>
  * <p>This class appeared in Android 3.1 (Honeycomb MR1); it's available as part
  * of <a href="http://developer.android.com/sdk/compatibility-library.html">Android's
  * Support Package</a> for earlier releases.
@@ -48,20 +49,31 @@ public class LruCache<K, V> {
     /**
      * 缓存大小的单位。不规定元素的数量。
      */
-    // 已经存储的数据大小
     private int size;
-    // 最大存储大小
+    /**
+     * 最大存储大小
+     */
     private int maxSize;
 
-    // 调用put的次数
+    /**
+     * 调用put的次数
+     */
     private int putCount;
-    // 调用create的次数
+    /**
+     * 调用create的次数
+     */
     private int createCount;
-    // 收回的次数 (如果出现)
+    /**
+     * 收回的次数 (如果出现)
+     */
     private int evictionCount;
-    // 命中的次数（取出数据的成功次数）
+    /**
+     * 命中的次数（取出数据的成功次数）
+     */
     private int hitCount;
-    // 丢失的次数（取出数据的丢失次数）
+    /**
+     * 丢失的次数（取出数据的丢失次数）
+     */
     private int missCount;
 
 
@@ -240,6 +252,7 @@ public class LruCache<K, V> {
                 if (size <= maxSize || map.isEmpty()) {
                     break;
                 }
+                //剩下的情况就是 if (size > maxSize && !map.isEmpty())即存储已超出最大缓存空间
 
                 Map.Entry<K, V> toEvict = map.entrySet().iterator().next();
                 key = toEvict.getKey();
@@ -414,7 +427,8 @@ public class LruCache<K, V> {
     }
 
 
-    @Override public synchronized final String toString() {
+    @Override
+    public synchronized final String toString() {
         int accesses = hitCount + missCount;
         int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
         return String.format("LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]", maxSize,

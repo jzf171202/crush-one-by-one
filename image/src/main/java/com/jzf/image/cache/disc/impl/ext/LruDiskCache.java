@@ -17,6 +17,7 @@ package com.jzf.image.cache.disc.impl.ext;
 
 import android.graphics.Bitmap;
 import com.jzf.image.cache.disc.DiskCache;
+import com.jzf.image.cache.disc.impl.ext.libcore.io.DiskLruCache;
 import com.jzf.image.cache.disc.naming.FileNameGenerator;
 import com.jzf.image.utils.IoUtils;
 import com.jzf.image.utils.L;
@@ -29,7 +30,7 @@ import java.io.OutputStream;
 
 /**
  * Disk cache based on "Least-Recently Used" principle. Adapter pattern, adapts
- * {@link com.jzf.image.cache.disc.impl.ext.DiskLruCache DiskLruCache} to
+ * {@link DiskLruCache DiskLruCache} to
  * {@link com.jzf.image.cache.disc.DiskCache DiskCache}
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
