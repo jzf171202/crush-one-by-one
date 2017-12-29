@@ -1,7 +1,9 @@
 # crush-one-by-one
 这是一个针对Android核心知识模块进行的源码分析实例项目，目的是为了巩固知识并深入学习。
 ## V 1.0.4
-- 本地音视频录制及合成；
+- Android-Universal-Image-Loader源码解析；
+- 大文件下下载；
+- DiskLruCache缓存与获取；
 
 ## V 1.0.3
 - ThreadPoolExecutor线程池机制引入；
