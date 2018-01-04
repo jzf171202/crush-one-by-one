@@ -20,10 +20,13 @@ public class FileUtil {
 
     /**
      * 获取本地文件
-     * @param uniqueName 子目录
+     *
+     * @param uniqueName
+     *         子目录
+     *
      * @return
      */
-    public  static File getDiskCacheDir(String uniqueName) {
+    public static File getDiskCacheDir(String uniqueName) {
         String cachePath;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
@@ -31,8 +34,8 @@ public class FileUtil {
         } else {
             cachePath = App.getAppContext().getCacheDir().getPath();
         }
-        File  file = new File(cachePath + File.separator + uniqueName);
-        if (!file.exists()){
+        File file = new File(cachePath + File.separator + uniqueName);
+        if (!file.exists()) {
             file.mkdirs();
         }
         return file;
@@ -40,7 +43,9 @@ public class FileUtil {
 
     /**
      * MD5 算法
+     *
      * @param key
+     *
      * @return
      */
     public static String hashKeyForDisk(String key) {
