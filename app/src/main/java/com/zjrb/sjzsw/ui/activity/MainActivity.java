@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.ui.fragment.CustomViewFragment;
 import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
 import com.zjrb.sjzsw.ui.fragment.Rxjava2Fragment;
@@ -25,9 +26,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ac_main);
         ButterKnife.bind(this);
-        selectFragment(1);
+        selectFragment(5);
     }
 
     /**
@@ -49,6 +49,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case 4:
                 fragmentTransaction.replace(R.id.fragment_id, new ThreadFragment());
+                break;
+            case 5:
+                fragmentTransaction.replace(R.id.fragment_id, new CustomViewFragment());
                 break;
             default:
                 break;

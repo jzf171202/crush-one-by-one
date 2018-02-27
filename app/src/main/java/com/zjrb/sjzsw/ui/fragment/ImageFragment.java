@@ -51,7 +51,7 @@ public class ImageFragment extends BaseFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        cacheFile();
+        cacheFile();
         getCache();
     }
 
