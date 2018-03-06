@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.zjrb.sjzsw"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 104
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -40,9 +40,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     debugCompile project(path: ':net', configuration: 'allDebug')
     releaseCompile project(path: ':net', configuration: 'allRelease')
-    compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support:design:26.+'
-    compile 'com.android.support:recyclerview-v7:26.+'
+    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support:design:25.+'
+    compile 'com.android.support:recyclerview-v7:25.+'
     compile 'com.github.bumptech.glide:glide:+'
     compile project(':net')
     //https://github.com/square/leakcanary
@@ -57,4 +57,6 @@ dependencies {
     //https://github.com/Blankj/AndroidUtilCode
     compile 'com.blankj:utilcode:1.9.8'
     compile project(':image')
+    //https://github.com/GavinCT/AndroidMP3Recorder
+    compile 'com.czt.mp3recorder:library:1.0.4'
 }

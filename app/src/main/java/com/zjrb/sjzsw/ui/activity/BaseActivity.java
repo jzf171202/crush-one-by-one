@@ -43,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         rootView = LayoutInflater.from(this).inflate(getLayoutId(), null);
         setContentView(rootView);
-        container = rootView.findViewById(R.id.container);
+        container = (ViewGroup) rootView.findViewById(R.id.container);
         ActivityStackManager.addActivity(this);
         context = this;
         initStatusBar();

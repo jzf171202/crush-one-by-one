@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment {
      * fragment中沉浸式状态栏设置
      */
     private void initStatusBar() {
-        container = rootView.findViewById(R.id.container);
+        container = (ViewGroup) rootView.findViewById(R.id.container);
         //低于API19的情况设置非偏移高度，不支持沉浸式状态栏
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             if (container != null) {
