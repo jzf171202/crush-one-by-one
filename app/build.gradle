@@ -57,6 +57,5 @@ dependencies {
     //https://github.com/Blankj/AndroidUtilCode
     compile 'com.blankj:utilcode:1.9.8'
     compile project(':image')
-    //https://github.com/GavinCT/AndroidMP3Recorder
-    compile 'com.czt.mp3recorder:library:1.0.4'
+    compile project(':library')
 }
