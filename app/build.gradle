@@ -57,5 +57,5 @@ dependencies {
     //https://github.com/Blankj/AndroidUtilCode
     compile 'com.blankj:utilcode:1.9.8'
     compile project(':image')
-    compile project(':library')
+    compile project(':audiorecord')
 }

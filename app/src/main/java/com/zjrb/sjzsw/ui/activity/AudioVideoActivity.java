@@ -1,15 +1,13 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
 
+import com.czt.mp3recorder.MP3Recorder;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.manager.ThreadPoolManager;
-import com.zjrb.sjzsw.runnable.PlayRunnable;
-import com.zjrb.sjzsw.runnable.RecordRunnable;
 import com.zjrb.sjzsw.utils.FileUtil;
 
 import java.io.File;
@@ -31,12 +29,11 @@ public class AudioVideoActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
     @BindView(R.id.surfaceview)
     SurfaceView surfaceview;
-    @BindView(R.id.start_audio)
-    Button startAudio;
-    private boolean isRecodering = false;
-    private RecordRunnable recordRunnable;
-    private PlayRunnable playRunnable;
+    private boolean isRecording = false;
+//    private RecordRunnable recordRunnable;
+//    private PlayRunnable playRunnable;
     private File recorderFile;
+    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
 
     @Override
     protected int getLayoutId() {
@@ -56,25 +53,46 @@ public class AudioVideoActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        playRunnable = new PlayRunnable(recorderFile);
+//        playRunnable = new PlayRunnable(recorderFile);
     }
 
-    @OnClick({R.id.play_audio, R.id.start_audio})
+    @OnClick({R.id.record_audio, R.id.play_audio, R.id.record_vedio, R.id.play_vedio, R.id.record_audio_vedio, R.id.play_audio_vedio})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.play_audio:
-                ThreadPoolManager.getInstance().execute(playRunnable);
-                break;
-            case R.id.start_audio:
-                isRecodering = !isRecodering;
-                if (recordRunnable == null) {
-                    ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
+            case R.id.record_audio:
+                isRecording = !isRecording;
+                if (isRecording) {
+                    try {
+                        mRecorder.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mRecorder.stop();
                 }
-                recordRunnable.setRecroding(isRecodering);
-                showToast(isRecodering == true ? "开始" : "暂停");
+                showToast(isRecording == true ? "开始" : "暂停");
                 break;
-            default:
+            case R.id.play_audio:
+//                if (!isRecording) {
+//                    ThreadPoolManager.getInstance().execute(playRunnable);
+//                }
+                break;
+            case R.id.record_vedio:
+                break;
+            case R.id.play_vedio:
+                break;
+            case R.id.record_audio_vedio:
+                break;
+            case R.id.play_audio_vedio:
                 break;
         }
     }
+
+//    private void normalAudioRecord() {
+//        isRecording = !isRecording;
+//        if (recordRunnable == null) {
+//            ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
+//        }
+//        recordRunnable.setRecroding(isRecording);
+//    }
 }

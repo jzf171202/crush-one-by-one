@@ -7,7 +7,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.ui.fragment.AudioRecordFragment;
 import com.zjrb.sjzsw.ui.fragment.CustomViewFragment;
 import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
@@ -38,7 +37,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         leftImage.setVisibility(View.INVISIBLE);
-        selectFragment(6);
+        selectFragment(5);
     }
 
     /**
@@ -68,10 +67,6 @@ public class MainActivity extends BaseActivity {
             case 5:
                 fragmentTransaction.replace(R.id.fragment_id, new CustomViewFragment());
                 titleText.setText("自定义view");
-                break;
-            case 6:
-                fragmentTransaction.replace(R.id.fragment_id, new AudioRecordFragment());
-                titleText.setText("音频录制转码");
                 break;
             default:
                 break;

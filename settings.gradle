@@ -1,1 +1,1 @@
-include ':app', ':net', ':image',':library'
+include ':app', ':net', ':image', ':audiorecord'
