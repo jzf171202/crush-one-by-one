@@ -71,12 +71,14 @@ public class MP3Recorder {
 		new Thread() {
 			@Override
 			public void run() {
-				//设置线程权限
+				//设置线程优先级 声音线程最高级别
 				android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
 				while (mIsRecording) {
 					int readSize = mAudioRecord.read(mPCMBuffer, 0, mBufferSize);
 					if (readSize > 0) {
+						//往转码线程中的转码队列中添加缓存，类似歌曲批量下载
 						mEncodeThread.addTask(mPCMBuffer, readSize);
+						//音量优化，暂时不管。
 						calculateRealVolume(mPCMBuffer, readSize);
 					}
 				}
