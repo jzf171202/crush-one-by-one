@@ -78,8 +78,6 @@ public class MP3Recorder {
 					if (readSize > 0) {
 						//往转码线程中的转码队列中添加缓存，类似歌曲批量下载
 						mEncodeThread.addTask(mPCMBuffer, readSize);
-						//音量优化，暂时不管。
-						calculateRealVolume(mPCMBuffer, readSize);
 					}
 				}
 				// release and finalize audioRecord
@@ -89,23 +87,6 @@ public class MP3Recorder {
 				// stop the encoding thread and try to wait
 				// until the thread finishes its job
 				mEncodeThread.sendStopMessage();
-			}
-			/**
-			 * 此计算方法来自samsung开发范例
-			 * 
-			 * @param buffer buffer
-			 * @param readSize readSize
-			 */
-			private void calculateRealVolume(short[] buffer, int readSize) {
-				double sum = 0;
-				for (int i = 0; i < readSize; i++) {  
-				    // 这里没有做运算的优化，为了更加清晰的展示代码  
-				    sum += buffer[i] * buffer[i]; 
-				} 
-				if (readSize > 0) {
-					double amplitude = sum / readSize;
-					mVolume = (int) Math.sqrt(amplitude);
-				}
 			}
 		}.start();
 	}
