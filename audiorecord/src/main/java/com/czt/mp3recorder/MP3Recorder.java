@@ -3,6 +3,7 @@ package com.czt.mp3recorder;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Process;
 
 import com.czt.mp3recorder.util.LameUtil;
 
@@ -21,7 +22,7 @@ public class MP3Recorder {
 	 * 下面是对此的封装
 	 * private static final int DEFAULT_AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
 	 */
-	private static final PCMFormat DEFAULT_AUDIO_FORMAT = PCMFormat.PCM_16BIT;
+	private static final PcmSampleFormat DEFAULT_AUDIO_FORMAT = PcmSampleFormat.PCM_16BIT;
 	
 	//======================Lame Default Settings=====================
 	private static final int DEFAULT_LAME_MP3_QUALITY = 7;
@@ -68,16 +69,18 @@ public class MP3Recorder {
 		mIsRecording = true; // 提早，防止init或startRecording被多次调用
 	    initAudioRecorder();
 		mAudioRecord.startRecording();
+
 		new Thread() {
 			@Override
 			public void run() {
 				//设置线程优先级 声音线程最高级别
-				android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+				Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
 				while (mIsRecording) {
 					int readSize = mAudioRecord.read(mPCMBuffer, 0, mBufferSize);
 					if (readSize > 0) {
 						//往转码线程中的转码队列中添加缓存，类似歌曲批量下载
 						mEncodeThread.addTask(mPCMBuffer, readSize);
+						// TODO: 2018/3/9 怎么没有对mPCMBuffer清理呢？
 					}
 				}
 				// release and finalize audioRecord
@@ -129,22 +132,33 @@ public class MP3Recorder {
 	 * Initialize audio recorder
 	 */
 	private void initAudioRecorder() throws IOException {
+		//最小缓存字节数byte
 		mBufferSize = AudioRecord.getMinBufferSize(DEFAULT_SAMPLING_RATE,
 				DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT.getAudioFormat());
-		
-		int bytesPerFrame = DEFAULT_AUDIO_FORMAT.getBytesPerFrame();
+
+		//AudioFormat.ENCODING_PCM_16BIT 每份采样数据（采样大小）为PCM 16bit 即位宽2byte
+		int bytesPerFrame = DEFAULT_AUDIO_FORMAT.getBytesPerSample();
 		/* Get number of samples. Calculate the buffer size 
 		 * (round up to the factor of given frame size) 
 		 * 使能被整除，方便下面的周期性通知
 		 * */
+
+		//得出该最小缓存值情况下需多少次采样 frame不是音频帧，因为一音频帧的数据（int size = 采样率 x 位宽 x 采样时间 x 通道数）
+		/**
+		 * frame不是音频帧
+		 */
+		// TODO: 2018/3/9 他这样计算是把AudioFormat.ENCODING_PCM_16BIT当做每帧数据为16bit即2byte了
 		int frameSize = mBufferSize / bytesPerFrame;
+		//确保frameSize份采样数据是设定周期FRAME_COUNT的整数倍
+
+		// TODO: 2018/3/9 ？单位不统一哦，前面的是采样个数，后面是音频帧数
 		if (frameSize % FRAME_COUNT != 0) {
 			/**
 			 * 如frameSize是340，FRAME_COUNT是160，frameSize % FRAME_COUNT就是20，
 			 * 160-20=140，140+frameSize的340=480，这样的frameSize正好是FRAME_COUNT整数倍。
 			 */
 			frameSize += (FRAME_COUNT - frameSize % FRAME_COUNT);
-			//保证缓存区大小是整数倍
+			//保证缓存区大小是FRAME_COUNT整数倍，便于周期性通知
 			mBufferSize = frameSize * bytesPerFrame;
 		}
 		
@@ -152,7 +166,7 @@ public class MP3Recorder {
 		mAudioRecord = new AudioRecord(DEFAULT_AUDIO_SOURCE,
 				DEFAULT_SAMPLING_RATE, DEFAULT_CHANNEL_CONFIG, DEFAULT_AUDIO_FORMAT.getAudioFormat(),
 				mBufferSize);
-		
+
 		mPCMBuffer = new short[mBufferSize];
 		/*
 		 * Initialize lame buffer
@@ -160,13 +174,14 @@ public class MP3Recorder {
 		 * The bit rate is 32kbps
 		 * 
 		 */
-		LameUtil.init(DEFAULT_SAMPLING_RATE, DEFAULT_LAME_IN_CHANNEL, DEFAULT_SAMPLING_RATE, DEFAULT_LAME_MP3_BIT_RATE, DEFAULT_LAME_MP3_QUALITY);
+		LameUtil.init(DEFAULT_SAMPLING_RATE, DEFAULT_LAME_IN_CHANNEL, DEFAULT_SAMPLING_RATE,
+				DEFAULT_LAME_MP3_BIT_RATE, DEFAULT_LAME_MP3_QUALITY);
 		// Create and run thread used to encode data
 		// The thread will 
 		mEncodeThread = new DataEncodeThread(mRecordFile, mBufferSize);
 		mEncodeThread.start();
 		mAudioRecord.setRecordPositionUpdateListener(mEncodeThread, mEncodeThread.getHandler());
-		//录音来通知编码线程开始工作，以160帧为一个单位
+		//录音来通知编码线程开始工作，以160帧为一个单位。要确保缓冲区大小(字节)是FRAME_COUNT（帧）的整数倍
 		mAudioRecord.setPositionNotificationPeriod(FRAME_COUNT);
 	}
 }
