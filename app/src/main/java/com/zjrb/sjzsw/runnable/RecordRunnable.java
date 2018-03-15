@@ -3,16 +3,12 @@ package com.zjrb.sjzsw.runnable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.util.Log;
+import android.os.Process;
 
-import com.czt.mp3recorder.PcmSampleFormat;
+import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * 类描述：音频录制任务类
@@ -24,72 +20,74 @@ import java.io.IOException;
 
 public class RecordRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
-    private static final int DEFAULT_SAMPLING_RATE = 44100;
-    private static final PcmSampleFormat PCM_SAMPLE_FORMAT = PcmSampleFormat.PCM_16BIT;
-    private static final int FRAME_COUNT = 160;
-    private boolean isRecroding = false;
-    private File recordFile;
-    private byte[] bytes;
 
-    public RecordRunnable(File recordFile) {
-        if (null == recordFile) {
-            throw new NullPointerException("recordFile为null");
-        }
+    private static final int DEFAULT_SAMPLING_RATE = 44100;
+    private boolean isRecroding = false;
+    private AudioRecord audioRecord = null;
+    // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
+    private int bufferSize = 0;
+    private File recordFile = null;
+    private DecodeRunnable decodeRunnable = null;
+
+    public RecordRunnable(File recordFile) throws FileNotFoundException {
         this.recordFile = recordFile;
+        initAudioRecord();
     }
 
-    public void setRecroding(boolean recroding) {
-        isRecroding = recroding;
+    /**
+     * 初始化音频录制参数
+     */
+    private void initAudioRecord() throws FileNotFoundException {
+        /**
+         *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且须是一音频帧大小的整数倍。
+         *  一帧音频帧的大小计算如下：int size = 采样率 x 位宽 x 采样时间 x 通道数
+         */
+        bufferSize = AudioRecord.getMinBufferSize(DEFAULT_SAMPLING_RATE,
+                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+
+        //参数是：声源，采样率，声道，采样格式，缓冲区大小
+        if (audioRecord == null) {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, DEFAULT_SAMPLING_RATE,
+                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize * 4);
+        }
+
+        //初始化转码工作线程
+        ThreadPoolManager.getInstance().execute(decodeRunnable = new DecodeRunnable(bufferSize,
+                recordFile));
+    }
+
+    public boolean startRecord() throws FileNotFoundException {
+        isRecroding = true;
+        if (audioRecord == null) {
+            initAudioRecord();
+        }
+        audioRecord.startRecording();
+        return isRecroding;
+    }
+
+    public boolean stopRecord() {
+        isRecroding = false;
+        if (audioRecord != null) {
+            audioRecord.stop();
+            audioRecord.release();
+            audioRecord = null;
+        }
+        ThreadPoolManager.getInstance().remove(decodeRunnable);
+        return !isRecroding;
     }
 
     @Override
     public void run() {
-        AudioRecord audioRecord = null;
-        DataOutputStream dataOutputStream = null;
-        try {
-            dataOutputStream = new DataOutputStream(
-                    new BufferedOutputStream(new FileOutputStream(recordFile)));
-            /**
-             *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且须是一音频帧大小的整数倍。
-             *  一帧音频帧的大小计算如下：int size = 采样率 x 位宽 x 采样时间 x 通道数
-             */
-            int bufferSize = AudioRecord.getMinBufferSize(DEFAULT_SAMPLING_RATE,
-                    AudioFormat.CHANNEL_IN_MONO, PCM_SAMPLE_FORMAT.getAudioFormat());
-            //确保能被整除，方便周期性通知
-            int sampleNum = bufferSize/PCM_SAMPLE_FORMAT.getBytesPerSample();
-
-
-            //参数是：声源，采样率，声道，采样格式，缓冲区大小
-            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, DEFAULT_SAMPLING_RATE,
-                    AudioFormat.CHANNEL_IN_MONO, PCM_SAMPLE_FORMAT.getAudioFormat(), bufferSize);
-
-            bytes = new byte[bufferSize];
-
-            audioRecord.startRecording();
-            int writeCount = 0;
-            while (isRecroding) {
-                writeCount = audioRecord.read(bytes, 0, bufferSize);
-                if (writeCount != 0 && writeCount != -1) {
-                    Log.d(TAG, "writeCount=" + writeCount);
-                    //在此可以对录制音频的数据进行二次处理 比如变声，压缩，降噪，增益等操作
-                    dataOutputStream.write(bytes, 0, writeCount);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (audioRecord != null) {
-                    audioRecord.stop();
-                    audioRecord.release();
-                }
-                if (dataOutputStream != null) {
-                    dataOutputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        //设置线程优先级
+        Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
+        // TODO: 2018/3/15 byte数组和short数组的区别
+        byte[] bytes = new byte[bufferSize];
+        int readSize = 0;
+        while (isRecroding) {
+            readSize = audioRecord.read(bytes, 0, bufferSize);
+            if (readSize > 0) {
+                //加入到转码线程任务队列中
+                decodeRunnable.addTask(bytes, readSize);
             }
         }
     }

@@ -1,18 +1,16 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.czt.mp3recorder.MP3Recorder;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 import com.zjrb.sjzsw.runnable.RecordRunnable;
 import com.zjrb.sjzsw.utils.FileUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -31,11 +29,11 @@ public class AudioVideoActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
     @BindView(R.id.surfaceview)
     SurfaceView surfaceview;
-    private boolean isRecording = false;
-    private RecordRunnable recordRunnable;
-//    private PlayRunnable playRunnable;
+    //音频是否录制
+    private boolean isAudioRecording = false;
+    private RecordRunnable recordRunnable = null;
     private File recorderFile;
-    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
+//    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
 
     @Override
     protected int getLayoutId() {
@@ -46,47 +44,42 @@ public class AudioVideoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        init();
+    }
 
-        //创建一个文件，用于存储录制内存
+    private void init() {
         File file = FileUtil.getDiskCacheDir("media");
         try {
             recorderFile = File.createTempFile("recording", ".pcm", file);
-            Log.d(TAG, "recorderFile=" + recorderFile.getName());
+            ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        playRunnable = new PlayRunnable(recorderFile);
     }
 
     @OnClick({R.id.record_audio, R.id.play_audio, R.id.record_vedio, R.id.play_vedio, R.id.record_audio_vedio, R.id.play_audio_vedio})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.record_audio:
-                isRecording = !isRecording;
-                if (recordRunnable == null) {
-                    ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
+                isAudioRecording = !isAudioRecording;
+                if (isAudioRecording) {
+                    try {
+                        recordRunnable.startRecord();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    recordRunnable.stopRecord();
                 }
-                recordRunnable.setRecroding(isRecording);
-                showToast(isRecording == true ? "开始" : "暂停");
+                showToast(isAudioRecording == true ? "开始" : "停止");
                 break;
             case R.id.play_audio:
-//                if (!isRecording) {
-//                    ThreadPoolManager.getInstance().execute(playRunnable);
-//                }
                 break;
             case R.id.record_vedio:
                 break;
             case R.id.play_vedio:
-                isRecording = !isRecording;
-                if (isRecording){
-                    try {
-                        mRecorder.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    mRecorder.stop();
-                }
                 break;
             case R.id.record_audio_vedio:
                 break;
