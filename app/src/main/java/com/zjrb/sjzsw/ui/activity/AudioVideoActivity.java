@@ -1,17 +1,15 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.SurfaceView;
 import android.view.View;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 import com.zjrb.sjzsw.runnable.RecordRunnable;
-import com.zjrb.sjzsw.utils.FileUtil;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +30,7 @@ public class AudioVideoActivity extends BaseActivity {
     //音频是否录制
     private boolean isAudioRecording = false;
     private RecordRunnable recordRunnable = null;
-    private File recorderFile;
+    private File recorderFile = new File(Environment.getExternalStorageDirectory(), "audio_record.aac");
 //    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
 
     @Override
@@ -44,19 +42,6 @@ public class AudioVideoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        init();
-    }
-
-    private void init() {
-        File file = FileUtil.getDiskCacheDir("media");
-        try {
-            recorderFile = File.createTempFile("recording", ".pcm", file);
-            ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @OnClick({R.id.record_audio, R.id.play_audio, R.id.record_vedio, R.id.play_vedio, R.id.record_audio_vedio, R.id.play_audio_vedio})
@@ -65,13 +50,9 @@ public class AudioVideoActivity extends BaseActivity {
             case R.id.record_audio:
                 isAudioRecording = !isAudioRecording;
                 if (isAudioRecording) {
-                    try {
-                        recordRunnable.startRecord();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
                 } else {
-                    recordRunnable.stopRecord();
+                    recordRunnable.setRecroding(false);
                 }
                 showToast(isAudioRecording == true ? "开始" : "停止");
                 break;

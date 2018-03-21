@@ -4,11 +4,11 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Process;
+import android.util.Log;
 
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * 类描述：音频录制任务类
@@ -22,22 +22,22 @@ public class RecordRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
 
     private static final int DEFAULT_SAMPLING_RATE = 44100;
+
     private boolean isRecroding = false;
     private AudioRecord audioRecord = null;
     // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
     private int bufferSize = 0;
-    private File recordFile = null;
-    private DecodeRunnable decodeRunnable = null;
+    private EncodeRunnable decodeRunnable = null;
 
-    public RecordRunnable(File recordFile) throws FileNotFoundException {
-        this.recordFile = recordFile;
-        initAudioRecord();
+    public RecordRunnable(File recordFile) {
+        initAudio(recordFile);
     }
 
-    /**
-     * 初始化音频录制参数
-     */
-    private void initAudioRecord() throws FileNotFoundException {
+    public void setRecroding(boolean recroding) {
+        isRecroding = recroding;
+    }
+
+    public void initAudio(File recordFile) {
         /**
          *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且须是一音频帧大小的整数倍。
          *  一帧音频帧的大小计算如下：int size = 采样率 x 位宽 x 采样时间 x 通道数
@@ -51,29 +51,12 @@ public class RecordRunnable implements Runnable {
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize * 4);
         }
 
-        //初始化转码工作线程
-        ThreadPoolManager.getInstance().execute(decodeRunnable = new DecodeRunnable(bufferSize,
+        //初始化转码等工作线程
+        ThreadPoolManager.getInstance().execute(decodeRunnable = new EncodeRunnable(bufferSize,
                 recordFile));
-    }
 
-    public boolean startRecord() throws FileNotFoundException {
-        isRecroding = true;
-        if (audioRecord == null) {
-            initAudioRecord();
-        }
         audioRecord.startRecording();
-        return isRecroding;
-    }
-
-    public boolean stopRecord() {
-        isRecroding = false;
-        if (audioRecord != null) {
-            audioRecord.stop();
-            audioRecord.release();
-            audioRecord = null;
-        }
-        ThreadPoolManager.getInstance().remove(decodeRunnable);
-        return !isRecroding;
+        setRecroding(true);
     }
 
     @Override
@@ -86,9 +69,16 @@ public class RecordRunnable implements Runnable {
         while (isRecroding) {
             readSize = audioRecord.read(bytes, 0, bufferSize);
             if (readSize > 0) {
+                Log.d(TAG, "本次录音数据 = " + readSize);
                 //加入到转码线程任务队列中
                 decodeRunnable.addTask(bytes, readSize);
             }
+        }
+
+        if (audioRecord != null) {
+            audioRecord.stop();
+            audioRecord.release();
+            audioRecord = null;
         }
     }
 }
