@@ -1,15 +1,12 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.SurfaceView;
 import android.view.View;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 import com.zjrb.sjzsw.runnable.RecordRunnable;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +27,6 @@ public class AudioVideoActivity extends BaseActivity {
     //音频是否录制
     private boolean isAudioRecording = false;
     private RecordRunnable recordRunnable = null;
-    private File recorderFile = new File(Environment.getExternalStorageDirectory(), "audio_record.aac");
 //    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
 
     @Override
@@ -50,9 +46,11 @@ public class AudioVideoActivity extends BaseActivity {
             case R.id.record_audio:
                 isAudioRecording = !isAudioRecording;
                 if (isAudioRecording) {
-                    ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable(recorderFile));
+                    ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable());
                 } else {
-                    recordRunnable.setRecroding(false);
+                    if (recordRunnable != null){
+                        recordRunnable.setRecroding(false);
+                    }
                 }
                 showToast(isAudioRecording == true ? "开始" : "停止");
                 break;

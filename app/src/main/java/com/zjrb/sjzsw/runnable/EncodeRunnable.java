@@ -1,11 +1,16 @@
 package com.zjrb.sjzsw.runnable;
 
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.util.Log;
+import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
+import com.zjrb.sjzsw.utils.FileUtil;
 import com.zjrb.sjzsw.utils.ListUtil;
 
 import java.io.BufferedOutputStream;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
  * 类描述：音频转码任务类
  *
@@ -28,47 +34,27 @@ import java.util.List;
  */
 
 public class EncodeRunnable implements Runnable {
-    private static final String TAG = "EncodeRunnable";
+    private final String TAG = getClass().getSimpleName();
     private static final int DEFAULT_SAMPLING_RATE = 44100;
     private DataOutputStream dataOutputStream = null;
     private static final String MIME = MediaFormat.MIMETYPE_AUDIO_AAC;
     // TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
     private List<Task> mTasks = Collections.synchronizedList(new ArrayList<Task>());
-
+    private File recorderFile;
     private ByteBuffer[] inputBuffers;
     private ByteBuffer[] outputBuffers;
     private MediaCodec.BufferInfo bufferInfo;
     private MediaCodec mediaCodec;
+    private MediaPlayer mediaPlayer;
+    public MyHandler myHandler;
 
-    public EncodeRunnable(int bufferSize, File decodeFile) {
+    public EncodeRunnable() {
         try {
-            dataOutputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(decodeFile)));
-
-            //转码类型，采样率，声道数
-            MediaFormat mediaFormat =
-                    MediaFormat.createAudioFormat(MIME, DEFAULT_SAMPLING_RATE, 1);
-            //比特率
-            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 48 * 1024);
-            //采样率
-            mediaFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, DEFAULT_SAMPLING_RATE);
-            //标记AAC类型
-            mediaFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-            //CHANNEL_IN_STEREO 立体声
-            mediaFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
-            //音频格式频道数
-            mediaFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-            //传入的数据大小
-//        mediaFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 1024);
-            //用来标记AAC是否有adts头，1-有
-//        mediaFormat.setInteger(MediaFormat.KEY_IS_ADTS, 1);
-            //初始化编码器
-            mediaCodec = MediaCodec.createEncoderByType(MIME);
-            mediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-            mediaCodec.start();
-
-            inputBuffers = mediaCodec.getInputBuffers();
-            outputBuffers = mediaCodec.getOutputBuffers();
-            bufferInfo = new MediaCodec.BufferInfo();
+            recorderFile = new File(
+                    FileUtil.getDiskCacheDir("audio"), System.currentTimeMillis() + ".aac");
+            dataOutputStream = new DataOutputStream(
+                    new BufferedOutputStream(new FileOutputStream(recorderFile)));
+            initMediaCodec();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -76,18 +62,124 @@ public class EncodeRunnable implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            if (!ListUtil.isListEmpty(mTasks)) {
-                encode();
+    static class MyHandler extends Handler {
+        private EncodeRunnable encodeRunnable;
+
+        public MyHandler(Looper looper, EncodeRunnable encodeRunnable) {
+            super(looper);
+            this.encodeRunnable = encodeRunnable;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    encodeRunnable.encodeToAAC();
+                    break;
+                case 1:
+                    while (encodeRunnable.encodeToAAC() > 0) {
+                    }
+
+                    //转码完毕，自动播放
+                    try {
+                        encodeRunnable.initMediaPlayer();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
 
-    private void encode() {
+    ;
+
+    /**
+     * 初始化音频播放器
+     *
+     * @throws IOException
+     */
+    private void initMediaPlayer() throws IOException {
+        mediaPlayer = new MediaPlayer();
+        //设置声源
+        mediaPlayer.setDataSource(recorderFile.getAbsolutePath());
+        //是否循环播放
+        mediaPlayer.setLooping(false);
+        //播放的流媒体类型
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        //设置左右音量
+        mediaPlayer.setVolume(1f, 1f);
+        //预加载音频
+        mediaPlayer.prepareAsync();
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                return true;
+            }
+        });
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+
+                myHandler.removeCallbacksAndMessages(null);
+            }
+        });
+    }
+
+    /**
+     * 初始化编码器
+     *
+     * @throws IOException
+     */
+    private void initMediaCodec() throws IOException {
+        //转码类型，采样率，声道数
+        MediaFormat mediaFormat = MediaFormat.createAudioFormat(MIME, DEFAULT_SAMPLING_RATE, 1);
+        //比特率
+        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 48 * 1024);
+        //标记AAC类型
+        mediaFormat.setInteger(MediaFormat.KEY_AAC_PROFILE,
+                MediaCodecInfo.CodecProfileLevel.AACObjectLC);
+        //单声道是所有设备都支持的
+        mediaFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
+        //初始化编码器
+        mediaCodec = MediaCodec.createEncoderByType(MIME);
+        mediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        mediaCodec.start();
+
+        inputBuffers = mediaCodec.getInputBuffers();
+        outputBuffers = mediaCodec.getOutputBuffers();
+        bufferInfo = new MediaCodec.BufferInfo();
+    }
+
+    @Override
+    public void run() {
+        Looper.prepare();
+        myHandler = new MyHandler(Looper.myLooper(), this);
+        Looper.loop();
+    }
+
+    /**
+     * PCM转码成AAC
+     */
+    private int encodeToAAC() {
         if (ListUtil.isListEmpty(mTasks)) {
-            return;
+            return 0;
         }
         Task task = mTasks.remove(0);
         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
@@ -114,21 +206,20 @@ public class EncodeRunnable implements Runnable {
                 byteBuffer.get(bytes, 7, outBitSize);
                 byteBuffer.position(bufferInfo.offset);
 
-                Log.d(TAG, "本次写入文件数据=" + bytes.length);
                 dataOutputStream.write(bytes, 0, bytes.length);
 
                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
                 outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 10000);
             }
-
-//            fileOutputStream.flush();
+            dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return mTasks.size();
     }
 
     /**
-     * 给编码出的aac裸流添加adts头字段
+     * 给编码出的aac流添加adts头字段
      *
      * @param packet    要空出前7个字节，否则会搞乱数据
      * @param packetLen
@@ -149,6 +240,7 @@ public class EncodeRunnable implements Runnable {
 
     public void addTask(byte[] rawData, int readSize) {
         mTasks.add(new Task(rawData, readSize));
+        myHandler.sendEmptyMessage(0);
     }
 
     private class Task {

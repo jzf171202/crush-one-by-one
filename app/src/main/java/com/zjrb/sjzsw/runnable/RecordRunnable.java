@@ -4,11 +4,8 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Process;
-import android.util.Log;
 
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
-
-import java.io.File;
 
 /**
  * 类描述：音频录制任务类
@@ -27,17 +24,9 @@ public class RecordRunnable implements Runnable {
     private AudioRecord audioRecord = null;
     // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
     private int bufferSize = 0;
-    private EncodeRunnable decodeRunnable = null;
+    private EncodeRunnable encodeRunnable;
 
-    public RecordRunnable(File recordFile) {
-        initAudio(recordFile);
-    }
-
-    public void setRecroding(boolean recroding) {
-        isRecroding = recroding;
-    }
-
-    public void initAudio(File recordFile) {
+    public RecordRunnable() {
         /**
          *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且须是一音频帧大小的整数倍。
          *  一帧音频帧的大小计算如下：int size = 采样率 x 位宽 x 采样时间 x 通道数
@@ -50,13 +39,13 @@ public class RecordRunnable implements Runnable {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, DEFAULT_SAMPLING_RATE,
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize * 4);
         }
-
-        //初始化转码等工作线程
-        ThreadPoolManager.getInstance().execute(decodeRunnable = new EncodeRunnable(bufferSize,
-                recordFile));
-
+        ThreadPoolManager.getInstance().execute(encodeRunnable = new EncodeRunnable());
         audioRecord.startRecording();
         setRecroding(true);
+    }
+
+    public void setRecroding(boolean recroding) {
+        isRecroding = recroding;
     }
 
     @Override
@@ -69,9 +58,7 @@ public class RecordRunnable implements Runnable {
         while (isRecroding) {
             readSize = audioRecord.read(bytes, 0, bufferSize);
             if (readSize > 0) {
-                Log.d(TAG, "本次录音数据 = " + readSize);
-                //加入到转码线程任务队列中
-                decodeRunnable.addTask(bytes, readSize);
+                encodeRunnable.addTask(bytes, readSize);
             }
         }
 
@@ -80,5 +67,6 @@ public class RecordRunnable implements Runnable {
             audioRecord.release();
             audioRecord = null;
         }
+        encodeRunnable.myHandler.sendEmptyMessage(1);
     }
 }

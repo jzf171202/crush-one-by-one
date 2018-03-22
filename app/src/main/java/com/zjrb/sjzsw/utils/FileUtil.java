@@ -21,20 +21,19 @@ public class FileUtil {
     /**
      * 获取本地文件
      *
-     * @param uniqueName
-     *         子目录
-     *
+     * @param directory 子目录
+     * /storage/emulated/0/Android/data/com.zjrb.sjzsw/cache/子目录
      * @return
      */
-    public static File getDiskCacheDir(String uniqueName) {
+    public static File getDiskCacheDir(String directory) {
         String cachePath;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
-            cachePath = App.getAppContext().getExternalCacheDir().getPath();
+            cachePath = App.getContext().getExternalCacheDir().getPath();
         } else {
-            cachePath = App.getAppContext().getCacheDir().getPath();
+            cachePath = App.getContext().getCacheDir().getPath();
         }
-        File file = new File(cachePath + File.separator + uniqueName);
+        File file = new File(cachePath + File.separator + directory);
         if (!file.exists()) {
             file.mkdirs();
         }
