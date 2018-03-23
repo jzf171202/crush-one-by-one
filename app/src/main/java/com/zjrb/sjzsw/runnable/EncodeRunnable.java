@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.czt.mp3recorder.util.LameUtil;
 import com.zjrb.sjzsw.utils.FileUtil;
 import com.zjrb.sjzsw.utils.ListUtil;
 
@@ -39,7 +38,7 @@ public class EncodeRunnable implements Runnable {
     private static final int DEFAULT_SAMPLING_RATE = 44100;
     private DataOutputStream dataOutputStream = null;
     private static final String MIME = MediaFormat.MIMETYPE_AUDIO_AAC;
-    //TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
+    // TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
     private List<Task> mTasks = Collections.synchronizedList(new ArrayList<Task>());
     private File recorderFile;
     private ByteBuffer[] inputBuffers;
@@ -48,31 +47,14 @@ public class EncodeRunnable implements Runnable {
     private MediaCodec mediaCodec;
     private MediaPlayer mediaPlayer;
     public MyHandler myHandler;
-    private byte[] bytes;
-    /**
-     * 0表示AAC，1表示MP3
-     */
-    private int type = 0;
 
-    public EncodeRunnable(int bufferSize) {
+    public EncodeRunnable() {
         try {
-            switch (this.type) {
-                case 0:
-                    recorderFile = new File(FileUtil.getDiskCacheDir("audio"), System
-                            .currentTimeMillis() + ".aac");
-                    initMediaCodec();
-                    break;
-                case 1:
-                    recorderFile = new File(FileUtil.getDiskCacheDir("audio"), System
-                            .currentTimeMillis() + ".mp3");
-                    //Lame官方规定了计算公式：7200 + (1.25 * buffer.length)。（可以在lame.h文件中看到）
-                    bytes = new byte[(int) (7200 + (bufferSize * 2 * 1.25))];
-                    break;
-                default:
-                    break;
-            }
-            dataOutputStream = new DataOutputStream(new BufferedOutputStream(new
-                    FileOutputStream(recorderFile)));
+            recorderFile = new File(
+                    FileUtil.getDiskCacheDir("audio"), System.currentTimeMillis() + ".aac");
+            dataOutputStream = new DataOutputStream(
+                    new BufferedOutputStream(new FileOutputStream(recorderFile)));
+            initMediaCodec();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -93,11 +75,10 @@ public class EncodeRunnable implements Runnable {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    encodeRunnable.encode();
+                    encodeRunnable.encodeToAAC();
                     break;
                 case 1:
-                    // TODO: 2018/3/23 MP3的收尾未做
-                    while (encodeRunnable.encode() > 0) {
+                    while (encodeRunnable.encodeToAAC() > 0) {
                     }
 
                     //转码完毕，自动播放
@@ -167,7 +148,7 @@ public class EncodeRunnable implements Runnable {
      * @throws IOException
      */
     private void initMediaCodec() throws IOException {
-        //转码类型(mp3为audio/mpeg；aac为audio/mp4a-latm；mp4为video/mp4v-es)，采样率，声道数
+        //转码类型，采样率，声道数
         MediaFormat mediaFormat = MediaFormat.createAudioFormat(MIME, DEFAULT_SAMPLING_RATE, 1);
         //比特率
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 48 * 1024);
@@ -193,60 +174,14 @@ public class EncodeRunnable implements Runnable {
         Looper.loop();
     }
 
-    private int encode() {
+    /**
+     * PCM转码成AAC
+     */
+    private int encodeToAAC() {
         if (ListUtil.isListEmpty(mTasks)) {
             return 0;
         }
         Task task = mTasks.remove(0);
-        switch (type) {
-            case 0:
-                encodeToAAC(task);
-                break;
-            case 1:
-                encodeToMp3(task);
-                break;
-            default:
-                break;
-        }
-        return mTasks.size();
-    }
-
-    /**
-     * PCM转码成MP3
-     *
-     * @param task
-     */
-    private void encodeToMp3(Task task) {
-        try {
-            short[] leftData = ListUtil.byteToShort(task.getData());
-            byte[] bytes2 = ListUtil.shortToByte(leftData);
-
-            //当前声道选的是单声道，因此bufferLeft和bufferRight传入一样的buffer。
-            int encodedSize = LameUtil.encode(leftData, leftData, task.getReadSize(), bytes);
-            if (encodedSize > 0) {
-                dataOutputStream.write(bytes, 0, encodedSize);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (dataOutputStream != null) {
-                try {
-                    dataOutputStream.flush();
-                    dataOutputStream.close();
-                    dataOutputStream = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * PCM转码成AAC
-     *
-     * @param task
-     */
-    private void encodeToAAC(Task task) {
         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
         if (inputBufferIndex > 0) {
             ByteBuffer byteBuffer = inputBuffers[inputBufferIndex];
@@ -279,17 +214,8 @@ public class EncodeRunnable implements Runnable {
             dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (dataOutputStream != null) {
-                try {
-                    dataOutputStream.flush();
-                    dataOutputStream.close();
-                    dataOutputStream = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+        return mTasks.size();
     }
 
     /**

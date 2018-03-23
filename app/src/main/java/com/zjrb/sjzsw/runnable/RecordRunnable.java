@@ -39,7 +39,7 @@ public class RecordRunnable implements Runnable {
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, DEFAULT_SAMPLING_RATE,
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize * 4);
         }
-        ThreadPoolManager.getInstance().execute(encodeRunnable = new EncodeRunnable(bufferSize));
+        ThreadPoolManager.getInstance().execute(encodeRunnable = new EncodeRunnable());
         audioRecord.startRecording();
         setRecroding(true);
     }
