@@ -23,10 +23,11 @@ public class ListUtil {
 
     /**
      * list倒序
+     *
      * @param list
      * @return
      */
-    public static List<String> replaceSort(List<String> list){
+    public static List<String> replaceSort(List<String> list) {
         List<String> list2 = new ArrayList<String>();
         if (isListEmpty(list)) {
             return list2;
@@ -34,7 +35,7 @@ public class ListUtil {
         if (list.size() == 1) {
             return list;
         }
-        for (int i = list.size()-1;i >= 0;i--){
+        for (int i = list.size() - 1; i >= 0; i--) {
             list2.add(list.get(i));
         }
         return list2;
@@ -48,5 +49,36 @@ public class ListUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * byte转Short
+     *
+     * @param src
+     * @return
+     */
+    public static short[] byteToShort(byte[] src) {
+        int count = src.length >> 1;
+        short[] dest = new short[count];
+        for (int i = 0; i < count; i++) {
+            dest[i] = (short) ((src[i * 2] & 0xff) | ((src[2 * i + 1] & 0xff) << 8));
+        }
+        return dest;
+    }
+
+    /**
+     * Short转byte
+     *
+     * @param src
+     * @return
+     */
+    public static byte[] shortToByte(short[] src) {
+        int count = src.length;
+        byte[] dest = new byte[count << 1];
+        for (int i = 0; i < count; i++) {
+            dest[i * 2] = (byte) (src[i]);
+            dest[i * 2 + 1] = (byte) (src[i] >> 8);
+        }
+        return dest;
     }
 }
