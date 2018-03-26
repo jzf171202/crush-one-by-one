@@ -162,8 +162,10 @@ public class EncodeRunnable implements Runnable {
         mediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mediaCodec.start();
 
+        // TODO: 2018/3/26 版本兼容性需处理
         inputBuffers = mediaCodec.getInputBuffers();
         outputBuffers = mediaCodec.getOutputBuffers();
+        //记录编码完成的缓存的信息
         bufferInfo = new MediaCodec.BufferInfo();
     }
 
@@ -195,17 +197,19 @@ public class EncodeRunnable implements Runnable {
         try {
             while (outputBufferIndex >= 0) {
                 int outBitSize = bufferInfo.size;
-                // 7 为adts头部大小
+                // 7 为adts头部大小（byte）
                 int outPacketSize = outBitSize + 7;
                 ByteBuffer byteBuffer = outputBuffers[outputBufferIndex];
                 byteBuffer.position(bufferInfo.offset);
                 byteBuffer.limit(bufferInfo.offset + outBitSize);
                 //添加adts头
                 byte[] bytes = new byte[outPacketSize];
-                addADTStoPacket(bytes, outPacketSize);
+                addADTStoPacket(bytes, outPacketSize, 4, 1);
+                //将ByteBuffer内的数据偏移7字节写入到bytes数组中
                 byteBuffer.get(bytes, 7, outBitSize);
                 byteBuffer.position(bufferInfo.offset);
 
+                //将转码好的数据通过输出流写入文件
                 dataOutputStream.write(bytes, 0, bytes.length);
 
                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
@@ -224,10 +228,16 @@ public class EncodeRunnable implements Runnable {
      * @param packet    要空出前7个字节，否则会搞乱数据
      * @param packetLen
      */
-    private void addADTStoPacket(byte[] packet, int packetLen) {
+    /**
+     * 给编码出的aac流添加adts头字段
+     *
+     * @param packet    AAC原始流数据
+     * @param packetLen 元数据长度
+     * @param freqIdx   采样率下标
+     * @param chanCfg   通道数
+     */
+    private void addADTStoPacket(byte[] packet, int packetLen, int freqIdx, int chanCfg) {
         int profile = 2;  //AAC LC
-        int freqIdx = 4;  //44.1KHz
-        int chanCfg = 2;  //CPE
         packet[0] = (byte) 0xFF;
         packet[1] = (byte) 0xF9;
         packet[2] = (byte) (((profile - 1) << 6) + (freqIdx << 2) + (chanCfg >> 2));
