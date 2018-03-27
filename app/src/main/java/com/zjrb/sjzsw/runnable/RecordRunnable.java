@@ -18,7 +18,7 @@ import com.zjrb.sjzsw.manager.ThreadPoolManager;
 public class RecordRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
 
-    private static final int DEFAULT_SAMPLING_RATE = 44100;
+    private static final int DEFAULT_SAMPLING_RATE = 8000;
 
     private boolean isRecroding = false;
     private AudioRecord audioRecord = null;
@@ -28,7 +28,7 @@ public class RecordRunnable implements Runnable {
 
     public RecordRunnable() {
         /**
-         *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且须是一音频帧大小的整数倍。
+         *  获取最小缓冲区大小，该值不能低于一帧“音频帧”（Frame）的大小，且宜是一音频帧大小的整数倍。
          *  一帧音频帧的大小计算如下：int size = 采样率 x 位宽 x 采样时间 x 通道数
          */
         bufferSize = AudioRecord.getMinBufferSize(DEFAULT_SAMPLING_RATE,
@@ -40,8 +40,10 @@ public class RecordRunnable implements Runnable {
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize * 4);
         }
         ThreadPoolManager.getInstance().execute(encodeRunnable = new EncodeRunnable());
-        audioRecord.startRecording();
-        setRecroding(true);
+        if (audioRecord != null && audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
+            audioRecord.startRecording();
+            setRecroding(true);
+        }
     }
 
     public void setRecroding(boolean recroding) {
@@ -62,7 +64,7 @@ public class RecordRunnable implements Runnable {
             }
         }
 
-        if (audioRecord != null) {
+        if (audioRecord != null && audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
             audioRecord.stop();
             audioRecord.release();
             audioRecord = null;
