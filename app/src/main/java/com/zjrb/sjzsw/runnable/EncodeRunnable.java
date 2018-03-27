@@ -41,8 +41,6 @@ public class EncodeRunnable implements Runnable {
     // TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
     private List<Task> mTasks = Collections.synchronizedList(new ArrayList<Task>());
     private File recorderFile;
-    private ByteBuffer[] inputBuffers;
-    private ByteBuffer[] outputBuffers;
     private MediaCodec.BufferInfo bufferInfo;
     private MediaCodec mediaCodec;
     private MediaPlayer mediaPlayer;
@@ -51,7 +49,7 @@ public class EncodeRunnable implements Runnable {
     public EncodeRunnable() {
         try {
             recorderFile = new File(
-                    FileUtil.getDiskCacheDir("audio"), System.currentTimeMillis() + ".aac");
+                    FileUtil.getDiskCacheDir("audio"), "test.aac");
             dataOutputStream = new DataOutputStream(
                     new BufferedOutputStream(new FileOutputStream(recorderFile)));
             initMediaCodec();
@@ -80,7 +78,7 @@ public class EncodeRunnable implements Runnable {
                 case 1:
                     while (encodeRunnable.encodeToAAC() > 0) {
                     }
-
+                    // TODO: 2018/3/27 这里加一个addWindow的封装dialog就好了。
                     //转码完毕，自动播放
                     try {
                         encodeRunnable.initMediaPlayer();
@@ -161,10 +159,6 @@ public class EncodeRunnable implements Runnable {
         mediaCodec = MediaCodec.createEncoderByType(MIME);
         mediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mediaCodec.start();
-
-        // TODO: 2018/3/26 版本兼容性需处理
-        inputBuffers = mediaCodec.getInputBuffers();
-        outputBuffers = mediaCodec.getOutputBuffers();
         //记录编码完成的缓存的信息
         bufferInfo = new MediaCodec.BufferInfo();
     }
@@ -184,12 +178,18 @@ public class EncodeRunnable implements Runnable {
             return 0;
         }
         Task task = mTasks.remove(0);
+       // TODO: 2018/3/27 API20以下的系统，此处debug不下去，应该是MediaCodec参数配置未兼容好。
         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
         if (inputBufferIndex > 0) {
-            ByteBuffer byteBuffer = inputBuffers[inputBufferIndex];
-            byteBuffer.clear();
-            byteBuffer.limit(task.getData().length);
-            byteBuffer.put(task.getData());
+            ByteBuffer inputBuffer = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                inputBuffer = mediaCodec.getInputBuffer(inputBufferIndex);
+            } else {
+                inputBuffer = mediaCodec.getInputBuffers()[inputBufferIndex];
+            }
+            inputBuffer.clear();
+            inputBuffer.limit(task.getData().length);
+            inputBuffer.put(task.getData());
             mediaCodec.queueInputBuffer(inputBufferIndex, 0, task.getData().length, 0, 0);
         }
 
@@ -199,15 +199,20 @@ public class EncodeRunnable implements Runnable {
                 int outBitSize = bufferInfo.size;
                 // 7 为adts头部大小（byte）
                 int outPacketSize = outBitSize + 7;
-                ByteBuffer byteBuffer = outputBuffers[outputBufferIndex];
-                byteBuffer.position(bufferInfo.offset);
-                byteBuffer.limit(bufferInfo.offset + outBitSize);
+                ByteBuffer outBuffer = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    outBuffer = mediaCodec.getOutputBuffer(outputBufferIndex);
+                } else {
+                    outBuffer = mediaCodec.getOutputBuffers()[outputBufferIndex];
+                }
+                outBuffer.position(bufferInfo.offset);
+                outBuffer.limit(bufferInfo.offset + outBitSize);
                 //添加adts头
                 byte[] bytes = new byte[outPacketSize];
                 addADTStoPacket(bytes, outPacketSize, 4, 1);
                 //将ByteBuffer内的数据偏移7字节写入到bytes数组中
-                byteBuffer.get(bytes, 7, outBitSize);
-                byteBuffer.position(bufferInfo.offset);
+                outBuffer.get(bytes, 7, outBitSize);
+                outBuffer.position(bufferInfo.offset);
 
                 //将转码好的数据通过输出流写入文件
                 dataOutputStream.write(bytes, 0, bytes.length);

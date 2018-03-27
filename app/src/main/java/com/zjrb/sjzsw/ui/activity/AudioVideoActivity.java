@@ -6,7 +6,11 @@ import android.view.View;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
+import com.zjrb.sjzsw.runnable.PlayRunnable;
 import com.zjrb.sjzsw.runnable.RecordRunnable;
+import com.zjrb.sjzsw.utils.FileUtil;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +59,8 @@ public class AudioVideoActivity extends BaseActivity {
                 showToast(isAudioRecording == true ? "开始" : "停止");
                 break;
             case R.id.play_audio:
+                File file = new File(FileUtil.getDiskCacheDir("audio"), "test.pcm");
+                ThreadPoolManager.getInstance().execute(new PlayRunnable(file));
                 break;
             case R.id.record_vedio:
                 break;

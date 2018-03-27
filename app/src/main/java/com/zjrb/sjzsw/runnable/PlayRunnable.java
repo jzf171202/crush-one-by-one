@@ -54,22 +54,33 @@ public class PlayRunnable implements Runnable {
                     audioTrack.write(bytes, 0, readCount);
                 }
             }
+            stopPlay(audioTrack, dataInputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (audioTrack != null) {
-                    audioTrack.stop();
-                    audioTrack.release();
-                }
-                if (dataInputStream != null) {
-                    dataInputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            stopPlay(audioTrack, dataInputStream);
+        }
+    }
+
+    /**
+     * 停止播放
+     *
+     * @param audioTrack
+     * @param dataInputStream
+     */
+    private void stopPlay(AudioTrack audioTrack, DataInputStream dataInputStream) {
+        try {
+            if (audioTrack != null) {
+                audioTrack.stop();
+                audioTrack.release();
             }
+            if (dataInputStream != null) {
+                dataInputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

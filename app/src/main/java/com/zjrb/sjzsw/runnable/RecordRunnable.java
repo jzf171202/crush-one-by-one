@@ -6,6 +6,14 @@ import android.media.MediaRecorder;
 import android.os.Process;
 
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
+import com.zjrb.sjzsw.utils.FileUtil;
+
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 类描述：音频录制任务类
@@ -18,13 +26,14 @@ import com.zjrb.sjzsw.manager.ThreadPoolManager;
 public class RecordRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
 
-    private static final int DEFAULT_SAMPLING_RATE = 8000;
+    private static final int DEFAULT_SAMPLING_RATE = 44100;
 
     private boolean isRecroding = false;
     private AudioRecord audioRecord = null;
     // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
     private int bufferSize = 0;
     private EncodeRunnable encodeRunnable;
+    private DataOutputStream dataOutputStream;
 
     public RecordRunnable() {
         /**
@@ -52,16 +61,27 @@ public class RecordRunnable implements Runnable {
 
     @Override
     public void run() {
-        //设置线程优先级
-        Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
-        // TODO: 2018/3/15 byte数组和short数组的区别
-        byte[] bytes = new byte[bufferSize];
-        int readSize = 0;
-        while (isRecroding) {
-            readSize = audioRecord.read(bytes, 0, bufferSize);
-            if (readSize > 0) {
-                encodeRunnable.addTask(bytes, readSize);
+        File recorderFile = new File(FileUtil.getDiskCacheDir("audio"),  "test.pcm");
+        try {
+            dataOutputStream = new DataOutputStream(
+                    new BufferedOutputStream(new FileOutputStream(recorderFile)));
+
+            //设置线程优先级
+            Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
+            // TODO: 2018/3/15 byte数组和short数组的区别
+            byte[] bytes = new byte[bufferSize];
+            int readSize = 0;
+            while (isRecroding) {
+                readSize = audioRecord.read(bytes, 0, bufferSize);
+                if (readSize > 0) {
+                    encodeRunnable.addTask(bytes, readSize);
+                    dataOutputStream.write(bytes, 0, readSize);
+                }
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (audioRecord != null && audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
