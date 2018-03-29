@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.ui.fragment.AnimatorFragment;
 import com.zjrb.sjzsw.ui.fragment.CustomViewFragment;
 import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
@@ -37,7 +38,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         leftImage.setVisibility(View.INVISIBLE);
-        selectFragment(5);
+        selectFragment(6);
     }
 
     /**
@@ -65,6 +66,10 @@ public class MainActivity extends BaseActivity {
                 titleText.setText("线程池");
                 break;
             case 5:
+                fragmentTransaction.replace(R.id.fragment_id, new AnimatorFragment());
+                titleText.setText("动画");
+                break;
+            case 6:
                 fragmentTransaction.replace(R.id.fragment_id, new CustomViewFragment());
                 titleText.setText("自定义view");
                 break;

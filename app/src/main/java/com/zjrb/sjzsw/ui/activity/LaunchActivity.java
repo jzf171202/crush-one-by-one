@@ -56,7 +56,7 @@ public class LaunchActivity extends BaseActivity {
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ActivityUtil.to(LaunchActivity.this, AudioVideoActivity.class);
+                ActivityUtil.to(LaunchActivity.this, MainActivity.class);
                 finish();
             }
         }, 2000);
