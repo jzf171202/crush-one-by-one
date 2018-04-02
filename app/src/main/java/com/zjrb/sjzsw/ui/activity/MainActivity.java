@@ -2,6 +2,8 @@ package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,7 +24,7 @@ import butterknife.ButterKnife;
  * @author jinzifu
  */
 public class MainActivity extends BaseActivity {
-
+    private final String TAG = getClass().getSimpleName();
     @BindView(R.id.leftImage)
     ImageButton leftImage;
     @BindView(R.id.titleText)
@@ -77,5 +79,27 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d(TAG, "dispatchTouchEvent= super.dispatchTouchEvent(ev)");
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            default:
+                break;
+        }
+        Log.d(TAG, "onTouchEvent= super.onTouchEvent(ev)");
+        return super.onTouchEvent(event);
     }
 }
