@@ -24,8 +24,8 @@ public class CaheInterceptor implements Interceptor {
         Request request = chain.request();
         if (NetUtil.isNetConnected(context)) {
             Response response = chain.proceed(request);
-            // read from cache for 60 s
-            int maxAge = 60;
+            // read from cache for 1 s
+            int maxAge = 1;
             String cacheControl = request.cacheControl().toString();
             Log.e("CacheInterceptor", "60s load cahe" + cacheControl);
             return response.newBuilder()

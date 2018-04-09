@@ -11,7 +11,8 @@ import java.net.ConnectException;
 
 
 /**
- * Created by Tamic on 2016-08-12.
+ * @author jinzifu
+ * @date 2017-10-06
  */
 public class ApiException {
 
