@@ -13,16 +13,17 @@ import java.util.Map;
  */
 
 public class ApiManager {
+    private static Map<Class, Object> map = new HashMap();
+
     /**
      * 获取API接口类
      * 注：可以写多个API接口类，并在此配置
+     *
      * @return
      */
     public static ApiService getApiService() {
         return provideService(ApiService.class);
     }
-
-    private static Map<Class, Object> map = new HashMap();
 
     private static <T> T provideService(Class cls) {
         Object object = map.get(cls);

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DBOpenHelper extends SQLiteOpenHelper {
-    final String CREATE_SQL="CREATE TABLE test(_id INTEGER PRIMARY KEY AUTOINCREMENT,NAME)";
+    final String CREATE_SQL = "CREATE TABLE test(_id INTEGER PRIMARY KEY AUTOINCREMENT,NAME)";
 
     public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, null, 1);

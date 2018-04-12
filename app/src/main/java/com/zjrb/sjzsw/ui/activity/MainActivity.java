@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         leftImage.setVisibility(View.INVISIBLE);
-        selectFragment(6);
+        selectFragment(2);
     }
 
     /**

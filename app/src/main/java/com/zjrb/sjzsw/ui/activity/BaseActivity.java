@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.zjrb.sjzsw.ActivityStackManager;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.controller.BaseController;
-import com.zjrb.sjzsw.controller.LifecycleManage;
+import com.zjrb.sjzsw.presenter.BasePresenter;
+import com.zjrb.sjzsw.presenter.PresenterManager;
 import com.zjrb.sjzsw.utils.ScreenUtil;
 
 /**
@@ -26,10 +26,10 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private LifecycleManage lifecycleManage = new LifecycleManage();
-    protected Context context;
-    private View rootView;
-    private ViewGroup container;
+    protected Context mContext;
+    private PresenterManager mPresenterManager = new PresenterManager();
+    private View mRootView;
+    private ViewGroup mContainer;
 
     /**
      * 获取根布局的资源ID
@@ -41,14 +41,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = LayoutInflater.from(this).inflate(getLayoutId(), null);
-        setContentView(rootView);
-        container = (ViewGroup) rootView.findViewById(R.id.container);
+        mRootView = LayoutInflater.from(this).inflate(getLayoutId(), null);
+        setContentView(mRootView);
+        mContainer = (ViewGroup) mRootView.findViewById(R.id.container);
         ActivityStackManager.addActivity(this);
-        context = this;
+        mContext = this;
         initStatusBar();
     }
-
 
     /**
      * 沉浸式状态栏
@@ -66,10 +65,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         } else {
             //低于API19的情况设置非偏移高度，不支持沉浸式状态栏
-            if (container != null) {
-                ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
+            if (mContainer != null) {
+                ViewGroup.LayoutParams layoutParams = mContainer.getLayoutParams();
                 layoutParams.height = ScreenUtil.dip2px(this, 50);
-                container.setLayoutParams(layoutParams);
+                mContainer.setLayoutParams(layoutParams);
             }
         }
     }
@@ -77,11 +76,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 注册控制器
      *
-     * @param controller
+     * @param basePresenter
      */
-    protected void registerController(BaseController controller) {
-        if (controller != null) {
-            lifecycleManage.register(controller.getClass().getSimpleName(), controller);
+    protected void initPresenter(BasePresenter basePresenter) {
+        if (basePresenter != null) {
+            mPresenterManager.register(basePresenter.getClass().getSimpleName(), basePresenter);
         }
     }
 
@@ -91,38 +90,38 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param key
      * @return
      */
-    protected <Controller extends BaseController> Controller getController(String key) {
-        return (Controller) lifecycleManage.get(key);
+    protected <Controller extends BasePresenter> Controller getPresenter(String key) {
+        return (Controller) mPresenterManager.get(key);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        lifecycleManage.onStart();
+        mPresenterManager.onStart();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        lifecycleManage.onResume();
+        mPresenterManager.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        lifecycleManage.onPause();
+        mPresenterManager.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        lifecycleManage.onStop();
+        mPresenterManager.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        lifecycleManage.onDestroy();
+        mPresenterManager.onDestroy();
         ActivityStackManager.finishActivity(this);
     }
 

@@ -24,7 +24,6 @@ public class DownloadManager {
      *
      * @param url
      * @param outputStream
-     *
      * @return
      */
     public static boolean downloadFileRunnable(final String url, OutputStream outputStream) {

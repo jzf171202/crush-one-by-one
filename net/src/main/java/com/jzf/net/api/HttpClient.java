@@ -32,17 +32,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class HttpClient {
     private static final int DEFAULT_TIMEOUT = 5;
-    private Retrofit mRetrofit;
     private volatile static HttpClient instance;
-    private Cache cache = null;
-    private File httpCacheDirectory;
     private static Context context;
-
     /**
      * 静态内部类——饿汉式
      */
     private static SchedulersTransformer schedulersTransformer = new SchedulersTransformer();
     private static ErrorTransformer errorTransformer = new ErrorTransformer();
+    private Retrofit mRetrofit;
+    private Cache cache = null;
+    private File httpCacheDirectory;
 
     private HttpClient() {
         //header追加

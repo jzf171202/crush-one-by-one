@@ -16,6 +16,7 @@
 package com.jzf.image.core.display;
 
 import android.graphics.Bitmap;
+
 import com.jzf.image.core.assist.LoadedFrom;
 import com.jzf.image.core.imageaware.ImageAware;
 
@@ -26,8 +27,8 @@ import com.jzf.image.core.imageaware.ImageAware;
  * @since 1.5.6
  */
 public final class SimpleBitmapDisplayer implements BitmapDisplayer {
-	@Override
-	public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
-		imageAware.setImageBitmap(bitmap);
-	}
+    @Override
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
+        imageAware.setImageBitmap(bitmap);
+    }
 }

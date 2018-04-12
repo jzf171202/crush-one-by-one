@@ -17,17 +17,17 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseLinearLayout extends LinearLayout {
-    private Context context;
     protected OnChildViewClickListener onChildViewClickListener;
+    private Context context;
 
     public BaseLinearLayout(Context context) {
         super(context);
-        init(context,null);
+        init(context, null);
     }
 
     public BaseLinearLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     protected void init(Context context, AttributeSet attrs) {
@@ -47,6 +47,7 @@ public abstract class BaseLinearLayout extends LinearLayout {
 
     /**
      * 实现此方法在业务类中处理点击事件
+     *
      * @param childView
      * @param action
      * @param obj
@@ -59,6 +60,7 @@ public abstract class BaseLinearLayout extends LinearLayout {
 
     /**
      * 获取组合布局的资源ID
+     *
      * @return
      */
     protected abstract int layoutId();
@@ -73,6 +75,6 @@ public abstract class BaseLinearLayout extends LinearLayout {
     }
 
     protected void toast(String string) {
-        Toast.makeText(context, string,Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 }

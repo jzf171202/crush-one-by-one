@@ -78,21 +78,6 @@ public class ThreadFragment extends BaseFragment {
         }
     }
 
-    class MyRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            while (true) {
-                sycnUpdateNum();
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     /**
      * 同步更新number值
      */
@@ -107,5 +92,20 @@ public class ThreadFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    class MyRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                sycnUpdateNum();
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ public class AudioVideoActivity extends BaseActivity {
                 if (isAudioRecording) {
                     ThreadPoolManager.getInstance().execute(recordRunnable = new RecordRunnable());
                 } else {
-                    if (recordRunnable != null){
+                    if (recordRunnable != null) {
                         recordRunnable.setRecroding(false);
                     }
                 }

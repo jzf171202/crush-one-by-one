@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseFrameLayout extends FrameLayout {
+    protected OnChildViewClickListener onChildViewClickListener;
     private Context context;
 
     public BaseFrameLayout(@NonNull Context context) {
@@ -29,9 +30,6 @@ public abstract class BaseFrameLayout extends FrameLayout {
         super(context, attrs);
         init(context, attrs);
     }
-
-    protected OnChildViewClickListener onChildViewClickListener;
-
 
     protected void init(Context context, AttributeSet attrs) {
         if (layoutId() != 0) {
@@ -50,6 +48,7 @@ public abstract class BaseFrameLayout extends FrameLayout {
 
     /**
      * 实现此方法以在业务类中处理点击事件
+     *
      * @param childView
      * @param action
      * @param obj
@@ -62,6 +61,7 @@ public abstract class BaseFrameLayout extends FrameLayout {
 
     /**
      * 获取组合布局的资源ID
+     *
      * @return
      */
     protected abstract int layoutId();

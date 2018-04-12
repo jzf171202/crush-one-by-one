@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class ThreadPoolManager {
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     /**
      * 核心线程的数量。当前设备可用处理器核心数*2 + 1,能够让cpu的效率得到最大程度执行。
      */
@@ -32,14 +33,9 @@ public class ThreadPoolManager {
      */
     private TimeUnit timeUnit = TimeUnit.MINUTES;
     private ThreadPoolExecutor threadPoolExecutor;
-    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 
     private ThreadPoolManager() {
         init();
-    }
-
-    private static class SingleClass {
-        private static final ThreadPoolManager THREAD_POOL_MANAGER = new ThreadPoolManager();
     }
 
     /**
@@ -79,7 +75,6 @@ public class ThreadPoolManager {
         }
     }
 
-
     /**
      * 从线程池移除任务
      *
@@ -89,5 +84,9 @@ public class ThreadPoolManager {
         if (runnable != null) {
             threadPoolExecutor.remove(runnable);
         }
+    }
+
+    private static class SingleClass {
+        private static final ThreadPoolManager THREAD_POOL_MANAGER = new ThreadPoolManager();
     }
 }

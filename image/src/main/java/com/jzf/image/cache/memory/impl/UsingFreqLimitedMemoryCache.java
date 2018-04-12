@@ -16,6 +16,7 @@
 package com.jzf.image.cache.memory.impl;
 
 import android.graphics.Bitmap;
+
 import com.jzf.image.cache.memory.LimitedMemoryCache;
 
 import java.lang.ref.Reference;
@@ -38,88 +39,88 @@ import java.util.Set;
  * @since 1.0.0
  */
 public class UsingFreqLimitedMemoryCache extends LimitedMemoryCache {
-	/**
-	 * Contains strong references to stored objects (keys) and last object usage date (in milliseconds). If hard cache
-	 * size will exceed limit then object with the least frequently usage is deleted (but it continue exist at
-	 * {@link #softMap} and can be collected by GC at any time)
-	 */
-	private final Map<Bitmap, Integer> usingCounts = Collections.synchronizedMap(new HashMap<Bitmap, Integer>());
+    /**
+     * Contains strong references to stored objects (keys) and last object usage date (in milliseconds). If hard cache
+     * size will exceed limit then object with the least frequently usage is deleted (but it continue exist at
+     * {@link #softMap} and can be collected by GC at any time)
+     */
+    private final Map<Bitmap, Integer> usingCounts = Collections.synchronizedMap(new HashMap<Bitmap, Integer>());
 
-	public UsingFreqLimitedMemoryCache(int sizeLimit) {
-		super(sizeLimit);
-	}
+    public UsingFreqLimitedMemoryCache(int sizeLimit) {
+        super(sizeLimit);
+    }
 
-	@Override
-	public boolean put(String key, Bitmap value) {
-		if (super.put(key, value)) {
-			usingCounts.put(value, 0);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean put(String key, Bitmap value) {
+        if (super.put(key, value)) {
+            usingCounts.put(value, 0);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public Bitmap get(String key) {
-		Bitmap value = super.get(key);
-		// Increment usage count for value if value is contained in hardCahe
-		if (value != null) {
-			Integer usageCount = usingCounts.get(value);
-			if (usageCount != null) {
-				usingCounts.put(value, usageCount + 1);
-			}
-		}
-		return value;
-	}
+    @Override
+    public Bitmap get(String key) {
+        Bitmap value = super.get(key);
+        // Increment usage count for value if value is contained in hardCahe
+        if (value != null) {
+            Integer usageCount = usingCounts.get(value);
+            if (usageCount != null) {
+                usingCounts.put(value, usageCount + 1);
+            }
+        }
+        return value;
+    }
 
-	@Override
-	public Bitmap remove(String key) {
-		Bitmap value = super.get(key);
-		if (value != null) {
-			usingCounts.remove(value);
-		}
-		return super.remove(key);
-	}
+    @Override
+    public Bitmap remove(String key) {
+        Bitmap value = super.get(key);
+        if (value != null) {
+            usingCounts.remove(value);
+        }
+        return super.remove(key);
+    }
 
-	@Override
-	public void clear() {
-		usingCounts.clear();
-		super.clear();
-	}
+    @Override
+    public void clear() {
+        usingCounts.clear();
+        super.clear();
+    }
 
-	@Override
-	protected int getSize(Bitmap value) {
-		return value.getRowBytes() * value.getHeight();
-	}
+    @Override
+    protected int getSize(Bitmap value) {
+        return value.getRowBytes() * value.getHeight();
+    }
 
-	@Override
-	protected Bitmap removeNext() {
-		Integer minUsageCount = null;
-		Bitmap leastUsedValue = null;
-		Set<Entry<Bitmap, Integer>> entries = usingCounts.entrySet();
-		synchronized (usingCounts) {
-			for (Entry<Bitmap, Integer> entry : entries) {
-				if (leastUsedValue == null) {
-					leastUsedValue = entry.getKey();
-					minUsageCount = entry.getValue();
-				} else {
-					//lastValueUsage本次（最后、最新）循环内的使用次数值，minUsageCount不为null时表示上次循环时赋的值。
-					Integer lastValueUsage = entry.getValue();
-					//如果检索出更小使用次数时，则将该循环内的entry.getKey()和entry.getValue()赋值给leastUsedValue和minUsageCount。
-					if (lastValueUsage < minUsageCount) {
-						minUsageCount = lastValueUsage;
-						leastUsedValue = entry.getKey();
-					}
-				}
-			}
-		}
-		//检索完毕之后，移除使用频率最低的那个值。
-		usingCounts.remove(leastUsedValue);
-		return leastUsedValue;
-	}
+    @Override
+    protected Bitmap removeNext() {
+        Integer minUsageCount = null;
+        Bitmap leastUsedValue = null;
+        Set<Entry<Bitmap, Integer>> entries = usingCounts.entrySet();
+        synchronized (usingCounts) {
+            for (Entry<Bitmap, Integer> entry : entries) {
+                if (leastUsedValue == null) {
+                    leastUsedValue = entry.getKey();
+                    minUsageCount = entry.getValue();
+                } else {
+                    //lastValueUsage本次（最后、最新）循环内的使用次数值，minUsageCount不为null时表示上次循环时赋的值。
+                    Integer lastValueUsage = entry.getValue();
+                    //如果检索出更小使用次数时，则将该循环内的entry.getKey()和entry.getValue()赋值给leastUsedValue和minUsageCount。
+                    if (lastValueUsage < minUsageCount) {
+                        minUsageCount = lastValueUsage;
+                        leastUsedValue = entry.getKey();
+                    }
+                }
+            }
+        }
+        //检索完毕之后，移除使用频率最低的那个值。
+        usingCounts.remove(leastUsedValue);
+        return leastUsedValue;
+    }
 
-	@Override
-	protected Reference<Bitmap> createReference(Bitmap value) {
-		return new WeakReference<Bitmap>(value);
-	}
+    @Override
+    protected Reference<Bitmap> createReference(Bitmap value) {
+        return new WeakReference<Bitmap>(value);
+    }
 }

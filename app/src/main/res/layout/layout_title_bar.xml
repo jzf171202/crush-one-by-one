@@ -62,9 +62,8 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:text="跳转"
-        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="@dimen/text_15"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>

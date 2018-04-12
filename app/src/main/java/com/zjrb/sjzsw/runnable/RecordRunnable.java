@@ -24,10 +24,8 @@ import java.io.IOException;
  */
 
 public class RecordRunnable implements Runnable {
-    private final String TAG = getClass().getSimpleName();
-
     private static final int DEFAULT_SAMPLING_RATE = 44100;
-
+    private final String TAG = getClass().getSimpleName();
     private boolean isRecroding = false;
     private AudioRecord audioRecord = null;
     // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
@@ -61,7 +59,7 @@ public class RecordRunnable implements Runnable {
 
     @Override
     public void run() {
-        File recorderFile = new File(FileUtil.getDiskCacheDir("audio"),  "test.pcm");
+        File recorderFile = new File(FileUtil.getDiskCacheDir("audio"), "test.pcm");
         try {
             dataOutputStream = new DataOutputStream(
                     new BufferedOutputStream(new FileOutputStream(recorderFile)));

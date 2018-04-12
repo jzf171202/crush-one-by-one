@@ -7,8 +7,8 @@ import android.text.TextUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -68,18 +68,20 @@ public class Utils {
 
     /**
      * 获取特定格式时间
+     *
      * @param date
      * @return
      */
-    public static String getFormatData(Date date)
-    {
+    public static String getFormatData(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("MM月dd HH:mm");
         return format.format(date);
     }
+
     /**
      * 获取特定格式的数据
+     *
      * @param cnt
-     * @return   00:00:00的时间格式
+     * @return 00:00:00的时间格式
      */
     public static String getStringTime(int cnt) {
         int hour = cnt / 3600;
@@ -90,15 +92,16 @@ public class Utils {
 
     /**
      * 获取长整型数字的位数
+     *
      * @param num
      * @return
      */
-    public static int getNumLenght(long num){
-        num = num>0?num:-num;
-        if (num==0) {
+    public static int getNumLenght(long num) {
+        num = num > 0 ? num : -num;
+        if (num == 0) {
             return 1;
         }
-        return (int) Math.log10(num)+1;
+        return (int) Math.log10(num) + 1;
     }
 
 }

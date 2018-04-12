@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.jzf.net.exception.ApiException;
 import com.jzf.net.listener.OnResultCallBack;
-import com.jzf.net.observer.BaseObserver;
+import com.jzf.net.observer.ApiObserver;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.api.NetManager;
-import com.zjrb.sjzsw.controller.LoginController;
 import com.zjrb.sjzsw.entity.LoginEntity;
 import com.zjrb.sjzsw.listener.NetListener;
+import com.zjrb.sjzsw.presenter.LoginPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +32,7 @@ public class NetFragment extends BaseFragment {
     TextView infoShow;
     Unbinder unbinder;
     private String url = "http://apistore.baidu.com/microservice/weather?citypinyin=beijing";
-    private LoginController loginController;
+    private LoginPresenter loginPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -41,7 +41,7 @@ public class NetFragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        registerController(loginController = new LoginController(context));
+        initPresenter(loginPresenter = new LoginPresenter());
     }
 
 
@@ -80,8 +80,8 @@ public class NetFragment extends BaseFragment {
                 });
                 break;
             case R.id.retrofit_load:
-                loginController.login("chenshaohua", "12345678", loginController.registerObserver(
-                        new BaseObserver(context, new OnResultCallBack<LoginEntity>() {
+                loginPresenter.login("chenshaohua", "12345678", loginPresenter.registerObserver(
+                        new ApiObserver(context, new OnResultCallBack<LoginEntity>() {
 
                             @Override
                             public void onSuccess(LoginEntity loginEntity) {

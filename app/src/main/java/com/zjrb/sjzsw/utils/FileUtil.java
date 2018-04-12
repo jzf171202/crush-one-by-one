@@ -22,7 +22,7 @@ public class FileUtil {
      * 获取本地文件
      *
      * @param directory 子目录
-     * /storage/emulated/0/Android/data/com.zjrb.sjzsw/cache/子目录
+     *                  /storage/emulated/0/Android/data/com.zjrb.sjzsw/cache/子目录
      * @return
      */
     public static File getDiskCacheDir(String directory) {
@@ -44,7 +44,6 @@ public class FileUtil {
      * MD5 算法
      *
      * @param key
-     *
      * @return
      */
     public static String hashKeyForDisk(String key) {

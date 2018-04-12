@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/load_main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/dp_10"
     android:background="@drawable/bg_round_white"
     android:gravity="center"
-    android:id="@+id/load_main"
-    android:layout_margin="@dimen/dp_10"
-    android:layout_gravity="center"
     android:orientation="vertical">
 
     <ImageView

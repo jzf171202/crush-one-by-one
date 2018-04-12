@@ -23,6 +23,8 @@ package com.jzf.image.cache.disc.naming;
  */
 public interface FileNameGenerator {
 
-	/** Generates unique file name for image defined by URI */
-	String generate(String imageUri);
+    /**
+     * Generates unique file name for image defined by URI
+     */
+    String generate(String imageUri);
 }

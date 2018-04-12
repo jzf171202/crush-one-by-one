@@ -22,5 +22,5 @@ package com.jzf.image.core.assist;
  * @since 1.6.3
  */
 public enum QueueProcessingType {
-	FIFO, LIFO
+    FIFO, LIFO
 }

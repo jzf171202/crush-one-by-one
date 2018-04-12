@@ -33,43 +33,48 @@ import java.util.Map;
  */
 public abstract class BaseMemoryCache implements MemoryCache {
 
-	/** Stores not strong references to objects */
-	private final Map<String, Reference<Bitmap>> softMap = Collections.synchronizedMap(new HashMap<String, Reference<Bitmap>>());
-	@Override
-	public Bitmap get(String key) {
-		Bitmap result = null;
-		Reference<Bitmap> reference = softMap.get(key);
-		if (reference != null) {
-			//获取存储在该引用类型中的强引用bitmap
-			result = reference.get();
-		}
-		return result;
-	}
+    /**
+     * Stores not strong references to objects
+     */
+    private final Map<String, Reference<Bitmap>> softMap = Collections.synchronizedMap(new HashMap<String, Reference<Bitmap>>());
 
-	@Override
-	public boolean put(String key, Bitmap value) {
-		softMap.put(key, createReference(value));
-		return true;
-	}
+    @Override
+    public Bitmap get(String key) {
+        Bitmap result = null;
+        Reference<Bitmap> reference = softMap.get(key);
+        if (reference != null) {
+            //获取存储在该引用类型中的强引用bitmap
+            result = reference.get();
+        }
+        return result;
+    }
 
-	@Override
-	public Bitmap remove(String key) {
-		Reference<Bitmap> bmpRef = softMap.remove(key);
-		return bmpRef == null ? null : bmpRef.get();
-	}
+    @Override
+    public boolean put(String key, Bitmap value) {
+        softMap.put(key, createReference(value));
+        return true;
+    }
 
-	@Override
-	public Collection<String> keys() {
-		synchronized (softMap) {
-			return new HashSet<String>(softMap.keySet());
-		}
-	}
+    @Override
+    public Bitmap remove(String key) {
+        Reference<Bitmap> bmpRef = softMap.remove(key);
+        return bmpRef == null ? null : bmpRef.get();
+    }
 
-	@Override
-	public void clear() {
-		softMap.clear();
-	}
+    @Override
+    public Collection<String> keys() {
+        synchronized (softMap) {
+            return new HashSet<String>(softMap.keySet());
+        }
+    }
 
-	/** Creates {@linkplain Reference not strong} reference of value */
-	protected abstract Reference<Bitmap> createReference(Bitmap value);
+    @Override
+    public void clear() {
+        softMap.clear();
+    }
+
+    /**
+     * Creates {@linkplain Reference not strong} reference of value
+     */
+    protected abstract Reference<Bitmap> createReference(Bitmap value);
 }
