@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.ui.fragment.AnimatorFragment;
 import com.zjrb.sjzsw.ui.fragment.CustomViewFragment;
-import com.zjrb.sjzsw.ui.fragment.ImageFragment;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
 import com.zjrb.sjzsw.ui.fragment.Rxjava2Fragment;
 import com.zjrb.sjzsw.ui.fragment.ThreadFragment;
@@ -51,10 +50,6 @@ public class MainActivity extends BaseActivity {
     private void selectFragment(int type) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (type) {
-            case 1:
-                fragmentTransaction.replace(R.id.fragment_id, new ImageFragment());
-                titleText.setText("图片加载");
-                break;
             case 2:
                 fragmentTransaction.replace(R.id.fragment_id, new NetFragment());
                 titleText.setText("网络架构");
