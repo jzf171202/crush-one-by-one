@@ -8,10 +8,11 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class BaseObserver<T> implements Observer<T> {
+    private Disposable mDisposable;
 
     @Override
     public void onSubscribe(Disposable d) {
-
+        mDisposable = d;
     }
 
     @Override
@@ -27,5 +28,11 @@ public class BaseObserver<T> implements Observer<T> {
     @Override
     public void onComplete() {
 
+    }
+
+    public void unSubscribe() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
     }
 }

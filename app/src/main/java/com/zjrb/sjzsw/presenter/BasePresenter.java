@@ -2,10 +2,10 @@ package com.zjrb.sjzsw.presenter;
 
 import android.util.Log;
 
+import com.jzf.net.observer.BaseObserver;
 import com.jzf.net.observer.ObserverManager;
 import com.zjrb.sjzsw.listener.LifeCycle;
 
-import io.reactivex.Observer;
 
 /**
  * Created by jinzifu on 2017/9/1.
@@ -21,25 +21,25 @@ public class BasePresenter implements LifeCycle {
     /**
      * 注册observer控制器
      *
-     * @param observer
+     * @param baseObserver
      */
-    public Observer registerObserver(Observer observer) {
-        if (null != observer) {
-            String key = observer.getClass().getSimpleName();
+    public BaseObserver registerObserver(BaseObserver baseObserver) {
+        if (null != baseObserver) {
+            String key = baseObserver.getClass().getSimpleName();
             Log.d(TAG, "registerObserver = " + key);
-            mObserverManager.register(key, observer);
+            mObserverManager.register(key, baseObserver);
         }
-        return observer;
+        return baseObserver;
     }
 
     /**
      * 反注册observer控制器
      *
-     * @param observer
+     * @param baseObserver
      */
-    public void removeObserver(Observer observer) {
-        if (null != observer) {
-            String key = observer.getClass().getSimpleName();
+    public void removeObserver(BaseObserver baseObserver) {
+        if (null != baseObserver) {
+            String key = baseObserver.getClass().getSimpleName();
             Log.d(TAG, "removeObserver = " + key);
             mObserverManager.unRegister(key);
         }

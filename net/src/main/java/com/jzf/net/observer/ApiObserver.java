@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.jzf.net.BuildConfig;
 import com.jzf.net.api.BaseResponse;
 import com.jzf.net.exception.ApiException;
-import com.jzf.net.listener.OnResultCallBack;
+import com.jzf.net.listener.ApiCallBack;
 import com.jzf.net.ui.LoadingDialog;
 
 import io.reactivex.disposables.Disposable;
@@ -19,34 +19,19 @@ import io.reactivex.disposables.Disposable;
  *         不支持rxjava 2.x背压的，不是好的网络库
  */
 public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
-    private OnResultCallBack mOnResultListener;
-    private Disposable mDisposable;
-    private Context context;
+    private ApiCallBack mApiCallBack;
+    private Context mContext;
     private LoadingDialog mLoadingDialog;
 
-    public ApiObserver(Context context, OnResultCallBack listener) {
-        this.mOnResultListener = listener;
-        this.context = context;
-        mLoadingDialog = new LoadingDialog(context);
+    public ApiObserver(Context mContext, ApiCallBack listener) {
+        this.mApiCallBack = listener;
+        this.mContext = mContext;
+        mLoadingDialog = new LoadingDialog(mContext);
     }
-
-    public void dismissDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-        }
-    }
-
-    public void showDialog() {
-        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
-            mLoadingDialog.show();
-        }
-    }
-
 
     @Override
     public void onSubscribe(Disposable d) {
         super.onSubscribe(d);
-        mDisposable = d;
         showDialog();
     }
 
@@ -54,9 +39,9 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     public void onNext(BaseResponse<T> tBaseResponse) {
         super.onNext(tBaseResponse);
         if (tBaseResponse.isOk()) {
-            if (mOnResultListener != null) {
+            if (mApiCallBack != null) {
                 T t = tBaseResponse.getData();
-                mOnResultListener.onSuccess(t);
+                mApiCallBack.onSuccess(t);
             }
         } else {
             onError(new ApiException.ResponeThrowable(tBaseResponse.getCode(), tBaseResponse.getMsg()));
@@ -75,8 +60,8 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
                 }
                 break;
         }
-        if (mOnResultListener != null) {
-            mOnResultListener.onError(responeThrowable);
+        if (mApiCallBack != null) {
+            mApiCallBack.onError(responeThrowable);
         }
     }
 
@@ -84,29 +69,32 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     public void onComplete() {
         super.onComplete();
         dismissDialog();
-        if (mOnResultListener != null) {
-            mOnResultListener.onComplete();
+        if (mApiCallBack != null) {
+            mApiCallBack.onComplete();
         }
     }
 
+    @Override
     public void unSubscribe() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-            if (mLoadingDialog != null) {
-                mLoadingDialog.dismiss();
-                mLoadingDialog = null;
-            }
+        super.unSubscribe();
+        dismissDialog();
+    }
+
+    public void dismissDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 
-    /**
-     * 展示错误状态吐司
-     *
-     * @param string
-     */
+    public void showDialog() {
+        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
+        }
+    }
+
     private void showTost(String string) {
         if (!TextUtils.isEmpty(string)) {
-            Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, string, Toast.LENGTH_SHORT).show();
         }
     }
 }

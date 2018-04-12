@@ -5,7 +5,7 @@ import com.jzf.net.exception.ApiException;
 /**
  * @author jinzifu
  */
-public interface OnResultCallBack<T> {
+public interface ApiCallBack<T> {
 
     /**
      * 成功返回

@@ -5,7 +5,7 @@ package com.jzf.net;
  * @author jinzifu
  */
 public class Constant {
-    public static final String BASE_URL = "http://121.43.160.180/";
+    public static final String BASE_URL = "https://newslive.8531.cn/";
 
     /**
      * API返回-正确码

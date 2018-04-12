@@ -3,7 +3,7 @@ package com.jzf.net.interceptor;
 import android.content.Context;
 import android.util.Log;
 
-import com.jzf.net.NetUtil;
+import com.jzf.net.ApiUtil;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public class CaheInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        if (NetUtil.isNetConnected(context)) {
+        if (ApiUtil.isNetConnected(context)) {
             Response response = chain.proceed(request);
             // read from cache for 1 s
             int maxAge = 1;

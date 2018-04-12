@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("deprecation")
-public class NetUtil {
+public class ApiUtil {
 
     /**
      * 检测网络是否连接

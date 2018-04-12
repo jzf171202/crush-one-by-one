@@ -6,16 +6,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jzf.net.exception.ApiException;
-import com.jzf.net.listener.OnResultCallBack;
+import com.jzf.net.listener.ApiCallBack;
 import com.jzf.net.observer.ApiObserver;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.api.NetManager;
 import com.zjrb.sjzsw.entity.LoginEntity;
 import com.zjrb.sjzsw.listener.NetListener;
 import com.zjrb.sjzsw.presenter.LoginPresenter;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +35,12 @@ public class NetFragment extends BaseFragment {
     @BindView(R.id.info_show)
     TextView infoShow;
     Unbinder unbinder;
+    @BindView(R.id.account)
+    EditText account;
+    @BindView(R.id.password)
+    EditText password;
     private String url = "http://apistore.baidu.com/microservice/weather?citypinyin=beijing";
-    private LoginPresenter loginPresenter;
+    private LoginPresenter mLoginPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -41,7 +49,7 @@ public class NetFragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        initPresenter(loginPresenter = new LoginPresenter());
+        initPresenter(mLoginPresenter = new LoginPresenter());
     }
 
 
@@ -80,12 +88,14 @@ public class NetFragment extends BaseFragment {
                 });
                 break;
             case R.id.retrofit_load:
-                loginPresenter.login("chenshaohua", "12345678", loginPresenter.registerObserver(
-                        new ApiObserver(context, new OnResultCallBack<LoginEntity>() {
+                String acount = account.getText().toString();
+                String pasword = password.getText().toString();
+                mLoginPresenter.login(acount, encode(pasword), mLoginPresenter.registerObserver(
+                        new ApiObserver(context, new ApiCallBack<LoginEntity>() {
 
                             @Override
                             public void onSuccess(LoginEntity loginEntity) {
-                                showToast(loginEntity.getUser().getTruename());
+                                infoShow.setText("" + loginEntity.getUser().getTruename());
                             }
 
                             @Override
@@ -95,12 +105,34 @@ public class NetFragment extends BaseFragment {
 
                             @Override
                             public void onError(ApiException.ResponeThrowable e) {
-                                Log.d("onError", e.getMessage());
                             }
                         })));
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 加密登录参数
+     *
+     * @param password
+     */
+    private String encode(String password) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            for (int i = 0; i < password.length(); i++) {
+                String item = password.charAt(i) + "";
+                String output = URLEncoder.encode(item.trim(), "UTF-8");
+                if (output.equals(item)) {
+                    output = Integer.toHexString(password.charAt(i));
+                }
+                stringBuilder.append(output);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        password = stringBuilder.toString().replaceAll("\\%", "").toUpperCase();
+        return password;
     }
 }

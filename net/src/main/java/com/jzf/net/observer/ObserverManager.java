@@ -3,9 +3,6 @@ package com.jzf.net.observer;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observer;
-
-
 /**
  * 类描述：Observer管理器
  *
@@ -15,20 +12,20 @@ import io.reactivex.Observer;
  */
 
 public class ObserverManager {
-    private Map<String, Observer> mObserverMap;
+    private Map<String, BaseObserver> mObserverMap;
 
     public ObserverManager() {
-        mObserverMap = new HashMap<String, Observer>();
+        mObserverMap = new HashMap<String, BaseObserver>();
     }
 
     /**
      * 注册Observer
      *
      * @param key
-     * @param commonObserver
+     * @param baseObserver
      */
-    public void register(String key, Observer commonObserver) {
-        mObserverMap.put(key, commonObserver);
+    public void register(String key, BaseObserver baseObserver) {
+        mObserverMap.put(key, baseObserver);
     }
 
     /**
@@ -38,9 +35,9 @@ public class ObserverManager {
      * @return true 反注册成功
      */
     public boolean unRegister(String key) {
-        Observer observer = mObserverMap.get(key);
-        if (observer != null) {
-//            observer.unSubscribe();
+        BaseObserver baseObserver = mObserverMap.get(key);
+        if (baseObserver != null) {
+            baseObserver.unSubscribe();
             mObserverMap.remove(key);
             return true;
         }
@@ -53,7 +50,7 @@ public class ObserverManager {
      * @param key
      * @return
      */
-    public Observer get(String key) {
+    public BaseObserver get(String key) {
         return mObserverMap.get(key);
     }
 
@@ -61,8 +58,8 @@ public class ObserverManager {
      * 反注册所有Observer
      */
     public void onDestroy() {
-        for (Map.Entry<String, Observer> entry : mObserverMap.entrySet()) {
-//            entry.getValue().unSubscribe();
+        for (Map.Entry<String, BaseObserver> entry : mObserverMap.entrySet()) {
+            entry.getValue().unSubscribe();
         }
         mObserverMap.clear();
     }

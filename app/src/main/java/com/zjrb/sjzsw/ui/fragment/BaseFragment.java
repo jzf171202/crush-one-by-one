@@ -129,11 +129,6 @@ public abstract class BaseFragment extends Fragment {
         mPresenterManager.onDestroy();
     }
 
-    /**
-     * 通用toast展示
-     *
-     * @param string
-     */
     protected void showToast(String string) {
         if (!getActivity().isFinishing()) {
             Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
