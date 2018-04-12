@@ -1,6 +1,6 @@
 package com.zjrb.sjzsw.api;
 
-import com.zjrb.sjzsw.listener.NetListener;
+import com.zjrb.sjzsw.biz.INetCallBack;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +25,7 @@ public class NetManager {
      * @param url
      * @param paragm
      */
-    public static void post(final String url, final String paragm, final NetListener netListener) {
+    public static void post(final String url, final String paragm, final INetCallBack INetCallBack) {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
@@ -52,12 +52,12 @@ public class NetManager {
                     if (HttpURLConnection.HTTP_OK == responseCode) {
                         InputStream inputStream = httpURLConnection.getInputStream();
                         String response = getStringFromInputStream(inputStream);
-                        if (null != netListener) {
-                            netListener.onResponseListener(response);
+                        if (null != INetCallBack) {
+                            INetCallBack.onResponseListener(response);
                         }
                     } else {
-                        if (null != netListener) {
-                            netListener.onErrorListener(httpURLConnection.getResponseCode());
+                        if (null != INetCallBack) {
+                            INetCallBack.onErrorListener(httpURLConnection.getResponseCode());
                         }
                     }
                 } catch (MalformedURLException e) {
@@ -79,7 +79,7 @@ public class NetManager {
      * @param url
      * @return
      */
-    public static void get(final String url, final NetListener netListener) {
+    public static void get(final String url, final INetCallBack INetCallBack) {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
@@ -101,12 +101,12 @@ public class NetManager {
                         // getInputStream()也是同理。
                         InputStream inputStream = httpURLConnection.getInputStream();
                         String response = getStringFromInputStream(inputStream);
-                        if (null != netListener) {
-                            netListener.onResponseListener(response);
+                        if (null != INetCallBack) {
+                            INetCallBack.onResponseListener(response);
                         }
                     } else {
-                        if (null != netListener) {
-                            netListener.onErrorListener(httpURLConnection.getResponseCode());
+                        if (null != INetCallBack) {
+                            INetCallBack.onErrorListener(httpURLConnection.getResponseCode());
                         }
                     }
                 } catch (MalformedURLException e) {

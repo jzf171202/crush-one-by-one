@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.zjrb.sjzsw.listener.OnChildViewClickListener;
+import com.zjrb.sjzsw.biz.IViewClick;
 
 import butterknife.ButterKnife;
 
@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseFrameLayout extends FrameLayout {
-    protected OnChildViewClickListener onChildViewClickListener;
+    protected IViewClick iViewClick;
     private Context context;
 
     public BaseFrameLayout(@NonNull Context context) {
@@ -42,8 +42,8 @@ public abstract class BaseFrameLayout extends FrameLayout {
         }
     }
 
-    public void setOnChildViewClickListener(OnChildViewClickListener onChildViewClickListener) {
-        this.onChildViewClickListener = onChildViewClickListener;
+    public void setiViewClick(IViewClick iViewClick) {
+        this.iViewClick = iViewClick;
     }
 
     /**
@@ -54,8 +54,8 @@ public abstract class BaseFrameLayout extends FrameLayout {
      * @param obj
      */
     protected void onChildViewClick(View childView, String action, Object obj) {
-        if (onChildViewClickListener != null) {
-            onChildViewClickListener.onChildViewClick(childView, action, obj);
+        if (iViewClick != null) {
+            iViewClick.onChildViewClickListener(childView, action, obj);
         }
     }
 

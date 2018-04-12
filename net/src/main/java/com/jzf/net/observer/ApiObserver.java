@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import com.jzf.net.BuildConfig;
 import com.jzf.net.api.BaseResponse;
+import com.jzf.net.biz.ApiCallBack;
 import com.jzf.net.exception.ApiException;
-import com.jzf.net.listener.ApiCallBack;
 import com.jzf.net.ui.LoadingDialog;
 
 import io.reactivex.disposables.Disposable;
@@ -20,13 +20,12 @@ import io.reactivex.disposables.Disposable;
  */
 public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     private ApiCallBack mApiCallBack;
-    private Context mContext;
     private LoadingDialog mLoadingDialog;
 
-    public ApiObserver(Context mContext, ApiCallBack listener) {
-        this.mApiCallBack = listener;
-        this.mContext = mContext;
-        mLoadingDialog = new LoadingDialog(mContext);
+    public ApiObserver(Context context, ApiCallBack mApiCallBack) {
+        super(context);
+        this.mApiCallBack = mApiCallBack;
+        mLoadingDialog = new LoadingDialog(context);
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.zjrb.sjzsw.listener;
+package com.zjrb.sjzsw.biz;
 
 /**
  * Created by jinzifu on 2017/9/1.
  */
 
-public interface LifeCycle {
+public interface ILifeCycle {
     /**
      * 绑定Activity/fragment生命周期 onStart 阶段
      */

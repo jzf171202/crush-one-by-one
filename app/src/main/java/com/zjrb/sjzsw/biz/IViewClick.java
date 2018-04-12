@@ -1,11 +1,11 @@
-package com.zjrb.sjzsw.listener;
+package com.zjrb.sjzsw.biz;
 
 import android.view.View;
 
 /**
  * Created by jinzifu on 2017/6/10.
  */
-public interface OnChildViewClickListener {
+public interface IViewClick {
 
     /**
      * view 内子控件点击事件监听回调
@@ -14,5 +14,5 @@ public interface OnChildViewClickListener {
      * @param action    活动类型——一般写为view的ID
      * @param obj       额外数据
      */
-    void onChildViewClick(View childView, String action, Object obj);
+    void onChildViewClickListener(View childView, String action, Object obj);
 }

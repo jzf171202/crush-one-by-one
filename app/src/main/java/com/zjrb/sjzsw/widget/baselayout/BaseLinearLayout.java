@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.zjrb.sjzsw.listener.OnChildViewClickListener;
+import com.zjrb.sjzsw.biz.IViewClick;
 
 import butterknife.ButterKnife;
 
@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseLinearLayout extends LinearLayout {
-    protected OnChildViewClickListener onChildViewClickListener;
+    protected IViewClick iViewClick;
     private Context context;
 
     public BaseLinearLayout(Context context) {
@@ -41,8 +41,8 @@ public abstract class BaseLinearLayout extends LinearLayout {
         }
     }
 
-    public void setOnChildViewClickListener(OnChildViewClickListener onChildViewClickListener) {
-        this.onChildViewClickListener = onChildViewClickListener;
+    public void setiViewClick(IViewClick iViewClick) {
+        this.iViewClick = iViewClick;
     }
 
     /**
@@ -53,8 +53,8 @@ public abstract class BaseLinearLayout extends LinearLayout {
      * @param obj
      */
     protected void onChildViewClick(View childView, String action, Object obj) {
-        if (onChildViewClickListener != null) {
-            onChildViewClickListener.onChildViewClick(childView, action, obj);
+        if (iViewClick != null) {
+            iViewClick.onChildViewClickListener(childView, action, obj);
         }
     }
 

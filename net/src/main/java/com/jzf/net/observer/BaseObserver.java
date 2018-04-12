@@ -1,5 +1,7 @@
 package com.jzf.net.observer;
 
+import android.content.Context;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -8,7 +10,15 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class BaseObserver<T> implements Observer<T> {
+    public Context mContext;
     private Disposable mDisposable;
+
+    public BaseObserver(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public BaseObserver() {
+    }
 
     @Override
     public void onSubscribe(Disposable d) {

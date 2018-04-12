@@ -1,10 +1,12 @@
 package com.zjrb.sjzsw.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.jzf.net.observer.BaseObserver;
 import com.jzf.net.observer.ObserverManager;
-import com.zjrb.sjzsw.listener.LifeCycle;
+import com.zjrb.sjzsw.biz.ILifeCycle;
+import com.zjrb.sjzsw.biz.presenterBiz.IPBase;
 
 
 /**
@@ -14,9 +16,14 @@ import com.zjrb.sjzsw.listener.LifeCycle;
  * 这是我没用mvp的原因：https://juejin.im/post/58b25e588d6d810057ed3659
  */
 
-public class BasePresenter implements LifeCycle {
+public class BasePresenter implements ILifeCycle, IPBase {
     private final String TAG = getClass().getSimpleName();
+    public Context mContext;
     private ObserverManager mObserverManager = new ObserverManager();
+
+    public BasePresenter(Context mContext) {
+        this.mContext = mContext;
+    }
 
     /**
      * 注册observer控制器

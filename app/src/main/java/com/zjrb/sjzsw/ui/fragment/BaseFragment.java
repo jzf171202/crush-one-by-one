@@ -23,7 +23,7 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
 
 public abstract class BaseFragment extends Fragment {
     protected PresenterManager mPresenterManager = new PresenterManager();
-    protected Context context;
+    public Context mContext;
     private View rootView;
     private ViewGroup container;
 
@@ -45,7 +45,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.mContext = context;
     }
 
     @Nullable
@@ -71,7 +71,7 @@ public abstract class BaseFragment extends Fragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             if (container != null) {
                 ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
-                layoutParams.height = ScreenUtil.dip2px(context, 50);
+                layoutParams.height = ScreenUtil.dip2px(mContext, 50);
                 container.setLayoutParams(layoutParams);
             }
         }
@@ -131,7 +131,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected void showToast(String string) {
         if (!getActivity().isFinishing()) {
-            Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
