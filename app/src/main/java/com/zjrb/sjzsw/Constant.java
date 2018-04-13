@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.common;
+package com.zjrb.sjzsw;
 
 import android.Manifest;
 

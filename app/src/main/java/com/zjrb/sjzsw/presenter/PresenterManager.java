@@ -2,7 +2,7 @@ package com.zjrb.sjzsw.presenter;
 
 import android.content.Intent;
 
-import com.zjrb.sjzsw.biz.ILifeCycle;
+import com.zjrb.sjzsw.biz.other.ILifeCycle;
 
 import java.util.HashMap;
 import java.util.Map;

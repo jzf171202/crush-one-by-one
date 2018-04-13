@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.common.Constant;
+import com.zjrb.sjzsw.Constant;
 import com.zjrb.sjzsw.utils.ActivityUtil;
 import com.zjrb.sjzsw.utils.ListUtil;
 

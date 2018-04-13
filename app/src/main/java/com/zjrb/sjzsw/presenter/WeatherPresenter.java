@@ -3,7 +3,7 @@ package com.zjrb.sjzsw.presenter;
 import android.text.TextUtils;
 
 import com.zjrb.sjzsw.api.NetManager;
-import com.zjrb.sjzsw.biz.INetCallBack;
+import com.zjrb.sjzsw.biz.other.INetCallBack;
 import com.zjrb.sjzsw.biz.presenterBiz.IPWeather;
 import com.zjrb.sjzsw.biz.viewBiz.IVWeather;
 

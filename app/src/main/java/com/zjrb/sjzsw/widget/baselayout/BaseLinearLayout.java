@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.zjrb.sjzsw.biz.IViewClick;
+import com.zjrb.sjzsw.biz.other.IViewClick;
 
 import butterknife.ButterKnife;
 

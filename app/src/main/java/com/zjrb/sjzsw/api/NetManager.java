@@ -1,6 +1,6 @@
 package com.zjrb.sjzsw.api;
 
-import com.zjrb.sjzsw.biz.INetCallBack;
+import com.zjrb.sjzsw.biz.other.INetCallBack;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 
 import java.io.ByteArrayOutputStream;

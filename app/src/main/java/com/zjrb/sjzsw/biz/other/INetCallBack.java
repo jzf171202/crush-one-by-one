@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.biz;
+package com.zjrb.sjzsw.biz.other;
 
 /**
  * Created by jinzifu on 2017/9/23.

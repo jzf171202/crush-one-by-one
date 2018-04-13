@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.biz;
+package com.zjrb.sjzsw.biz.other;
 
 import android.view.View;
 

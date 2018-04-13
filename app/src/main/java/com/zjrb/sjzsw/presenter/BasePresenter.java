@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.jzf.net.biz.IVBase;
 import com.jzf.net.observer.BaseObserver;
 import com.jzf.net.observer.ObserverManager;
-import com.zjrb.sjzsw.biz.ILifeCycle;
+import com.zjrb.sjzsw.biz.other.ILifeCycle;
 
 
 /**
