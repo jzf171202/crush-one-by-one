@@ -11,7 +11,6 @@ import com.zjrb.sjzsw.api.ApiManager;
 import com.zjrb.sjzsw.biz.presenterBiz.IPLogin;
 import com.zjrb.sjzsw.biz.viewBiz.IVLogin;
 import com.zjrb.sjzsw.entity.LoginEntity;
-import com.zjrb.sjzsw.ui.fragment.NetFragment;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -26,12 +25,10 @@ import io.reactivex.Observable;
  * @date 2017/11/27 2020
  */
 
-public class LoginPresenter extends BasePresenter implements IPLogin {
-    private IVLogin mIvLogin;
+public class LoginPresenter extends BasePresenter<IVLogin> implements IPLogin {
 
-    public LoginPresenter(Context mContext, IVLogin mIvLogin) {
+    public LoginPresenter(Context mContext) {
         super(mContext);
-        this.mIvLogin = mIvLogin;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class LoginPresenter extends BasePresenter implements IPLogin {
             @Override
             public void onSuccess(LoginEntity loginEntity) {
                 if (null != loginEntity) {
-                    mIvLogin.showInfo(loginEntity);
+                    v.showInfo(loginEntity);
                 }
             }
 

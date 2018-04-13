@@ -1,14 +1,14 @@
 package com.zjrb.sjzsw.biz;
 
+import android.content.Intent;
+
 /**
  * Created by jinzifu on 2017/9/1.
  */
 
 public interface ILifeCycle {
-    /**
-     * 绑定Activity/fragment生命周期 onStart 阶段
-     */
-    void onStart();
+
+    void onNewIntent(Intent intent);
 
     /**
      * 绑定Activity/fragment生命周期 onResume 阶段

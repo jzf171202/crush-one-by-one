@@ -44,10 +44,8 @@ public class NetFragment extends BaseFragment implements IVLogin {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        //this和context和getApplictionContext的区别:https://blog.csdn.net/wang_8649/article/details/70535978
-        initPresenter(mLoginPresenter = new LoginPresenter(mContext, this));
+        registerPresenter(mLoginPresenter = new LoginPresenter(mContext));
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

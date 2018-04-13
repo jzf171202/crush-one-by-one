@@ -1,6 +1,7 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.jzf.net.biz.IVBase;
 import com.zjrb.sjzsw.ActivityStackManager;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.presenter.BasePresenter;
@@ -25,7 +27,7 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制activity基类
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IVBase {
     protected Context mContext;
     private PresenterManager mPresenterManager = new PresenterManager();
     private View mRootView;
@@ -78,9 +80,11 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param basePresenter
      */
-    protected void initPresenter(BasePresenter basePresenter) {
+    protected void registerPresenter(BasePresenter basePresenter) {
         if (basePresenter != null) {
-            mPresenterManager.register(basePresenter.getClass().getSimpleName(), basePresenter);
+            String key = basePresenter.getClass().getSimpleName();
+            mPresenterManager.register(key, basePresenter);
+            basePresenter.attachView(this);
         }
     }
 
@@ -95,9 +99,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mPresenterManager.onStart();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mPresenterManager.onNewIntent(intent);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.zjrb.sjzsw.presenter;
 
+import android.content.Intent;
+
 import com.zjrb.sjzsw.biz.ILifeCycle;
 
 import java.util.HashMap;
@@ -28,9 +30,9 @@ public class PresenterManager implements ILifeCycle {
 
 
     @Override
-    public void onStart() {
+    public void onNewIntent(Intent intent) {
         for (Map.Entry<String, ILifeCycle> entry : presenterMap.entrySet()) {
-            entry.getValue().onStart();
+            entry.getValue().onNewIntent(intent);
         }
     }
 

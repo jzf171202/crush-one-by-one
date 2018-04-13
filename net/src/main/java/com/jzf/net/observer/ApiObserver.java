@@ -82,6 +82,7 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     public void dismissDialog() {
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();
+            mLoadingDialog = null;
         }
     }
 

@@ -1,12 +1,12 @@
 package com.zjrb.sjzsw.presenter;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 
+import com.jzf.net.biz.IVBase;
 import com.jzf.net.observer.BaseObserver;
 import com.jzf.net.observer.ObserverManager;
 import com.zjrb.sjzsw.biz.ILifeCycle;
-import com.zjrb.sjzsw.biz.presenterBiz.IPBase;
 
 
 /**
@@ -16,13 +16,17 @@ import com.zjrb.sjzsw.biz.presenterBiz.IPBase;
  * 这是我没用mvp的原因：https://juejin.im/post/58b25e588d6d810057ed3659
  */
 
-public class BasePresenter implements ILifeCycle, IPBase {
-    private final String TAG = getClass().getSimpleName();
+public class BasePresenter<V extends IVBase> implements ILifeCycle {
     public Context mContext;
+    public V v;
+
     private ObserverManager mObserverManager = new ObserverManager();
 
     public BasePresenter(Context mContext) {
         this.mContext = mContext;
+    }
+
+    public BasePresenter() {
     }
 
     /**
@@ -33,7 +37,6 @@ public class BasePresenter implements ILifeCycle, IPBase {
     public BaseObserver registerObserver(BaseObserver baseObserver) {
         if (null != baseObserver) {
             String key = baseObserver.getClass().getSimpleName();
-            Log.d(TAG, "registerObserver = " + key);
             mObserverManager.register(key, baseObserver);
         }
         return baseObserver;
@@ -47,13 +50,13 @@ public class BasePresenter implements ILifeCycle, IPBase {
     public void removeObserver(BaseObserver baseObserver) {
         if (null != baseObserver) {
             String key = baseObserver.getClass().getSimpleName();
-            Log.d(TAG, "removeObserver = " + key);
             mObserverManager.unRegister(key);
         }
     }
 
+
     @Override
-    public void onStart() {
+    public void onNewIntent(Intent intent) {
 
     }
 
@@ -74,6 +77,43 @@ public class BasePresenter implements ILifeCycle, IPBase {
 
     @Override
     public void onDestroy() {
+        //避免内存泄露的关键代码：移除任务，断开引用
         mObserverManager.onDestroy();
+        detachView();
+        mContext = null;
+    }
+
+    /**
+     * 绑定V层的引用
+     *
+     * @param v
+     */
+    public void attachView(V v) {
+        this.v = v;
+    }
+
+    /**
+     * 断开V层的引用
+     */
+    public void detachView() {
+        this.v = null;
+    }
+
+    /**
+     * 获取V层的引用
+     *
+     * @return
+     */
+    public V getView() {
+        return this.v;
+    }
+
+    /**
+     * 检测V层的引用是否为null,每次调用V层方法须调用此方法检测
+     *
+     * @return
+     */
+    public boolean isViewAttached() {
+        return this.v != null;
     }
 }

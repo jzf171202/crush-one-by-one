@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.jzf.net.biz.IVBase;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.presenter.BasePresenter;
 import com.zjrb.sjzsw.presenter.PresenterManager;
@@ -21,7 +22,7 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制fragment基类
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements IVBase {
     protected PresenterManager mPresenterManager = new PresenterManager();
     public Context mContext;
     private View rootView;
@@ -82,10 +83,11 @@ public abstract class BaseFragment extends Fragment {
      *
      * @param basePresenter
      */
-    protected void initPresenter(BasePresenter basePresenter) {
+    protected void registerPresenter(BasePresenter basePresenter) {
         if (basePresenter != null) {
             String key = basePresenter.getClass().getSimpleName();
             mPresenterManager.register(key, basePresenter);
+            basePresenter.attachView(this);
         }
     }
 
@@ -99,11 +101,6 @@ public abstract class BaseFragment extends Fragment {
         return (BasePresenter) mPresenterManager.get(key);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenterManager.onStart();
-    }
 
     @Override
     public void onResume() {
