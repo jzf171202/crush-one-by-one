@@ -38,7 +38,7 @@ public class LoginPresenter extends BasePresenter<IVLogin> implements IPLogin {
 
             @Override
             public void onSuccess(LoginEntity loginEntity) {
-                if (null != loginEntity) {
+                if (null != loginEntity && isViewAttached()) {
                     v.showInfo(loginEntity);
                 }
             }

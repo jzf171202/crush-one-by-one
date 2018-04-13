@@ -2,7 +2,6 @@ package com.zjrb.sjzsw.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.api.NetManager;
-import com.zjrb.sjzsw.biz.INetCallBack;
 import com.zjrb.sjzsw.biz.viewBiz.IVLogin;
+import com.zjrb.sjzsw.biz.viewBiz.IVWeather;
 import com.zjrb.sjzsw.entity.LoginEntity;
 import com.zjrb.sjzsw.presenter.LoginPresenter;
+import com.zjrb.sjzsw.presenter.WeatherPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +25,7 @@ import butterknife.Unbinder;
  * @date 2017/9/17
  */
 
-public class NetFragment extends BaseFragment implements IVLogin {
+public class NetFragment extends BaseFragment implements IVLogin, IVWeather {
     @BindView(R.id.info_show)
     TextView infoShow;
     Unbinder unbinder;
@@ -36,6 +35,7 @@ public class NetFragment extends BaseFragment implements IVLogin {
     EditText password;
     private String url = "http://www.weather.com.cn/data/cityinfo/101010100.html";
     private LoginPresenter mLoginPresenter;
+    private WeatherPresenter mWeatherPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +45,7 @@ public class NetFragment extends BaseFragment implements IVLogin {
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
         registerPresenter(mLoginPresenter = new LoginPresenter(mContext));
+        registerPresenter(mWeatherPresenter = new WeatherPresenter());
     }
 
     @Override
@@ -64,22 +65,7 @@ public class NetFragment extends BaseFragment implements IVLogin {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.net_load:
-                NetManager.get(url, new INetCallBack() {
-                    @Override
-                    public void onResponseListener(final String string) {
-                        infoShow.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                infoShow.setText(string);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onErrorListener(int responseCode) {
-                        Log.e("onErrorListener", "" + responseCode);
-                    }
-                });
+                mWeatherPresenter.getWeather(url);
                 break;
             case R.id.retrofit_load:
                 String acount = account.getText().toString();
@@ -94,5 +80,15 @@ public class NetFragment extends BaseFragment implements IVLogin {
     @Override
     public void showInfo(LoginEntity loginEntity) {
         infoShow.setText("" + loginEntity.getUser().getTruename());
+    }
+
+    @Override
+    public void showWeather(final String string) {
+        infoShow.post(new Runnable() {
+            @Override
+            public void run() {
+                infoShow.setText("" + string);
+            }
+        });
     }
 }
