@@ -6,8 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.text.TextUtils;
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,6 +28,9 @@ import java.util.List;
  */
 
 public class AppUtil {
+    private static final int SPACE_TIME = 500;
+    private static long mLastClickTime = 0;
+
     /**
      * 查询手机内所有应用包括系统应用
      *
@@ -39,7 +42,6 @@ public class AppUtil {
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         return paklist;
     }
-
 
     /**
      * 查询手机内非系统应用
@@ -62,8 +64,6 @@ public class AppUtil {
         }
         return apps;
     }
-
-
 
     /**
      * 获取进程号对应的进程名
@@ -93,7 +93,6 @@ public class AppUtil {
         }
         return null;
     }
-
 
     /**
      * 查询手机内所有支持分享的应用
@@ -134,11 +133,9 @@ public class AppUtil {
         return pName.contains(packageName);
     }
 
-    private static long mLastClickTime = 0;
-    private static final int SPACE_TIME = 500;
-
     /**
      * 防止过快重复点击 true为太快点击
+     *
      * @return
      */
     public static boolean isFastDoubleClick() {

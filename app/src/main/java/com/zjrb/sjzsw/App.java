@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.blankj.utilcode.util.Utils;
-import com.jzf.image.core.ImageLoader;
-import com.jzf.image.core.ImageLoaderConfiguration;
 import com.jzf.net.api.HttpClient;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -37,9 +35,6 @@ public class App extends Application {
 
         //配置tencent.bugly,上报进程控制
         initBugly();
-
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(configuration);
 
         //初始化APP工具类
         Utils.init(this);

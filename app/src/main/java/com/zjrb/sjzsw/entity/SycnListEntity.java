@@ -31,7 +31,7 @@ public class SycnListEntity {
         return false;
     }
 
-    public  boolean addItem(int i) {
+    public boolean addItem(int i) {
         if (list != null) {
             list.add(i);
             Log.d(TAG, "增加后的list.size = " + list.size());

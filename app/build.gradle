@@ -56,6 +56,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     //https://github.com/Blankj/AndroidUtilCode
     compile 'com.blankj:utilcode:1.9.8'
-    compile project(':image')
     compile project(':audiorecord')
 }

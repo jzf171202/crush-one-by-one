@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.common.Constant;
+import com.zjrb.sjzsw.Constant;
 import com.zjrb.sjzsw.utils.ActivityUtil;
 import com.zjrb.sjzsw.utils.ListUtil;
 
@@ -45,8 +45,8 @@ public class LaunchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        String  versionName = AppUtils.getAppVersionName("com.zjrb.sjzsw");
-        lauchText.setText("V "+versionName);
+        String versionName = AppUtils.getAppVersionName("com.zjrb.sjzsw");
+        lauchText.setText("V " + versionName);
         if (checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
             toNext();
         }
@@ -98,7 +98,7 @@ public class LaunchActivity extends BaseActivity {
                 }
                 if (flag) {
                     toNext();
-                }else {
+                } else {
                     showToast("请打开相应权限，否则会影响APP正常使用");
                 }
                 break;

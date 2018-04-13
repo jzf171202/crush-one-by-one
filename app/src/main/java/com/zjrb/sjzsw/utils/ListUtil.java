@@ -23,10 +23,11 @@ public class ListUtil {
 
     /**
      * list倒序
+     *
      * @param list
      * @return
      */
-    public static List<String> replaceSort(List<String> list){
+    public static List<String> replaceSort(List<String> list) {
         List<String> list2 = new ArrayList<String>();
         if (isListEmpty(list)) {
             return list2;
@@ -34,7 +35,7 @@ public class ListUtil {
         if (list.size() == 1) {
             return list;
         }
-        for (int i = list.size()-1;i >= 0;i--){
+        for (int i = list.size() - 1; i >= 0; i--) {
             list2.add(list.get(i));
         }
         return list2;

@@ -11,9 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.jzf.net.biz.IVBase;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.controller.BaseController;
-import com.zjrb.sjzsw.controller.LifecycleManage;
+import com.zjrb.sjzsw.presenter.BasePresenter;
+import com.zjrb.sjzsw.presenter.PresenterManager;
 import com.zjrb.sjzsw.utils.ScreenUtil;
 
 /**
@@ -21,9 +22,9 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制fragment基类
  */
 
-public abstract class BaseFragment extends Fragment {
-    protected LifecycleManage lifecycleManage = new LifecycleManage();
-    protected Context context;
+public abstract class BaseFragment extends Fragment implements IVBase {
+    protected PresenterManager mPresenterManager = new PresenterManager();
+    public Context mContext;
     private View rootView;
     private ViewGroup container;
 
@@ -45,7 +46,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.mContext = context;
     }
 
     @Nullable
@@ -71,20 +72,22 @@ public abstract class BaseFragment extends Fragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             if (container != null) {
                 ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
-                layoutParams.height = ScreenUtil.dip2px(context, 50);
+                layoutParams.height = ScreenUtil.dip2px(mContext, 50);
                 container.setLayoutParams(layoutParams);
             }
         }
     }
 
     /**
-     * 注册业务类控制器
+     * 注册控制器
      *
-     * @param controller
+     * @param basePresenter
      */
-    protected void registerController(BaseController controller) {
-        if (controller != null) {
-            lifecycleManage.register(controller.getClass().getSimpleName(), controller);
+    protected void registerPresenter(BasePresenter basePresenter) {
+        if (basePresenter != null) {
+            String key = basePresenter.getClass().getSimpleName();
+            mPresenterManager.register(key, basePresenter);
+            basePresenter.attachView(this);
         }
     }
 
@@ -94,48 +97,38 @@ public abstract class BaseFragment extends Fragment {
      * @param key
      * @return
      */
-    public <Controller extends BaseController> Controller getController(String key) {
-        return (Controller) lifecycleManage.get(key);
+    public BasePresenter getPresenter(String key) {
+        return (BasePresenter) mPresenterManager.get(key);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        lifecycleManage.onStart();
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        lifecycleManage.onResume();
+        mPresenterManager.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        lifecycleManage.onPause();
+        mPresenterManager.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        lifecycleManage.onStop();
+        mPresenterManager.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        lifecycleManage.onDestroy();
+        mPresenterManager.onDestroy();
     }
 
-    /**
-     * 通用toast展示
-     *
-     * @param string
-     */
     protected void showToast(String string) {
         if (!getActivity().isFinishing()) {
-            Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }

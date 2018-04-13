@@ -34,17 +34,17 @@ import java.util.List;
  */
 
 public class EncodeRunnable implements Runnable {
-    private final String TAG = getClass().getSimpleName();
     private static final int DEFAULT_SAMPLING_RATE = 44100;
-    private DataOutputStream dataOutputStream = null;
     private static final String MIME = MediaFormat.MIMETYPE_AUDIO_AAC;
+    private final String TAG = getClass().getSimpleName();
+    public MyHandler myHandler;
+    private DataOutputStream dataOutputStream = null;
     // TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
     private List<Task> mTasks = Collections.synchronizedList(new ArrayList<Task>());
     private File recorderFile;
     private MediaCodec.BufferInfo bufferInfo;
     private MediaCodec mediaCodec;
     private MediaPlayer mediaPlayer;
-    public MyHandler myHandler;
 
     public EncodeRunnable() {
         try {
@@ -59,40 +59,6 @@ public class EncodeRunnable implements Runnable {
             e.printStackTrace();
         }
     }
-
-    static class MyHandler extends Handler {
-        private EncodeRunnable encodeRunnable;
-
-        public MyHandler(Looper looper, EncodeRunnable encodeRunnable) {
-            super(looper);
-            this.encodeRunnable = encodeRunnable;
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    encodeRunnable.encodeToAAC();
-                    break;
-                case 1:
-                    while (encodeRunnable.encodeToAAC() > 0) {
-                    }
-                    // TODO: 2018/3/27 这里加一个addWindow的封装dialog就好了。
-                    //转码完毕，自动播放
-                    try {
-                        encodeRunnable.initMediaPlayer();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    ;
 
     /**
      * 初始化音频播放器
@@ -140,6 +106,8 @@ public class EncodeRunnable implements Runnable {
         });
     }
 
+    ;
+
     /**
      * 初始化编码器
      *
@@ -178,7 +146,7 @@ public class EncodeRunnable implements Runnable {
             return 0;
         }
         Task task = mTasks.remove(0);
-       // TODO: 2018/3/27 API20以下的系统，此处debug不下去，应该是MediaCodec参数配置未兼容好。
+        // TODO: 2018/3/27 API20以下的系统，此处debug不下去，应该是MediaCodec参数配置未兼容好。
         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
         if (inputBufferIndex > 0) {
             ByteBuffer inputBuffer = null;
@@ -230,12 +198,6 @@ public class EncodeRunnable implements Runnable {
     /**
      * 给编码出的aac流添加adts头字段
      *
-     * @param packet    要空出前7个字节，否则会搞乱数据
-     * @param packetLen
-     */
-    /**
-     * 给编码出的aac流添加adts头字段
-     *
      * @param packet    AAC原始流数据
      * @param packetLen 元数据长度
      * @param freqIdx   采样率下标
@@ -252,10 +214,48 @@ public class EncodeRunnable implements Runnable {
         packet[6] = (byte) 0xFC;
     }
 
+    /**
+     * 给编码出的aac流添加adts头字段
+     *
+     * @param packet    要空出前7个字节，否则会搞乱数据
+     * @param packetLen
+     */
 
     public void addTask(byte[] rawData, int readSize) {
         mTasks.add(new Task(rawData, readSize));
         myHandler.sendEmptyMessage(0);
+    }
+
+    static class MyHandler extends Handler {
+        private EncodeRunnable encodeRunnable;
+
+        public MyHandler(Looper looper, EncodeRunnable encodeRunnable) {
+            super(looper);
+            this.encodeRunnable = encodeRunnable;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    encodeRunnable.encodeToAAC();
+                    break;
+                case 1:
+                    while (encodeRunnable.encodeToAAC() > 0) {
+                    }
+                    // TODO: 2018/3/27 这里加一个addWindow的封装dialog就好了。
+                    //转码完毕，自动播放
+                    try {
+                        encodeRunnable.initMediaPlayer();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private class Task {

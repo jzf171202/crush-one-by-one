@@ -21,9 +21,46 @@
         android:layout_toRightOf="@+id/net_load"
         android:text="retrofit请求" />
 
+    <LinearLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/retrofit_load"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:hint="请输入账号"
+            android:inputType="textVisiblePassword"
+            android:maxLength="100"
+            android:singleLine="true"
+            android:text="yzm1"
+            android:textCursorDrawable="@drawable/cursor_color" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/account"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:maxLength="100"
+            android:singleLine="true"
+            android:text="a12345678" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/info_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/net_load" />
+        android:layout_below="@+id/input_layout" />
+
 </RelativeLayout>

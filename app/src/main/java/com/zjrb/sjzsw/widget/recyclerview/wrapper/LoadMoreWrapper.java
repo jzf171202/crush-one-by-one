@@ -18,6 +18,7 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     private RecyclerView.Adapter mInnerAdapter;
     private View mLoadMoreView;
     private int mLoadMoreLayoutId;
+    private OnLoadMoreListener mOnLoadMoreListener;
 
     public LoadMoreWrapper(RecyclerView.Adapter adapter) {
         mInnerAdapter = adapter;
@@ -26,7 +27,6 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean hasLoadMore() {
         return mLoadMoreView != null || mLoadMoreLayoutId != 0;
     }
-
 
     private boolean isShowLoadMore(int position) {
         return hasLoadMore() && (position >= mInnerAdapter.getItemCount());
@@ -81,7 +81,6 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
     }
 
-
     @Override
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
         mInnerAdapter.onViewAttachedToWindow(holder);
@@ -107,13 +106,6 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mInnerAdapter.getItemCount() + (hasLoadMore() ? 1 : 0);
     }
 
-
-    public interface OnLoadMoreListener {
-        void onLoadMoreRequested();
-    }
-
-    private OnLoadMoreListener mOnLoadMoreListener;
-
     public LoadMoreWrapper setOnLoadMoreListener(OnLoadMoreListener loadMoreListener) {
         if (loadMoreListener != null) {
             mOnLoadMoreListener = loadMoreListener;
@@ -129,5 +121,9 @@ public class LoadMoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     public LoadMoreWrapper setLoadMoreView(int layoutId) {
         mLoadMoreLayoutId = layoutId;
         return this;
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMoreRequested();
     }
 }

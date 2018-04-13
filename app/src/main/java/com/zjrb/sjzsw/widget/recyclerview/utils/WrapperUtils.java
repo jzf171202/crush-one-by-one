@@ -9,10 +9,6 @@ import android.view.ViewGroup;
  * Created by zhy on 16/6/28.
  */
 public class WrapperUtils {
-    public interface SpanSizeCallback {
-        int getSpanSize(GridLayoutManager layoutManager, GridLayoutManager.SpanSizeLookup oldLookup, int position);
-    }
-
     public static void onAttachedToRecyclerView(RecyclerView.Adapter innerAdapter, RecyclerView recyclerView, final SpanSizeCallback callback) {
         innerAdapter.onAttachedToRecyclerView(recyclerView);
 
@@ -37,5 +33,9 @@ public class WrapperUtils {
             StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
             p.setFullSpan(true);
         }
+    }
+
+    public interface SpanSizeCallback {
+        int getSpanSize(GridLayoutManager layoutManager, GridLayoutManager.SpanSizeLookup oldLookup, int position);
     }
 }

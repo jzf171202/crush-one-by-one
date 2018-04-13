@@ -11,7 +11,8 @@ import java.net.ConnectException;
 
 
 /**
- * Created by Tamic on 2016-08-12.
+ * @author jinzifu
+ * @date 2017-10-06
  */
 public class ApiException {
 
@@ -70,7 +71,7 @@ public class ApiException {
             ex = new ResponeThrowable(e, ERROR.TIMEOUT_ERROR);
             ex.message = "连接超时";
             return ex;
-        }else if (e instanceof java.net.SocketException) {
+        } else if (e instanceof java.net.SocketException) {
             ex = new ResponeThrowable(e, ERROR.TIMEOUT_ERROR);
             ex.message = "网络异常";
             return ex;
@@ -81,6 +82,20 @@ public class ApiException {
         }
     }
 
+    public static class ResponeThrowable extends Exception {
+        public int code;
+        public String message;
+
+        public ResponeThrowable(Throwable throwable, int code) {
+            super(throwable);
+            this.code = code;
+        }
+
+        public ResponeThrowable(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+    }
 
     /**
      * 约定异常
@@ -112,21 +127,6 @@ public class ApiException {
          * 连接超时
          */
         public static final int TIMEOUT_ERROR = 1006;
-    }
-
-    public static class ResponeThrowable extends Exception {
-        public int code;
-        public String message;
-
-        public ResponeThrowable(Throwable throwable, int code) {
-            super(throwable);
-            this.code = code;
-        }
-
-        public ResponeThrowable(int code, String message) {
-            this.code = code;
-            this.message = message;
-        }
     }
 
     public class ServerException extends RuntimeException {

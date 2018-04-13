@@ -21,8 +21,8 @@ import java.io.IOException;
  */
 
 public class PlayRunnable implements Runnable {
-    private final String TAG = getClass().getSimpleName();
     private static final int DEFAULT_SAMPLING_RATE = 44100;
+    private final String TAG = getClass().getSimpleName();
     private File recordFile;
 
     public PlayRunnable(File recordFile) {

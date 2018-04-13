@@ -153,6 +153,14 @@ public class TopicListBean implements Serializable {
         private String userName;
         private String trueName;
 
+        public StreamUsersBean() {
+        }
+
+        public StreamUsersBean(String userName, String trueName) {
+            this.userName = userName;
+            this.trueName = trueName;
+        }
+
         public String getUserName() {
             return userName;
         }
@@ -166,14 +174,6 @@ public class TopicListBean implements Serializable {
         }
 
         public void setTrueName(String trueName) {
-            this.trueName = trueName;
-        }
-
-        public StreamUsersBean() {
-        }
-
-        public StreamUsersBean(String userName, String trueName) {
-            this.userName = userName;
             this.trueName = trueName;
         }
     }

@@ -10,6 +10,7 @@ import com.zjrb.sjzsw.App;
  */
 public class SpUtil {
     private static SharedPreferences sharedPreferences;
+
     public static SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());

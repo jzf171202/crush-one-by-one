@@ -2,20 +2,18 @@ package com.zjrb.sjzsw.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jzf.net.exception.ApiException;
-import com.jzf.net.listener.OnResultCallBack;
-import com.jzf.net.observer.BaseObserver;
 import com.zjrb.sjzsw.R;
-import com.zjrb.sjzsw.api.NetManager;
-import com.zjrb.sjzsw.controller.LoginController;
+import com.zjrb.sjzsw.biz.viewBiz.IVLogin;
+import com.zjrb.sjzsw.biz.viewBiz.IVWeather;
 import com.zjrb.sjzsw.entity.LoginEntity;
-import com.zjrb.sjzsw.listener.NetListener;
+import com.zjrb.sjzsw.presenter.LoginPresenter;
+import com.zjrb.sjzsw.presenter.WeatherPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +25,17 @@ import butterknife.Unbinder;
  * @date 2017/9/17
  */
 
-public class NetFragment extends BaseFragment {
+public class NetFragment extends BaseFragment implements IVLogin, IVWeather {
     @BindView(R.id.info_show)
     TextView infoShow;
     Unbinder unbinder;
-    private String url = "http://apistore.baidu.com/microservice/weather?citypinyin=beijing";
-    private LoginController loginController;
+    @BindView(R.id.account)
+    EditText account;
+    @BindView(R.id.password)
+    EditText password;
+    private String url = "http://www.weather.com.cn/data/cityinfo/101010100.html";
+    private LoginPresenter mLoginPresenter;
+    private WeatherPresenter mWeatherPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -41,9 +44,9 @@ public class NetFragment extends BaseFragment {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        registerController(loginController = new LoginController(context));
+        registerPresenter(mLoginPresenter = new LoginPresenter(mContext));
+        registerPresenter(mWeatherPresenter = new WeatherPresenter());
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,45 +65,30 @@ public class NetFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.net_load:
-                NetManager.get(url, new NetListener() {
-                    @Override
-                    public void onResponseListener(final String string) {
-                        infoShow.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                infoShow.setText(string);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onErrorListener(int responseCode) {
-                        Log.e("onErrorListener", "" + responseCode);
-                    }
-                });
+                mWeatherPresenter.getWeather(url);
                 break;
             case R.id.retrofit_load:
-                loginController.login("chenshaohua", "12345678", loginController.registerObserver(
-                        new BaseObserver(context, new OnResultCallBack<LoginEntity>() {
-
-                            @Override
-                            public void onSuccess(LoginEntity loginEntity) {
-                                showToast(loginEntity.getUser().getTruename());
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-
-                            @Override
-                            public void onError(ApiException.ResponeThrowable e) {
-                                Log.d("onError", e.getMessage());
-                            }
-                        })));
+                String acount = account.getText().toString();
+                String pasword = password.getText().toString();
+                mLoginPresenter.login(acount, pasword);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void showInfo(LoginEntity loginEntity) {
+        infoShow.setText("" + loginEntity.getUser().getTruename());
+    }
+
+    @Override
+    public void showWeather(final String string) {
+        infoShow.post(new Runnable() {
+            @Override
+            public void run() {
+                infoShow.setText("" + string);
+            }
+        });
     }
 }
