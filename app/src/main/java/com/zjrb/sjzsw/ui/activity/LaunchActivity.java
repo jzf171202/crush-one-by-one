@@ -1,5 +1,6 @@
 package com.zjrb.sjzsw.ui.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,7 +57,7 @@ public class LaunchActivity extends BaseActivity {
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ActivityUtil.to(LaunchActivity.this, MainActivity.class);
+                startActivity(new Intent(LaunchActivity.this, DataBindingActivity.class));
                 finish();
             }
         }, 2000);

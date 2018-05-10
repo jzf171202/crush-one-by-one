@@ -25,10 +25,12 @@ android {
         }
     }
 
-    android {
-        lintOptions {
-            abortOnError false
-        }
+    lintOptions {
+        abortOnError false
+    }
+
+    dataBinding{
+        enabled = true;
     }
 }
 
