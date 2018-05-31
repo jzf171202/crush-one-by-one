@@ -57,7 +57,7 @@ public class LaunchActivity extends BaseActivity {
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(LaunchActivity.this, DataBindingActivity.class));
+                startActivity(new Intent(LaunchActivity.this, MainActivity.class));
                 finish();
             }
         }, 2000);
