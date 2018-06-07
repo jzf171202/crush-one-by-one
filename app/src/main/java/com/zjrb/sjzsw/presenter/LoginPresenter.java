@@ -33,6 +33,7 @@ public class LoginPresenter extends BasePresenter<IVLogin> implements IPLogin {
 
     @Override
     public void login(String username, String password) {
+        // TODO: 2018/6/8 解决rxjava包在住项目必须重复依赖的问题
         Observable<BaseResponse<LoginEntity>> observable = ApiManager.getApiService().login(username, encode(password));
         HttpClient.getInstance().execute(observable, registerObserver(new ApiObserver(mContext, new ApiCallBack<LoginEntity>() {
 

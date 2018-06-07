@@ -39,7 +39,6 @@ public class EncodeRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
     public MyHandler myHandler;
     private DataOutputStream dataOutputStream = null;
-    // TODO: 2018/3/16 synchronizedList的用法和原理，是否会因为阻塞导致上下游流速不平衡（背压引入）
     private List<Task> mTasks = Collections.synchronizedList(new ArrayList<Task>());
     private File recorderFile;
     private MediaCodec.BufferInfo bufferInfo;
