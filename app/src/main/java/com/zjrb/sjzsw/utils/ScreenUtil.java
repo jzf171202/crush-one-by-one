@@ -140,7 +140,7 @@ public class ScreenUtil {
 
     public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
         int tabWidth = calculateTabWidth(tabLayout);
-        int screenWidth = getScreenWidth(App.getContext());
+        int screenWidth = getScreenWidth(App.context);
 
         if (tabWidth <= screenWidth) {
             tabLayout.setTabMode(TabLayout.MODE_FIXED);

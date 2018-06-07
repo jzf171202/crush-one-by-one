@@ -3,7 +3,6 @@ package com.zjrb.sjzsw;
 import android.app.Application;
 import android.content.Context;
 
-import com.blankj.utilcode.util.Utils;
 import com.jzf.net.api.HttpClient;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -15,11 +14,7 @@ import com.zjrb.sjzsw.utils.AppUtil;
  */
 public class App extends Application {
 
-    private static Context context;
-
-    public static Context getContext() {
-        return context;
-    }
+    public static Context context;
 
     @Override
     public void onCreate() {
@@ -35,9 +30,6 @@ public class App extends Application {
 
         //配置tencent.bugly,上报进程控制
         initBugly();
-
-        //初始化APP工具类
-        Utils.init(this);
     }
 
     /**

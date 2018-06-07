@@ -29,9 +29,9 @@ public class FileUtil {
         String cachePath;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
-            cachePath = App.getContext().getExternalCacheDir().getPath();
+            cachePath = App.context.getExternalCacheDir().getPath();
         } else {
-            cachePath = App.getContext().getCacheDir().getPath();
+            cachePath = App.context.getCacheDir().getPath();
         }
         File file = new File(cachePath + File.separator + directory);
         if (!file.exists()) {

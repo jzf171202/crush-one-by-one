@@ -13,7 +13,7 @@ public class SpUtil {
 
     public static SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.context);
         }
         return sharedPreferences;
     }

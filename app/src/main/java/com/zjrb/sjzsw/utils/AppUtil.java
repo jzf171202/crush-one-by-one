@@ -1,6 +1,5 @@
 package com.zjrb.sjzsw.utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -8,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.SystemClock;
 import android.text.TextUtils;
+
+import com.zjrb.sjzsw.App;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -33,11 +34,9 @@ public class AppUtil {
 
     /**
      * 查询手机内所有应用包括系统应用
-     *
-     * @param context
      */
-    public static List<PackageInfo> getAllApps(Context context) {
-        PackageManager pManager = context.getPackageManager();
+    public static List<PackageInfo> getAllApps() {
+        PackageManager pManager = App.context.getPackageManager();
         //获取手机内所有应用
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         return paklist;
@@ -46,12 +45,11 @@ public class AppUtil {
     /**
      * 查询手机内非系统应用
      *
-     * @param context
      * @return
      */
-    public static List<PackageInfo> getAllAppsNoSystem(Context context) {
+    public static List<PackageInfo> getAllAppsNoSystem() {
         List<PackageInfo> apps = new ArrayList<PackageInfo>();
-        PackageManager pManager = context.getPackageManager();
+        PackageManager pManager = App.context.getPackageManager();
         //获取手机内所有应用
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         for (int i = 0; i < paklist.size(); i++) {
@@ -95,17 +93,34 @@ public class AppUtil {
     }
 
     /**
-     * 查询手机内所有支持分享的应用
+     * 获取版本号/名
      *
-     * @param context
      * @return
      */
-    public static List<ResolveInfo> getShareApps(Context context) {
+    public static String[] getAppVersion() {
+        String[] versionNo = new String[2];
+        PackageManager packageManager = App.context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo("com.zjrb.sjzsw", 0);
+            versionNo[0] = "" + packageInfo.versionCode;
+            versionNo[1] = "" + packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionNo;
+    }
+
+    /**
+     * 查询手机内所有支持分享的应用
+     *
+     * @return
+     */
+    public static List<ResolveInfo> getShareApps() {
         List<ResolveInfo> mApps = new ArrayList<ResolveInfo>();
         Intent intent = new Intent(Intent.ACTION_SEND, null);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setType("text/plain");
-        PackageManager pManager = context.getPackageManager();
+        PackageManager pManager = App.context.getPackageManager();
         mApps = pManager.queryIntentActivities(intent, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
 
         return mApps;
@@ -114,12 +129,11 @@ public class AppUtil {
     /**
      * 判断手机已安装某程序的方法
      *
-     * @param context
      * @param packageName 目标程序的包名
      * @return
      */
-    public static boolean isAvilible(Context context, String packageName) {
-        List<PackageInfo> pinfo = getAllAppsNoSystem(context);
+    public static boolean isAvilible(String packageName) {
+        List<PackageInfo> pinfo = getAllAppsNoSystem();
         //用于存储所有已安装程序的包名
         List<String> pName = new ArrayList<String>();
         //从pinfo中将包名字逐一取出，压入pName list中
