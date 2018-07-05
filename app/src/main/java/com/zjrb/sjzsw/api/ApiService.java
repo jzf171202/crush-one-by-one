@@ -34,6 +34,13 @@ public interface ApiService {
     @GET("/api/live/app/list")
     Observable<BaseResponse<ProgramListEntity>> getProgramList(@Query("page") int page, @Query("pageSize") String pageSize);
 
+    /**
+     * 获取天气预报
+     *
+     * @return
+     */
+    @GET("open/api/weather/json.shtml?city=%E5%8C%97%E4%BA%AC")
+    Observable<BaseResponse<Object>> getWeather();
 
     /**
      * 新建直播页面数据
@@ -54,4 +61,5 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("login")
     Observable<BaseResponse<LoginEntity>> login(@Field("username") String username, @Field("password") String password);
+
 }

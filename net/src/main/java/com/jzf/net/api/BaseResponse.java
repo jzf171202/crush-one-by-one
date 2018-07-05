@@ -1,8 +1,6 @@
 package com.jzf.net.api;
 
 
-import com.jzf.net.Constant;
-
 /**
  * 网络返回基类 支持泛型
  *
@@ -11,24 +9,51 @@ import com.jzf.net.Constant;
  */
 public class BaseResponse<T> {
 
-    private int code;
-    private String msg;
+    private int status;
+    private String message;
+    private String date;
+    private String city;
+    private String count;
     private T data;
 
-    public int getCode() {
-        return code;
+    public int getStatus() {
+        return status;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public T getData() {
@@ -40,6 +65,6 @@ public class BaseResponse<T> {
     }
 
     public boolean isOk() {
-        return code == Constant.RESPONSE_SUCCESS_CODE;
+        return status == 200;
     }
 }

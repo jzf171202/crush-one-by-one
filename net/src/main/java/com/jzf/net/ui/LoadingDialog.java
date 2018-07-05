@@ -34,7 +34,7 @@ public class LoadingDialog extends Dialog {
     private void initView(Context context) {
         setCancelable(false);
         setContentView(R.layout.dialog_loading);
-        ivLoading = (ImageView) findViewById(R.id.iv_loading);
+        ivLoading = findViewById(R.id.iv_loading);
         rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_always);
         rotateAnimation.setInterpolator(new LinearInterpolator());
     }

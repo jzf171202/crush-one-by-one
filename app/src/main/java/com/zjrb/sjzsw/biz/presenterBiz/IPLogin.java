@@ -13,11 +13,4 @@ public interface IPLogin{
      */
     void login(String username, String password);
 
-    /**
-     * URL编码加密
-     *
-     * @param password
-     * @return
-     */
-    String encode(String password);
 }

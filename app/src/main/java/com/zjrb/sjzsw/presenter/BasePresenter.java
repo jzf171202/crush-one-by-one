@@ -24,9 +24,6 @@ public class BasePresenter<V extends IVBase> implements ILifeCycle {
         this.mContext = mContext;
     }
 
-    public BasePresenter() {
-    }
-
     /**
      * 注册observer控制器
      *

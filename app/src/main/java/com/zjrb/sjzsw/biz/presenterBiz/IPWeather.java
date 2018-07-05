@@ -7,8 +7,6 @@ package com.zjrb.sjzsw.biz.presenterBiz;
 public interface IPWeather {
     /**
      * 获取天气
-     *
-     * @param url
      */
-    void getWeather(String url);
+    void getWeather();
 }

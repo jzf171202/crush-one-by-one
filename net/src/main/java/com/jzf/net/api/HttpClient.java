@@ -4,9 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import com.jzf.net.Constant;
 import com.jzf.net.cookie.CookieManger;
-import com.jzf.net.exception.ApiException;
+import com.jzf.net.exception.MyException;
 import com.jzf.net.interceptor.CaheInterceptor;
 import com.jzf.net.interceptor.HeaderInterceptor;
 
@@ -27,17 +26,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * @author jinzifu
- */
 public class HttpClient {
-    private static final int DEFAULT_TIMEOUT = 5;
+    private static final int DEFAULT_TIMEOUT = 10;
     private volatile static HttpClient instance;
     private static Context context;
-    /**
-     * 静态内部类——饿汉式
-     */
-    private static SchedulersTransformer schedulersTransformer = new SchedulersTransformer();
+    public static final String BASE_URL = "https://www.sojson.com/";
     private static ErrorTransformer errorTransformer = new ErrorTransformer();
     private Retrofit mRetrofit;
     private Cache cache = null;
@@ -87,7 +80,7 @@ public class HttpClient {
         mRetrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Constant.BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(okHttpClient.build())
                 .build();
     }
@@ -117,8 +110,9 @@ public class HttpClient {
      */
     public <T> void execute(Observable<T> observable, Observer<?> observer) {
         observable
-                .compose(schedulersTransformer)
+                .subscribeOn(Schedulers.io())
                 .compose(errorTransformer)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 
@@ -126,17 +120,6 @@ public class HttpClient {
         return mRetrofit.create(tClass);
     }
 
-    /**
-     * 处理线程调度
-     */
-    private static class SchedulersTransformer<T> implements ObservableTransformer {
-        @Override
-        public ObservableSource apply(Observable observable) {
-            return ((Observable<T>) observable).subscribeOn(Schedulers.io())
-                    .unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
-        }
-    }
 
     /**
      * 处理数据及异常
@@ -145,22 +128,19 @@ public class HttpClient {
 
         @Override
         public ObservableSource apply(Observable observable) {
-            //onErrorResumeNext当发生错误的时候，由另外一个Observable来代替当前的Observable并继续发射数据
-            return (Observable<T>) observable.map(new HandleFunction<T>()).onErrorResumeNext(new HttpResponseFunction<T>());
-        }
-    }
-
-    private static class HttpResponseFunction<T> implements Function<Throwable, Observable<T>> {
-        @Override
-        public Observable<T> apply(Throwable throwable) throws Exception {
-            return Observable.error(ApiException.handleException(throwable));
-        }
-    }
-
-    public static class HandleFunction<T> implements Function<BaseResponse<T>, T> {
-        @Override
-        public T apply(BaseResponse<T> response) throws Exception {
-            return (T) response;
+            return (Observable<T>) observable
+                    .map(new Function<BaseResponse<T>, T>() {
+                        @Override
+                        public T apply(BaseResponse<T> response) throws Exception {
+                            return (T) response;
+                        }
+                    })
+                    .onErrorResumeNext(new Function<Throwable, Observable<T>>() {
+                        @Override
+                        public Observable<T> apply(Throwable throwable) throws Exception {
+                            return Observable.error(MyException.handleException(throwable));
+                        }
+                    });
         }
     }
 }

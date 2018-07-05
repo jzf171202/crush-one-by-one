@@ -5,16 +5,12 @@ import android.content.Context;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by jinzifu on 2018/4/11.
- */
-
 public class BaseObserver<T> implements Observer<T> {
-    public Context mContext;
-    private Disposable mDisposable;
+    public Context context;
+    private Disposable disposable;
 
-    public BaseObserver(Context mContext) {
-        this.mContext = mContext;
+    public BaseObserver(Context context) {
+        this.context = context;
     }
 
     public BaseObserver() {
@@ -22,7 +18,7 @@ public class BaseObserver<T> implements Observer<T> {
 
     @Override
     public void onSubscribe(Disposable d) {
-        mDisposable = d;
+        disposable = d;
     }
 
     @Override
@@ -41,8 +37,8 @@ public class BaseObserver<T> implements Observer<T> {
     }
 
     public void unSubscribe() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
     }
 }

@@ -12,20 +12,14 @@ import com.jzf.net.ui.LoadingDialog;
 
 import io.reactivex.disposables.Disposable;
 
-
-/**
- * @author jinzifu
- *         <p>
- *         不支持rxjava 2.x背压的，不是好的网络库
- */
 public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
-    private ApiCallBack mApiCallBack;
-    private LoadingDialog mLoadingDialog;
+    private ApiCallBack apiCallBack;
+    private LoadingDialog loadingDialog;
 
-    public ApiObserver(Context context, ApiCallBack mApiCallBack) {
+    public ApiObserver(Context context, ApiCallBack apiCallBack) {
         super(context);
-        this.mApiCallBack = mApiCallBack;
-        mLoadingDialog = new LoadingDialog(context);
+        this.apiCallBack = apiCallBack;
+        loadingDialog = new LoadingDialog(context);
     }
 
     @Override
@@ -35,15 +29,15 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     }
 
     @Override
-    public void onNext(BaseResponse<T> tBaseResponse) {
-        super.onNext(tBaseResponse);
-        if (tBaseResponse.isOk()) {
-            if (mApiCallBack != null) {
-                T t = tBaseResponse.getData();
-                mApiCallBack.onSuccess(t);
+    public void onNext(BaseResponse<T> baseResponse) {
+        super.onNext(baseResponse);
+        if (baseResponse.isOk()) {
+            if (apiCallBack != null) {
+                T t = baseResponse.getData();
+                apiCallBack.onSuccess(t);
             }
         } else {
-            onError(new ApiException.ResponeThrowable(tBaseResponse.getCode(), tBaseResponse.getMsg()));
+            onError(new ApiException(baseResponse.getStatus(), baseResponse.getMessage()));
         }
     }
 
@@ -51,16 +45,16 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     public void onError(Throwable e) {
         super.onError(e);
         dismissDialog();
-        ApiException.ResponeThrowable responeThrowable = (ApiException.ResponeThrowable) e;
-        switch (responeThrowable.code) {
+        ApiException apiException = (ApiException) e;
+        switch (apiException.code) {
             default:
                 if (BuildConfig.DEBUG) {
-                    showTost(responeThrowable.message);
+                    showTost(apiException.message);
                 }
                 break;
         }
-        if (mApiCallBack != null) {
-            mApiCallBack.onError(responeThrowable);
+        if (apiCallBack != null) {
+            apiCallBack.onError(apiException);
         }
     }
 
@@ -68,9 +62,6 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     public void onComplete() {
         super.onComplete();
         dismissDialog();
-        if (mApiCallBack != null) {
-            mApiCallBack.onComplete();
-        }
     }
 
     @Override
@@ -80,21 +71,21 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     }
 
     public void dismissDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-            mLoadingDialog = null;
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+            loadingDialog = null;
         }
     }
 
     public void showDialog() {
-        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
-            mLoadingDialog.show();
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.show();
         }
     }
 
     private void showTost(String string) {
         if (!TextUtils.isEmpty(string)) {
-            Toast.makeText(mContext, string, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
         }
     }
 }
