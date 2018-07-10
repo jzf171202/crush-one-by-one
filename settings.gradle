@@ -1,1 +1,1 @@
-include ':app', ':net', ':audiorecord'
+include ':app', ':net'
