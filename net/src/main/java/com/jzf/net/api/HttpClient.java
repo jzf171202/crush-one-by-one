@@ -57,7 +57,7 @@ public class HttpClient {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                Log.d("====HttpClient====", message);
+                Log.d("HttpClient:", message);
             }
         }).setLevel(HttpLoggingInterceptor.Level.BODY);
 
