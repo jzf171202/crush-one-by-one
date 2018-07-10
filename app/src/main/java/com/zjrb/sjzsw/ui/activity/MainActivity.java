@@ -24,11 +24,6 @@ public class MainActivity extends BaseActivity<AcMainBinding> {
         selectFragment(1);
     }
 
-    /**
-     * 切换不同的fragment
-     *
-     * @param type
-     */
     private void selectFragment(int type) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (type) {
