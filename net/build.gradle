@@ -21,10 +21,6 @@ android {
     publishNonDefault true
 }
 
-configurations {
-    allDebug
-    allRelease
-}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
