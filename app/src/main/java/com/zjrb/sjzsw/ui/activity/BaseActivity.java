@@ -2,13 +2,14 @@ package com.zjrb.sjzsw.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,29 +28,27 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制activity基类
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements IVBase {
-    protected Context mContext;
-    private PresenterManager mPresenterManager = new PresenterManager();
-    private View mRootView;
-    private ViewGroup mContainer;
+public abstract class BaseActivity<T extends ViewDataBinding> extends AppCompatActivity implements IVBase {
+    protected final String TAG = getClass().getSimpleName();
+    protected Context context;
+    private PresenterManager presenterManager = new PresenterManager();
+    private ViewGroup container;
+    protected T t;
 
-    /**
-     * 获取根布局的资源ID
-     *
-     * @return
-     */
     protected abstract int getLayoutId();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootView = LayoutInflater.from(this).inflate(getLayoutId(), null);
-        setContentView(mRootView);
-        mContainer = (ViewGroup) mRootView.findViewById(R.id.container);
+        t = DataBindingUtil.setContentView(this, getLayoutId());
+        container = t.getRoot().findViewById(R.id.container);
         ActivityStackManager.addActivity(this);
-        mContext = this;
+        context = this;
         initStatusBar();
+        init(savedInstanceState);
     }
+
+    protected abstract void init(Bundle savedInstanceState);
 
     /**
      * 沉浸式状态栏
@@ -67,10 +66,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IVBase {
             }
         } else {
             //低于API19的情况设置非偏移高度，不支持沉浸式状态栏
-            if (mContainer != null) {
-                ViewGroup.LayoutParams layoutParams = mContainer.getLayoutParams();
+            if (container != null) {
+                ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
                 layoutParams.height = ScreenUtil.dip2px(this, 50);
-                mContainer.setLayoutParams(layoutParams);
+                container.setLayoutParams(layoutParams);
             }
         }
     }
@@ -83,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IVBase {
     protected void registerPresenter(BasePresenter basePresenter) {
         if (basePresenter != null) {
             String key = basePresenter.getClass().getSimpleName();
-            mPresenterManager.register(key, basePresenter);
+            presenterManager.register(key, basePresenter);
             basePresenter.attachView(this);
         }
     }
@@ -95,37 +94,37 @@ public abstract class BaseActivity extends AppCompatActivity implements IVBase {
      * @return
      */
     protected <Controller extends BasePresenter> Controller getPresenter(String key) {
-        return (Controller) mPresenterManager.get(key);
+        return (Controller) presenterManager.get(key);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mPresenterManager.onNewIntent(intent);
+        presenterManager.onNewIntent(intent);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenterManager.onResume();
+        presenterManager.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenterManager.onPause();
+        presenterManager.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenterManager.onStop();
+        presenterManager.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenterManager.onDestroy();
+        presenterManager.onDestroy();
         ActivityStackManager.finishActivity(this);
     }
 

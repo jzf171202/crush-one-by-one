@@ -1,6 +1,8 @@
 package com.zjrb.sjzsw.ui.fragment;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,11 +24,13 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制fragment基类
  */
 
-public abstract class BaseFragment extends Fragment implements IVBase {
-    protected PresenterManager mPresenterManager = new PresenterManager();
-    public Context mContext;
-    private View rootView;
+public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment implements IVBase {
+    protected final String TAG = getClass().getSimpleName();
+    protected PresenterManager presenterManager = new PresenterManager();
+    public Context context;
     private ViewGroup container;
+    protected T t;
+
 
     /**
      * 获取跟布局资源ID
@@ -46,16 +50,19 @@ public abstract class BaseFragment extends Fragment implements IVBase {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mContext = context;
+        this.context = context;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(getLayoutId(), viewGroup, false);
+        t = DataBindingUtil.inflate(inflater, getLayoutId(), viewGroup, false);
         initStatusBar();
-        return rootView;
+        initView(t.getRoot());
+        return t.getRoot();
     }
+
+    protected abstract void initView(View root);
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -67,12 +74,12 @@ public abstract class BaseFragment extends Fragment implements IVBase {
      * fragment中沉浸式状态栏设置
      */
     private void initStatusBar() {
-        container = (ViewGroup) rootView.findViewById(R.id.container);
+        container = t.getRoot().findViewById(R.id.container);
         //低于API19的情况设置非偏移高度，不支持沉浸式状态栏
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             if (container != null) {
                 ViewGroup.LayoutParams layoutParams = container.getLayoutParams();
-                layoutParams.height = ScreenUtil.dip2px(mContext, 50);
+                layoutParams.height = ScreenUtil.dip2px(context, 50);
                 container.setLayoutParams(layoutParams);
             }
         }
@@ -86,7 +93,7 @@ public abstract class BaseFragment extends Fragment implements IVBase {
     protected void registerPresenter(BasePresenter basePresenter) {
         if (basePresenter != null) {
             String key = basePresenter.getClass().getSimpleName();
-            mPresenterManager.register(key, basePresenter);
+            presenterManager.register(key, basePresenter);
             basePresenter.attachView(this);
         }
     }
@@ -98,37 +105,37 @@ public abstract class BaseFragment extends Fragment implements IVBase {
      * @return
      */
     public BasePresenter getPresenter(String key) {
-        return (BasePresenter) mPresenterManager.get(key);
+        return (BasePresenter) presenterManager.get(key);
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenterManager.onResume();
+        presenterManager.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenterManager.onPause();
+        presenterManager.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenterManager.onStop();
+        presenterManager.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenterManager.onDestroy();
+        presenterManager.onDestroy();
     }
 
     protected void showToast(String string) {
         if (!getActivity().isFinishing()) {
-            Toast toast = Toast.makeText(mContext, string, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }

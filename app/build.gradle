@@ -50,7 +50,4 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     //https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20170912151050#_2
     implementation 'com.tencent.bugly:crashreport:latest.release'
-    //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

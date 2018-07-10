@@ -1,6 +1,8 @@
 package com.zjrb.sjzsw.widget.baselayout;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -11,15 +13,14 @@ import android.widget.Toast;
 
 import com.zjrb.sjzsw.biz.other.IViewClick;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by jinzifu on 2017/6/10.
  */
 
-public abstract class BaseFrameLayout extends FrameLayout {
+public abstract class BaseFrameLayout<T extends ViewDataBinding> extends FrameLayout {
     protected IViewClick iViewClick;
     private Context context;
+    protected T t;
 
     public BaseFrameLayout(@NonNull Context context) {
         super(context);
@@ -34,11 +35,9 @@ public abstract class BaseFrameLayout extends FrameLayout {
     protected void init(Context context, AttributeSet attrs) {
         if (layoutId() != 0) {
             this.context = context;
-            LayoutInflater.from(context).inflate(layoutId(), this, true);
-            ButterKnife.bind(this);
-            initView();
-            initListener();
-            initData();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            t = DataBindingUtil.inflate(inflater, layoutId(), this, true);
+            initView(t.getRoot());
         }
     }
 
@@ -66,14 +65,7 @@ public abstract class BaseFrameLayout extends FrameLayout {
      */
     protected abstract int layoutId();
 
-    protected void initView() {
-    }
-
-    protected void initData() {
-    }
-
-    protected void initListener() {
-    }
+    protected abstract void initView(View root);
 
     protected void toast(String string) {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();

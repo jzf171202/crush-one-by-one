@@ -8,15 +8,9 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.zjrb.sjzsw.R;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import com.zjrb.sjzsw.databinding.AcWebviewBinding;
 
 /**
  * 类描述：通用webview展示类
@@ -26,15 +20,7 @@ import butterknife.OnClick;
  * @date 2017/11/7 16
  */
 
-public class WebViewActivity extends BaseActivity {
-    @BindView(R.id.leftImage)
-    ImageButton leftImage;
-    @BindView(R.id.titleText)
-    TextView titleText;
-    @BindView(R.id.webview)
-    WebView webview;
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
+public class WebViewActivity extends BaseActivity<AcWebviewBinding> implements View.OnClickListener {
     private String url = "http://baidu.com";
 
     @Override
@@ -43,12 +29,10 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+    protected void init(Bundle savedInstanceState) {
         url = getIntent().getStringExtra("url");
         initSetting();
-        webview.setWebViewClient(new WebViewClient() {
+        t.webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return super.shouldOverrideUrlLoading(view, request);
@@ -59,35 +43,37 @@ public class WebViewActivity extends BaseActivity {
                 super.onPageFinished(view, url);
             }
         });
-        webview.setWebChromeClient(new WebChromeClient() {
+        t.webview.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                titleText.setText(title);
+                t.topBar.titleText.setText(title);
                 super.onReceivedTitle(view, title);
             }
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (newProgress == 100) {
-                    progressbar.setVisibility(View.GONE);
+                    t.progressbar.setVisibility(View.GONE);
                 } else {
-                    if (progressbar.getVisibility() == View.GONE) {
-                        progressbar.setVisibility(View.VISIBLE);
+                    if (t.progressbar.getVisibility() == View.GONE) {
+                        t.progressbar.setVisibility(View.VISIBLE);
                     }
-                    progressbar.setProgress(newProgress);
+                    t.progressbar.setProgress(newProgress);
                 }
                 super.onProgressChanged(view, newProgress);
             }
         });
-        webview.loadUrl(url);
+        t.webview.loadUrl(url);
+        t.topBar.leftImage.setOnClickListener(this);
+        t.topBar.titleText.setOnClickListener(this);
     }
 
     /**
      * 设置WebSettings
      */
     private void initSetting() {
-        WebSettings settings = webview.getSettings();
+        WebSettings settings = t.webview.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setSupportZoom(true);
         //扩大比例的缩放
@@ -95,7 +81,7 @@ public class WebViewActivity extends BaseActivity {
         //把图片加载放在最后来加载渲染
         settings.setBlockNetworkImage(false);
         //如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点。
-        webview.requestFocusFromTouch();
+        t.webview.requestFocusFromTouch();
         //设置可以访问文件
         settings.setAllowFileAccess(true);
         //支持内容重新布局
@@ -109,14 +95,14 @@ public class WebViewActivity extends BaseActivity {
         }
         //开启硬件加速，并优化出现的闪屏现象
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            t.webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         //使用缓存
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
     }
 
-    @OnClick({R.id.leftImage, R.id.titleText})
-    public void onViewClicked(View view) {
+    @Override
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.leftImage:
                 finish();
@@ -124,14 +110,5 @@ public class WebViewActivity extends BaseActivity {
             case R.id.titleText:
                 break;
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        webview.stopLoading();
-        webview.removeAllViews();
-        webview.destroy();
-        webview = null;
     }
 }

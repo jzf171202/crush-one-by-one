@@ -1,20 +1,16 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.os.Bundle;
-import android.view.SurfaceView;
 import android.view.View;
 
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.databinding.AcAudiovideoBinding;
 import com.zjrb.sjzsw.manager.ThreadPoolManager;
 import com.zjrb.sjzsw.runnable.PlayRunnable;
 import com.zjrb.sjzsw.runnable.RecordRunnable;
 import com.zjrb.sjzsw.utils.FileUtil;
 
 import java.io.File;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 类描述：音视频录制及合成
@@ -24,14 +20,9 @@ import butterknife.OnClick;
  * @date 2017/12/13 1737
  */
 
-public class AudioVideoActivity extends BaseActivity {
-    private final String TAG = getClass().getSimpleName();
-    @BindView(R.id.surfaceview)
-    SurfaceView surfaceview;
-    //音频是否录制
+public class AudioVideoActivity extends BaseActivity<AcAudiovideoBinding> implements View.OnClickListener {
     private boolean isAudioRecording = false;
     private RecordRunnable recordRunnable = null;
-//    private MP3Recorder mRecorder = new MP3Recorder(new File(Environment.getExternalStorageDirectory(), "test.mp3"));
 
     @Override
     protected int getLayoutId() {
@@ -39,13 +30,17 @@ public class AudioVideoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+    protected void init(Bundle savedInstanceState) {
+        t.recordAudio.setOnClickListener(this);
+        t.playAudio.setOnClickListener(this);
+        t.recordVedio.setOnClickListener(this);
+        t.playVedio.setOnClickListener(this);
+        t.recordAudioVedio.setOnClickListener(this);
+        t.playAudioVedio.setOnClickListener(this);
     }
 
-    @OnClick({R.id.record_audio, R.id.play_audio, R.id.record_vedio, R.id.play_vedio, R.id.record_audio_vedio, R.id.play_audio_vedio})
-    public void onViewClicked(View view) {
+    @Override
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.record_audio:
                 isAudioRecording = !isAudioRecording;

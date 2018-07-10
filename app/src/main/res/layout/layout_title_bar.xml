@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/common_header_height"
-    android:background="@color/colorPrimary"
-    android:gravity="bottom"
-    android:minHeight="@dimen/common_title_height">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- leftImage1 -->
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_header_height"
+        android:background="@color/colorPrimary"
+        android:gravity="bottom"
+        android:minHeight="@dimen/common_title_height">
 
-
-    <ImageButton
-        android:id="@+id/leftImage"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="@null"
-        android:scaleType="center"
-        android:src="@drawable/return_btn" />
-
-
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:paddingLeft="100dp"
-        android:paddingRight="100dp"
-        android:singleLine="true"
-        android:text="标题"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_18" />
-
-    <!-- rightImage1 -->
-
-    <ImageButton
-        android:id="@+id/rightImage"
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@null"
-        android:scaleType="center"
-        android:visibility="gone" />
+        <ImageButton
+            android:id="@+id/leftImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:scaleType="center"
+            android:src="@drawable/return_btn" />
 
 
-    <TextView
-        android:id="@+id/rightText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:text="跳转"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_15"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            android:singleLine="true"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_18" />
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/rightImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:scaleType="center"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/rightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="跳转"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_15"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

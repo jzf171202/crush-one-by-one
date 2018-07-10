@@ -7,19 +7,15 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.zjrb.sjzsw.Constant;
 import com.zjrb.sjzsw.R;
+import com.zjrb.sjzsw.databinding.AcLaunchBinding;
 import com.zjrb.sjzsw.utils.AppUtil;
 import com.zjrb.sjzsw.utils.ListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 类描述：
@@ -29,11 +25,7 @@ import butterknife.ButterKnife;
  * @date 2017/11/24 1136
  */
 
-public class LaunchActivity extends BaseActivity {
-    @BindView(R.id.launch_img)
-    ImageView launchImg;
-    @BindView(R.id.lauch_text)
-    TextView lauchText;
+public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
     private Handler hander = new Handler();
 
     @Override
@@ -42,11 +34,9 @@ public class LaunchActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+    protected void init(Bundle savedInstanceState) {
         String versionCode = AppUtil.getAppVersion()[0];
-        lauchText.setText("V " + versionCode);
+        t.lauchText.setText("V " + versionCode);
         if (checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
             toNext();
         }
