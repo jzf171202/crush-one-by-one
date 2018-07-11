@@ -1,4 +1,4 @@
-package com.jzf.net.biz;
+package com.zjrb.sjzsw.biz.viewBiz;
 
 /**
  * V层视图逻辑接口基类

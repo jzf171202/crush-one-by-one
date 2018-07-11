@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw;
+package com.zjrb.sjzsw.manager;
 
 import android.app.Activity;
 import android.app.ActivityManager;

@@ -20,20 +20,7 @@ public class MainActivity extends BaseActivity<AcMainBinding> {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        t.topBar.leftImage.setVisibility(View.INVISIBLE);
-        selectFragment(1);
-    }
-
-    private void selectFragment(int type) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        switch (type) {
-            case 1:
-                fragmentTransaction.replace(R.id.fragment_id, new NetFragment());
-                t.topBar.titleText.setText("网络架构");
-                break;
-            default:
-                break;
-        }
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_id, new NetFragment()).commit();
+        t.topBar.titleText.setText("网络架构");
     }
 }

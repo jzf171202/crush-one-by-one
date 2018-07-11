@@ -1,6 +1,5 @@
 package com.zjrb.sjzsw.biz.viewBiz;
 
-import com.jzf.net.biz.IVBase;
 import com.zjrb.sjzsw.entity.LoginEntity;
 
 /**

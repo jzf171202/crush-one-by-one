@@ -3,7 +3,7 @@ package com.zjrb.sjzsw.presenter;
 import android.content.Context;
 import android.content.Intent;
 
-import com.jzf.net.biz.IVBase;
+import com.zjrb.sjzsw.biz.viewBiz.IVBase;
 import com.jzf.net.observer.BaseObserver;
 import com.jzf.net.observer.ObserverManager;
 import com.zjrb.sjzsw.biz.other.ILifeCycle;

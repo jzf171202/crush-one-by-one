@@ -1,4 +1,4 @@
-package com.jzf.net;
+package com.jzf.net.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

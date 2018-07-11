@@ -145,7 +145,6 @@ public class EncodeRunnable implements Runnable {
             return 0;
         }
         Task task = mTasks.remove(0);
-        // TODO: 2018/3/27 API20以下的系统，此处debug不下去，应该是MediaCodec参数配置未兼容好。
         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
         if (inputBufferIndex > 0) {
             ByteBuffer inputBuffer = null;
@@ -243,7 +242,6 @@ public class EncodeRunnable implements Runnable {
                 case 1:
                     while (encodeRunnable.encodeToAAC() > 0) {
                     }
-                    // TODO: 2018/3/27 这里加一个addWindow的封装dialog就好了。
                     //转码完毕，自动播放
                     try {
                         encodeRunnable.initMediaPlayer();

@@ -3,7 +3,7 @@ package com.jzf.net.interceptor;
 import android.content.Context;
 import android.util.Log;
 
-import com.jzf.net.ApiUtil;
+import com.jzf.net.utils.ApiUtil;
 
 import java.io.IOException;
 

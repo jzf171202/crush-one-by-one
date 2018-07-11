@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.jzf.net.biz.IVBase;
+import com.zjrb.sjzsw.biz.viewBiz.IVBase;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.presenter.BasePresenter;
 import com.zjrb.sjzsw.presenter.PresenterManager;

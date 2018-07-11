@@ -28,7 +28,6 @@ public class RecordRunnable implements Runnable {
     private final String TAG = getClass().getSimpleName();
     private boolean isRecroding = false;
     private AudioRecord audioRecord = null;
-    // TODO: 2018/3/15 和其他输出流的区别，输入流同样疑问
     private int bufferSize = 0;
     private EncodeRunnable encodeRunnable;
     private DataOutputStream dataOutputStream;
@@ -66,7 +65,6 @@ public class RecordRunnable implements Runnable {
 
             //设置线程优先级
             Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
-            // TODO: 2018/3/15 byte数组和short数组的区别
             byte[] bytes = new byte[bufferSize];
             int readSize = 0;
             while (isRecroding) {

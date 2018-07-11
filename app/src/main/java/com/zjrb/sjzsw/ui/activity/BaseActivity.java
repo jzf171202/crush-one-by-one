@@ -16,8 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.jzf.net.biz.IVBase;
-import com.zjrb.sjzsw.ActivityStackManager;
+import com.zjrb.sjzsw.biz.viewBiz.IVBase;
+import com.zjrb.sjzsw.manager.ActivityStackManager;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.presenter.BasePresenter;
 import com.zjrb.sjzsw.presenter.PresenterManager;
