@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by jinzifu on 2017/9/1.
  * PresenterManager管理器
- * 类描述：此模式并不能避免内存泄漏，只是提供了一种业务层和视图层解耦的思路，并支持绑定业务层与视图层的生命周期
+ * 提供了一种业务层和视图层解耦的思路，并支持绑定业务层与视图层的生命周期
  */
 
 public class PresenterManager implements ILifeCycle {

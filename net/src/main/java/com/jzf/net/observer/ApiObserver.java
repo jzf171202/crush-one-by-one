@@ -37,14 +37,14 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
                 apiCallBack.onSuccess(t);
             }
         } else {
-            onError(new ApiException(baseResponse.getStatus(), baseResponse.getMessage()));
+            onError(new ApiException(baseResponse.getCode(), baseResponse.getMsg()));
         }
     }
 
     @Override
     public void onError(Throwable e) {
         super.onError(e);
-        dismissDialog();
+        hideDialog();
         ApiException apiException = (ApiException) e;
         switch (apiException.code) {
             default:
@@ -61,16 +61,16 @@ public class ApiObserver<T> extends BaseObserver<BaseResponse<T>> {
     @Override
     public void onComplete() {
         super.onComplete();
-        dismissDialog();
+        hideDialog();
     }
 
     @Override
     public void unSubscribe() {
         super.unSubscribe();
-        dismissDialog();
+        hideDialog();
     }
 
-    public void dismissDialog() {
+    public void hideDialog() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
             loadingDialog = null;

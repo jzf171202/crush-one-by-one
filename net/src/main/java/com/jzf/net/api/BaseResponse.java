@@ -9,51 +9,24 @@ package com.jzf.net.api;
  */
 public class BaseResponse<T> {
 
-    private int status;
-    private String message;
-    private String date;
-    private String city;
-    private String count;
+    private int code;
+    private String msg;
     private T data;
 
-    public int getStatus() {
-        return status;
+    public int getCode() {
+        return code;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCount() {
-        return count;
-    }
-
-    public void setCount(String count) {
-        this.count = count;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {
@@ -65,6 +38,6 @@ public class BaseResponse<T> {
     }
 
     public boolean isOk() {
-        return status == 200;
+        return code == 200;
     }
 }

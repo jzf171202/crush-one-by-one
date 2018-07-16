@@ -6,8 +6,8 @@ android {
     defaultConfig {
         applicationId "com.zjrb.sjzsw"
         minSdkVersion 18
-        versionCode 105
-        versionName "1.0.5"
+        versionCode 106
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,4 +50,6 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     //https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20170912151050#_2
     implementation 'com.tencent.bugly:crashreport:latest.release'
+    //https://github.com/mylhyl/AndroidAcp
+    implementation 'com.mylhyl:acp:1.2.0'
 }

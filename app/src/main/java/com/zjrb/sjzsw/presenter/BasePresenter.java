@@ -2,6 +2,7 @@ package com.zjrb.sjzsw.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.zjrb.sjzsw.biz.viewBiz.IVBase;
 import com.jzf.net.observer.BaseObserver;
@@ -38,13 +39,35 @@ public class BasePresenter<V extends IVBase> implements ILifeCycle {
     }
 
     /**
+     * 自定义key的observer控制器
+     * 优势：解决多个同Observer的（key是相同的）导致Observer覆盖的问题
+     *
+     * @param key
+     * @param baseObserver
+     * @return
+     */
+    public BaseObserver registerObserver(String key, BaseObserver baseObserver) {
+        if (null != baseObserver) {
+            if (TextUtils.isEmpty(key)) {
+                key = baseObserver.getClass().getSimpleName();
+            }
+            mObserverManager.register(key, baseObserver);
+        }
+        return baseObserver;
+    }
+
+
+    /**
      * 反注册observer控制器
      *
+     * @param key
      * @param baseObserver
      */
-    public void removeObserver(BaseObserver baseObserver) {
+    public void removeObserver(String key, BaseObserver baseObserver) {
         if (null != baseObserver) {
-            String key = baseObserver.getClass().getSimpleName();
+            if (TextUtils.isEmpty(key)) {
+                key = baseObserver.getClass().getSimpleName();
+            }
             mObserverManager.unRegister(key);
         }
     }
@@ -79,7 +102,7 @@ public class BasePresenter<V extends IVBase> implements ILifeCycle {
     }
 
     /**
-     * 绑定V层的引用
+     * 绑定V层的强引用
      *
      * @param v
      */
@@ -88,7 +111,7 @@ public class BasePresenter<V extends IVBase> implements ILifeCycle {
     }
 
     /**
-     * 断开V层的引用
+     * 断开V层的强引用
      */
     public void detachView() {
         this.v = null;

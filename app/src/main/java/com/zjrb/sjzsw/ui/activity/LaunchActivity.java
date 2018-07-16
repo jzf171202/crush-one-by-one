@@ -37,9 +37,7 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
     protected void init(Bundle savedInstanceState) {
         String versionCode = AppUtil.getAppVersion()[0];
         t.lauchText.setText("V " + versionCode);
-        if (checkPermission(Constant.permissionArray, Constant.PERMISSION_CODE_ALL)) {
-            toNext();
-        }
+        toNext();
     }
 
     private void toNext() {
@@ -50,51 +48,6 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
                 finish();
             }
         }, 2000);
-    }
-
-    /**
-     * 动态监测权限并批量申请
-     *
-     * @param permission
-     * @param code
-     * @return true表示没有权限需要申请
-     */
-    public boolean checkPermission(String[] permission, int code) {
-        if (permission != null && permission.length > 0) {
-            List<String> list = new ArrayList<>();
-            for (int i = 0; i < permission.length; i++) {
-                if (ContextCompat.checkSelfPermission(this, permission[i]) != PackageManager.PERMISSION_GRANTED) {
-                    list.add(permission[i]);
-                }
-            }
-            if (!ListUtil.isListEmpty(list)) {
-                ActivityCompat.requestPermissions(this, list.toArray(new String[list.size()]), code);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case Constant.PERMISSION_CODE_ALL:
-                boolean flag = true;
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults[i] < 0) {
-                        flag = false;
-                    }
-                }
-                if (flag) {
-                    toNext();
-                } else {
-                    showToast("请打开相应权限，否则会影响APP正常使用");
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     @Override

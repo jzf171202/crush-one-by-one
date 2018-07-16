@@ -75,7 +75,7 @@ public abstract class BaseActivity<T extends ViewDataBinding> extends AppCompatA
     }
 
     /**
-     * 注册控制器
+     * 注册控制器，绑定V与P层
      *
      * @param basePresenter
      */
