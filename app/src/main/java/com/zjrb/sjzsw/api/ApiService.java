@@ -2,8 +2,6 @@ package com.zjrb.sjzsw.api;
 
 
 import com.jzf.net.api.BaseResponse;
-import com.zjrb.sjzsw.entity.LoginEntity;
-import com.zjrb.sjzsw.entity.ProgramListEntity;
 import com.zjrb.sjzsw.entity.SuccessEntity;
 
 import java.util.Map;
@@ -23,16 +21,6 @@ import retrofit2.http.QueryMap;
  * 类描述:自定义API接口类型
  */
 public interface ApiService {
-
-    /**
-     * 获取直播节目列表
-     *
-     * @param page
-     * @param pageSize
-     * @return
-     */
-    @GET("/api/live/app/list")
-    Observable<BaseResponse<ProgramListEntity>> getProgramList(@Query("page") int page, @Query("pageSize") String pageSize);
 
     /**
      * 获取天气预报
@@ -60,6 +48,6 @@ public interface ApiService {
      */
     @FormUrlEncoded
     @POST("login")
-    Observable<BaseResponse<LoginEntity>> login(@Field("username") String username, @Field("password") String password);
+    Observable<BaseResponse<SuccessEntity>> login(@Field("username") String username, @Field("password") String password);
 
 }

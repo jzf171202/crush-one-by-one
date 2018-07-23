@@ -7,7 +7,7 @@
 - 网络请求状态码动态配置业务逻辑；
 - API 23后权限动态申请引入。
 ## V 1.0.5
-- Android Studio 3.1引入，解决gragdle依赖兼容问题。
+- Android Studio 3.1引入，解决gradle依赖兼容问题。
 - 配置gradle环境变量。
 ## V 1.0.4
 - Android-Universal-Image-Loader源码解析；

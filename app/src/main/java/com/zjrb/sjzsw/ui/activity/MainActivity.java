@@ -7,6 +7,7 @@ import android.view.View;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.databinding.AcMainBinding;
 import com.zjrb.sjzsw.ui.fragment.NetFragment;
+import com.zjrb.sjzsw.ui.fragment.RecycleFragment;
 
 
 /**
@@ -20,7 +21,7 @@ public class MainActivity extends BaseActivity<AcMainBinding> {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_id, new NetFragment()).commit();
-        t.topBar.titleText.setText("网络架构");
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_id, new RecycleFragment()).commit();
+        t.topBar.titleText.setText("Recycle拓展");
     }
 }
