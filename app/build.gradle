@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 28
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "com.zjrb.sjzsw"
-        minSdkVersion 18
+        minSdkVersion rootProject.minSdkVersion
         versionCode 106
         versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,7 +27,7 @@ android {
         abortOnError false
     }
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 }
@@ -39,17 +39,13 @@ dependencies {
     })
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.android.support:appcompat-v7:+'
-    implementation 'com.android.support:design:+'
-    implementation 'com.android.support:recyclerview-v7:+'
-    implementation 'com.github.bumptech.glide:glide:3.6.1'
     implementation project(':net')
-    //https://github.com/square/leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    //https://github.com/scwang90/SmartRefreshLayout
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
-    //https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20170912151050#_2
-    implementation 'com.tencent.bugly:crashreport:latest.release'
-    //https://github.com/mylhyl/AndroidAcp
-    implementation 'com.mylhyl:acp:1.2.0'
+
+    implementation dep.appcompatV7
+    implementation dep.design
+    implementation dep.recyclerviewV7
+    implementation dep.glide
+    implementation dep.SmartRefreshLayout
+    implementation dep.bugly
+    implementation dep.mylhyl
 }

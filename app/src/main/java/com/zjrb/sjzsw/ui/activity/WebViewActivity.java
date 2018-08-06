@@ -1,9 +1,12 @@
 package com.zjrb.sjzsw.ui.activity;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -11,6 +14,8 @@ import android.webkit.WebViewClient;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.databinding.AcWebviewBinding;
+
+import static android.view.KeyEvent.KEYCODE_BACK;
 
 /**
  * 类描述：通用webview展示类
@@ -21,7 +26,6 @@ import com.zjrb.sjzsw.databinding.AcWebviewBinding;
  */
 
 public class WebViewActivity extends BaseActivity<AcWebviewBinding> implements View.OnClickListener {
-    private String url = "http://baidu.com";
 
     @Override
     protected int getLayoutId() {
@@ -30,12 +34,19 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> implements V
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        url = getIntent().getStringExtra("url");
         initSetting();
+        t.topBar.leftImage.setOnClickListener(this);
+        t.topBar.titleText.setOnClickListener(this);
         t.webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return super.shouldOverrideUrlLoading(view, request);
+                //url 为post时不执行
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    if (request.getUrl().toString().contains("jianshu")){
+                        t.webview.loadUrl("https://juejin.im/entry/5a9fb2eaf265da237506714d");
+                    }
+                }
+                return false;
             }
 
             @Override
@@ -43,30 +54,7 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> implements V
                 super.onPageFinished(view, url);
             }
         });
-        t.webview.setWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                t.topBar.titleText.setText(title);
-                super.onReceivedTitle(view, title);
-            }
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    t.progressbar.setVisibility(View.GONE);
-                } else {
-                    if (t.progressbar.getVisibility() == View.GONE) {
-                        t.progressbar.setVisibility(View.VISIBLE);
-                    }
-                    t.progressbar.setProgress(newProgress);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
-        t.webview.loadUrl(url);
-        t.topBar.leftImage.setOnClickListener(this);
-        t.topBar.titleText.setOnClickListener(this);
+        t.webview.loadUrl("https://www.jianshu.com/");
     }
 
     /**
@@ -110,5 +98,14 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> implements V
             case R.id.titleText:
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KEYCODE_BACK) && t.webview.canGoBack()) {
+            t.webview.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

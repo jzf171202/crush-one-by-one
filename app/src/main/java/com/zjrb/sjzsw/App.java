@@ -2,12 +2,9 @@ package com.zjrb.sjzsw;
 
 import android.app.Application;
 import android.content.Context;
-
 import com.jzf.net.api.HttpClient;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.zjrb.sjzsw.utils.AppUtil;
-
 
 /**
  * @author jinzifu
@@ -21,14 +18,6 @@ public class App extends Application {
         super.onCreate();
         context = getApplicationContext();
         HttpClient.init(this);
-
-        //LeakCanary初始化
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
-
-        //配置tencent.bugly,上报进程控制
         initBugly();
     }
 

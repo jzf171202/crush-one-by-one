@@ -44,7 +44,7 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(LaunchActivity.this, MainActivity.class));
+                startActivity(new Intent(LaunchActivity.this, WebViewActivity.class));
                 finish();
             }
         }, 2000);
