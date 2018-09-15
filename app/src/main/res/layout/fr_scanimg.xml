@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/scan_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图片扫描" />
+
+        <TextView
+            android:id="@+id/show_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="展示扫描结果" />
+
+    </LinearLayout>
+</layout>
