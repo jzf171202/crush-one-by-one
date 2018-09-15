@@ -1,22 +1,11 @@
 package com.zjrb.sjzsw.ui.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-
-import com.zjrb.sjzsw.Constant;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.databinding.AcLaunchBinding;
 import com.zjrb.sjzsw.utils.AppUtil;
-import com.zjrb.sjzsw.utils.ListUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 类描述：
  *
