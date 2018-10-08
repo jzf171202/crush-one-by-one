@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.entity;
+package com.zjrb.sjzsw.model;
 
 /**
  * 类描述：
@@ -8,6 +8,6 @@ package com.zjrb.sjzsw.entity;
  * @date 2017/11/16 1654
  */
 
-public class SuccessEntity {
+public class SuccessModel {
 
 }
