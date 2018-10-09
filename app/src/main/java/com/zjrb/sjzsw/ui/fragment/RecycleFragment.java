@@ -2,14 +2,16 @@ package com.zjrb.sjzsw.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.adapter.BaseListAdapter;
 import com.zjrb.sjzsw.adapter.BaseRecycleAdapter;
-import com.zjrb.sjzsw.adapter.DividerItemDecoration;
+import com.zjrb.sjzsw.adapter.DividerGridItemDecoration;
 import com.zjrb.sjzsw.adapter.RecycleViewHolder;
 import com.zjrb.sjzsw.databinding.FrRecycleBinding;
 import com.zjrb.sjzsw.model.GirlsItemModel;
@@ -76,13 +78,19 @@ public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
     }
 
     private void initRecycleView() {
-        t.recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        t.recycleview.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+//        t.recycleview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+//        t.recycleview.addItemDecoration(new DividerListItemDecoration(getActivity(), DividerListItemDecoration.HORIZONTAL_LIST, R.drawable.recycle_divider));
+        t.recycleview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        t.recycleview.addItemDecoration(new DividerGridItemDecoration(getActivity(),R.drawable.recycle_divider));
         t.recycleview.setAdapter(new BaseRecycleAdapter<GirlsItemModel>(getActivity(), R.layout.item_homelist, girlsItemModels) {
             @Override
             public void convert(RecycleViewHolder holder, GirlsItemModel girlsItemModel, int position) {
                 TextView name = holder.getView(R.id.name);
+                ImageView img = holder.getView(R.id.img);
                 name.setText("" + girlsItemModel.getName());
+                if (context != null){
+                    Glide.with(context).load(girlsItemModel.getUrl()).placeholder(R.drawable.icon_simple).into(img);
+                }
             }
         });
     }
