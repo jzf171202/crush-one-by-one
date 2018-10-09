@@ -2,6 +2,7 @@ package com.zjrb.sjzsw.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,30 +10,42 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.adapter.BaseListAdapter;
-import com.zjrb.sjzsw.adapter.ListViewHolder;
+import com.zjrb.sjzsw.adapter.BaseRecycleAdapter;
+import com.zjrb.sjzsw.adapter.DividerGridItemDecoration;
+import com.zjrb.sjzsw.adapter.RecycleViewHolder;
 import com.zjrb.sjzsw.databinding.FrRecycleBinding;
-import com.zjrb.sjzsw.entity.ListItemEntity;
+import com.zjrb.sjzsw.model.GirlsItemModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
-    private String url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN9b2J56II7OCCTls-Za5B3eBXJ4WMDVJ96FFK0ql49cyptteN";
-    private List<ListItemEntity> entityList = new ArrayList<>(Arrays.asList(
-            new ListItemEntity(1, "1", url),
-            new ListItemEntity(2, "2", url),
-            new ListItemEntity(3, "3", url),
-            new ListItemEntity(4, "4", url),
-            new ListItemEntity(5, "5", url),
-            new ListItemEntity(6, "6", url),
-            new ListItemEntity(7, "7", url),
-            new ListItemEntity(8, "8", url),
-            new ListItemEntity(9, "9", url),
-            new ListItemEntity(10, "10", url),
-            new ListItemEntity(11, "11", url),
-            new ListItemEntity(12, "12", url),
-            new ListItemEntity(13, "13", url)
+    private String url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOlt6QXr6EtRYnCyKBUasvHhGj_-xnseBtgeDKj6Rjl-7uP3M3";
+
+    private List<GirlsItemModel> girlsItemModels = new ArrayList<>(Arrays.asList(
+            new GirlsItemModel(1, "1", url),
+            new GirlsItemModel(2, "2", url),
+            new GirlsItemModel(3, "3", url),
+            new GirlsItemModel(4, "4", url),
+            new GirlsItemModel(5, "5", url),
+            new GirlsItemModel(6, "6", url),
+            new GirlsItemModel(7, "7", url),
+            new GirlsItemModel(8, "8", url),
+            new GirlsItemModel(9, "9", url),
+            new GirlsItemModel(10, "10", url),
+            new GirlsItemModel(10, "14", url),
+            new GirlsItemModel(10, "15", url),
+            new GirlsItemModel(10, "16", url),
+            new GirlsItemModel(10, "17", url),
+            new GirlsItemModel(10, "18", url),
+            new GirlsItemModel(10, "19", url),
+            new GirlsItemModel(10, "20", url),
+            new GirlsItemModel(10, "21", url),
+            new GirlsItemModel(10, "22", url),
+            new GirlsItemModel(11, "23", url),
+            new GirlsItemModel(12, "24", url),
+            new GirlsItemModel(13, "13", url)
     ));
 
     private BaseListAdapter listAdapter;
@@ -44,14 +57,13 @@ public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) {
-        // TODO: 2018/7/23 对照鸿翔封装的recycleadapter拓展
     }
 
 //    private void setListAdapter() {
-//        t.listview.setAdapter(listAdapter = new BaseListAdapter<ListItemEntity>(
-//                getActivity(), entityList, R.layout.item_homelist) {
+//        t.listview.setAdapter(listAdapter = new BaseListAdapter<GirlsItemModel>(
+//                getActivity(), girlsItemModels, R.layout.item_homelist) {
 //            @Override
-//            public void convert(ListViewHolder viewHolder, ListItemEntity listItemEntity) {
+//            public void convert(ListViewHolder viewHolder, GirlsItemModel listItemEntity) {
 //                TextView name = viewHolder.getView(R.id.name);
 //                ImageView img = viewHolder.getView(R.id.img);
 //                name.setText("" + listItemEntity.getName());
@@ -62,6 +74,24 @@ public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
 
     @Override
     protected void initView(View root) {
+        initRecycleView();
+    }
 
+    private void initRecycleView() {
+//        t.recycleview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+//        t.recycleview.addItemDecoration(new DividerListItemDecoration(getActivity(), DividerListItemDecoration.HORIZONTAL_LIST, R.drawable.recycle_divider));
+        t.recycleview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        t.recycleview.addItemDecoration(new DividerGridItemDecoration(getActivity(),R.drawable.recycle_divider));
+        t.recycleview.setAdapter(new BaseRecycleAdapter<GirlsItemModel>(getActivity(), R.layout.item_homelist, girlsItemModels) {
+            @Override
+            public void convert(RecycleViewHolder holder, GirlsItemModel girlsItemModel, int position) {
+                TextView name = holder.getView(R.id.name);
+                ImageView img = holder.getView(R.id.img);
+                name.setText("" + girlsItemModel.getName());
+                if (context != null){
+                    Glide.with(context).load(girlsItemModel.getUrl()).placeholder(R.drawable.icon_simple).into(img);
+                }
+            }
+        });
     }
 }

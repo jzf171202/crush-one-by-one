@@ -29,10 +29,10 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(RecycleViewHolder recycleViewHolder, int position) {
-        convert(recycleViewHolder, mDatas.get(position));
+        convert(recycleViewHolder, mDatas.get(position), position);
     }
 
-    public abstract void convert(RecycleViewHolder holder, T t);
+    public abstract void convert(RecycleViewHolder holder, T t, int position);
 
     @Override
     public int getItemCount() {

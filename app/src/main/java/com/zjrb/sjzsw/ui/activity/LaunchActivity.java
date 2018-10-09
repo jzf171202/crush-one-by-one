@@ -2,10 +2,11 @@ package com.zjrb.sjzsw.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.databinding.AcLaunchBinding;
 import com.zjrb.sjzsw.utils.AppUtil;
+
 /**
  * 类描述：
  *
@@ -15,7 +16,6 @@ import com.zjrb.sjzsw.utils.AppUtil;
  */
 
 public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
-    private Handler hander = new Handler();
 
     @Override
     protected int getLayoutId() {
@@ -24,24 +24,18 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        String versionCode = AppUtil.getAppVersion()[0];
-        t.lauchText.setText("V " + versionCode);
+        String versionName = AppUtil.getAppVersion()[1];
+        t.lauchText.setText("V  " + versionName);
         toNext();
     }
 
     private void toNext() {
-        hander.postDelayed(new Runnable() {
+        t.lauchText.postDelayed(new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(LaunchActivity.this, MainActivity.class));
                 finish();
             }
-        }, 2000);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hander.removeCallbacksAndMessages(null);
+        }, 1000);
     }
 }

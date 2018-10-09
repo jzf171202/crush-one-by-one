@@ -2,7 +2,7 @@ package com.zjrb.sjzsw.api;
 
 
 import com.jzf.net.api.BaseResponse;
-import com.zjrb.sjzsw.entity.SuccessEntity;
+import com.zjrb.sjzsw.model.SuccessModel;
 
 import java.util.Map;
 
@@ -11,7 +11,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -37,7 +36,7 @@ public interface ApiService {
      * @return
      */
     @POST("/api/live/new")
-    Observable<BaseResponse<SuccessEntity>> createProjectDetail(@QueryMap Map<String, String> maps);
+    Observable<BaseResponse<SuccessModel>> createProjectDetail(@QueryMap Map<String, String> maps);
 
     /**
      * 登录
@@ -48,6 +47,6 @@ public interface ApiService {
      */
     @FormUrlEncoded
     @POST("login")
-    Observable<BaseResponse<SuccessEntity>> login(@Field("username") String username, @Field("password") String password);
+    Observable<BaseResponse<SuccessModel>> login(@Field("username") String username, @Field("password") String password);
 
 }
