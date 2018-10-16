@@ -28,6 +28,7 @@ ext {
             appcompatV7       : 'com.android.support:appcompat-v7:+',
             design            : 'com.android.support:design:+',
             recyclerviewV7    : 'com.android.support:recyclerview-v7:+',
+            xrefreshview    : 'com.huxq17.xrefreshview:xrefreshview:3.6.9',
             glide             : 'com.github.bumptech.glide:glide:3.6.1',
             SmartRefreshLayout: 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3',
             bugly             : 'com.tencent.bugly:crashreport:latest.release',

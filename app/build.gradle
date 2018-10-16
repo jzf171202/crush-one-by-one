@@ -48,5 +48,6 @@ dependencies {
     implementation dep.glide
     implementation dep.SmartRefreshLayout
     implementation dep.bugly
+    implementation dep.xrefreshview
     implementation dep.mylhyl
 }

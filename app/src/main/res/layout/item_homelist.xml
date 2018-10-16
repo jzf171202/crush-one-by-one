@@ -8,6 +8,7 @@
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_150"
         android:scaleType="centerCrop"
         android:src="@drawable/icon_simple" />
 
@@ -15,6 +16,7 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_30"
         android:layout_gravity="bottom"
         android:background="@color/transparent_half"
         android:gravity="center"
