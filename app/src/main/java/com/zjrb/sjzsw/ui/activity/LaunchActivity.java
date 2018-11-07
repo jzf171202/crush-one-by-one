@@ -33,7 +33,7 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
         t.lauchText.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(LaunchActivity.this, MainActivity.class));
+                startActivity(new Intent(LaunchActivity.this, WebViewActivity.class));
                 finish();
             }
         }, 1000);
