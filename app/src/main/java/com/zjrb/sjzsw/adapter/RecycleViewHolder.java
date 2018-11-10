@@ -1,6 +1,7 @@
 package com.zjrb.sjzsw.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -19,13 +20,19 @@ public class RecycleViewHolder extends RecyclerView.ViewHolder {
         mViews = new SparseArray<View>();
     }
 
+    public RecycleViewHolder(@NonNull View itemView) {
+        super(itemView);
+        mConvertView = itemView;
+    }
 
     public static RecycleViewHolder get(Context context, ViewGroup parent, int layoutId) {
         View itemView = LayoutInflater.from(context).inflate(layoutId, parent, false);
-        RecycleViewHolder holder = new RecycleViewHolder(context, itemView, parent);
-        return holder;
+        return new RecycleViewHolder(context, itemView, parent);
     }
 
+    public static RecycleViewHolder get(View view) {
+        return new RecycleViewHolder(view);
+    }
 
     /**
      * 通过viewId获取控件
