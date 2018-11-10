@@ -1,59 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <com.andview.refreshview.XRefreshView
-
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.andview.refreshview.XScrollView
+        <com.andview.refreshview.XRefreshView
+            android:id="@+id/xrefreshview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_f4f4f4">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <com.andview.refreshview.XScrollView
+                android:id="@+id/xscrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:background="@color/color_f4f4f4">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="3"
-                    android:text="@string/test_content"
-                    android:textSize="@dimen/text_16" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycleview"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:minHeight="@dimen/dp_150" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="3"
-                    android:text="@string/test_content"
-                    android:textSize="@dimen/text_16" />
+                    <com.youth.banner.Banner
+                        android:id="@+id/banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
 
-                <!--<ListView-->
-                <!--android:id="@+id/listview"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/white"-->
-                <!--android:cacheColorHint="@color/color_dde3ed"-->
-                <!--android:divider="@color/color_e6e8e9"-->
-                <!--android:dividerHeight="@dimen/dp_1" />-->
-            </LinearLayout>
-        </com.andview.refreshview.XScrollView>
-    </com.andview.refreshview.XRefreshView>
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/mid_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@color/color_63ccf4"
+                        android:gravity="center"
+                        android:text="测试点击" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycleview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+            </com.andview.refreshview.XScrollView>
+        </com.andview.refreshview.XRefreshView>
+    </LinearLayout>
 </layout>

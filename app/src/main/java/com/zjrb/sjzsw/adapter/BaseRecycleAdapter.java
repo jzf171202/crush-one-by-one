@@ -23,8 +23,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<Recycle
 
     @Override
     public RecycleViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        RecycleViewHolder recycleViewHolder = RecycleViewHolder.get(mContext, parent, mLayoutId);
-        return recycleViewHolder;
+        return RecycleViewHolder.get(mContext, parent, mLayoutId);
     }
 
     @Override

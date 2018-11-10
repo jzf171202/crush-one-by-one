@@ -1,23 +1,22 @@
 package com.zjrb.sjzsw.ui.fragment;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.andview.refreshview.XRefreshView;
 import com.bumptech.glide.Glide;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.loader.ImageLoader;
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.adapter.BaseListAdapter;
-import com.zjrb.sjzsw.adapter.BaseRecycleAdapter;
-import com.zjrb.sjzsw.adapter.RecycleViewHolder;
+import com.zjrb.sjzsw.adapter.DividerGridItemDecoration;
+import com.zjrb.sjzsw.adapter.HomeImgAdapter;
 import com.zjrb.sjzsw.databinding.FrRecycleBinding;
 import com.zjrb.sjzsw.model.GirlsItemModel;
-import com.zjrb.sjzsw.ui.activity.TestActvity;
-import com.zjrb.sjzsw.utils.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +51,7 @@ public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
     ));
 
     private BaseListAdapter listAdapter;
+    private HomeImgAdapter homeImgAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -77,42 +77,51 @@ public class RecycleFragment extends BaseFragment<FrRecycleBinding> {
 
     @Override
     protected void initView(View root) {
-        initRecycleView();
+//        t.recycleview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+//        t.recycleview.addItemDecoration(new DividerListItemDecoration(getActivity(), DividerListItemDecoration.HORIZONTAL_LIST, R.drawable.recycle_divider))
+        t.recycleview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        t.recycleview.addItemDecoration(new DividerGridItemDecoration(getActivity(), R.drawable.recycle_divider));
+        t.recycleview.setAdapter(homeImgAdapter = new HomeImgAdapter(getActivity(), R.layout.item_homelist, girlsItemModels));
+        initXrefreshView();
+        initBanner();
     }
 
-    private void initRecycleView() {
-
-        t.recycleview.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-//        t.recycleview.addItemDecoration(new DividerListItemDecoration(getActivity(), DividerListItemDecoration.HORIZONTAL_LIST, R.drawable.recycle_divider));
-//        t.recycleview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-//        t.recycleview.addItemDecoration(new DividerGridItemDecoration(getActivity(),R.drawable.recycle_divider));
-
-        t.recycleview.setAdapter(new BaseRecycleAdapter<GirlsItemModel>(getActivity(), R.layout.item_homelist, girlsItemModels) {
+    private void initXrefreshView() {
+        t.xrefreshview.setAutoRefresh(true);
+        t.xrefreshview.setPullLoadEnable(true);
+        t.xrefreshview.setPullRefreshEnable(true);
+        t.xrefreshview.setMoveForHorizontal(true);
+        t.xrefreshview.setXRefreshViewListener(new XRefreshView.SimpleXRefreshListener() {
             @Override
-            public void convert(RecycleViewHolder holder, GirlsItemModel girlsItemModel, int position) {
-                TextView name = holder.getView(R.id.name);
-                ImageView img = holder.getView(R.id.img);
-                name.setText("" + girlsItemModel.getName());
+            public void onRefresh(boolean isPullDown) {
+                super.onRefresh(isPullDown);
+                t.xrefreshview.stopRefresh();
+            }
 
-                ViewGroup.LayoutParams imgParams = img.getLayoutParams();
-                imgParams.width = ScreenUtil.getScreenWidth(getActivity());
-                imgParams.height = (int) (imgParams.width * 0.545f);
-                img.setLayoutParams(imgParams);
-
-//                ViewGroup.LayoutParams textParams =  img.getLayoutParams();
-//                textParams.width = ScreenUtil.getScreenWidth(getActivity());
-//                name.setLayoutParams(textParams);
-
-                if (context != null) {
-                    Glide.with(context).load(girlsItemModel.getUrl()).placeholder(R.drawable.icon_simple).into(img);
-                }
-                img.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(getActivity(), TestActvity.class));
-                    }
-                });
+            @Override
+            public void onLoadMore(boolean isSilence) {
+                super.onLoadMore(isSilence);
+                t.xrefreshview.stopLoadMore();
+//                girlsItemModels.addAll(girlsItemModels);
+//                homeImgAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void initBanner() {
+        t.banner.setImages(girlsItemModels);
+        t.banner.isAutoPlay(true);
+        t.banner.setDelayTime(4000);
+        t.banner.setImageLoader(new ImageLoader() {
+            @Override
+            public void displayImage(Context context, Object object, ImageView imageView) {
+                GirlsItemModel girlsItemModel = (GirlsItemModel) object;
+                if (context != null) {
+                    Glide.with(context).load(girlsItemModel.getUrl()).placeholder(R.drawable.icon_simple).into(imageView);
+                }
+            }
+        });
+        t.banner.setIndicatorGravity(BannerConfig.RIGHT);
+        t.banner.start();
     }
 }
