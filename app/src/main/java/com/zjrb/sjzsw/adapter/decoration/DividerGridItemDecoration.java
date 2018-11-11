@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.adapter;
+package com.zjrb.sjzsw.adapter.decoration;
 
 import android.content.Context;
 import android.graphics.Canvas;

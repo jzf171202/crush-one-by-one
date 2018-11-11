@@ -1,9 +1,6 @@
 # 各个击破
 这是一个针对Android核心知识模块进行的源码分析实例项目，目的是为了巩固知识并深入学习。注释只针对对应版本，源码随版本有删减。
 
-## V 1.0.7
-- 添加recycleView/listview 的通用adapter封装；
-
 ## V 1.0.0 - 1.0.6
 - 整合MVP+Retrofit2.0+Rxjava2.0+DataBinding；
 - 规避MVP内存泄露问题；

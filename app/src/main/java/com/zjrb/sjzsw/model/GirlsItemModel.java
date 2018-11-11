@@ -4,11 +4,21 @@ public class GirlsItemModel {
     private int id;
     private String name;
     private String url;
+    private int type;
 
-    public GirlsItemModel(int id, String name, String url) {
+    public GirlsItemModel(int id, String name, String url, int type) {
         this.id = id;
         this.name = name;
         this.url = url;
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getId() {

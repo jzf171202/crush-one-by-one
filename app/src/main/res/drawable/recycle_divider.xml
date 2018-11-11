@@ -9,6 +9,6 @@
         android:type="linear" />
 
     <size
-        android:width="@dimen/dp_10"
-        android:height="@dimen/dp_10" />
+        android:width="@dimen/dp_1"
+        android:height="@dimen/dp_1" />
 </shape>

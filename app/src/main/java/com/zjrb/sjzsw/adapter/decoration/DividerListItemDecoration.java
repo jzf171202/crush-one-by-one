@@ -1,4 +1,4 @@
-package com.zjrb.sjzsw.adapter;
+package com.zjrb.sjzsw.adapter.decoration;
 
 /*
  * Copyright (C) 2014 The Android Open Source Project
