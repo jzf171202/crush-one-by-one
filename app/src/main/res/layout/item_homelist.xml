@@ -16,7 +16,6 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_30"
         android:layout_gravity="bottom"
         android:background="@color/transparent_half"
         android:gravity="center"
