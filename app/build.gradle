@@ -3,12 +3,18 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
         applicationId "com.zjrb.sjzsw"
         minSdkVersion rootProject.minSdkVersion
         versionCode 106
         versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        aaptOptions {
+            cruncherEnabled = false
+            useNewCruncher = false
+        }
     }
 
     compileOptions {

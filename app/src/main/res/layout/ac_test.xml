@@ -6,6 +6,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/layout_title_bar" />
+
         <Button
             android:id="@+id/test"
             android:layout_width="wrap_content"
@@ -16,7 +18,12 @@
         <TextView
             android:id="@+id/info_show"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/point_nine"
+            android:gravity="center"
+            android:text="这是.9图片测试"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_18" />
 
     </LinearLayout>
 </layout>
