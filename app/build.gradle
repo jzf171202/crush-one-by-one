@@ -63,4 +63,5 @@ dependencies {
     implementation dep.mylhyl
     implementation dep.youthbanner
     implementation dep.rvadapter
+    implementation dep.easyguideview
 }

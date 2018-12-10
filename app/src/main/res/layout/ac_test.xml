@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_title_bar" />
+        <include
+            android:id="@+id/title_layout"
+            layout="@layout/layout_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
 
         <Button
             android:id="@+id/test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/title_layout"
             android:text="test" />
 
-        <TextView
-            android:id="@+id/info_show"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/point_nine"
-            android:gravity="center"
-            android:text="这是.9图片测试"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_18" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/guile_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/lunch_background" />
+    </RelativeLayout>
 </layout>
