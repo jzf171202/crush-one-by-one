@@ -61,6 +61,8 @@
         <activity
             android:name=".ui.activity.WebViewActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <service android:name=".test.MyService"/>
     </application>
 
 </manifest>
