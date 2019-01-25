@@ -1,20 +1,25 @@
-buildscript {
+buildscript {//buildscript{}内部是gradle脚本执行所需依赖，分别是对应的maven库和插件
     repositories {
-        google()
-        jcenter()
+        google()//引用Google上的开源项目
+        jcenter()//是一个类似github的代码托管仓库，可以引用jcenter上的开源项目
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+    dependencies {//dependencies{}配置构建工具
+        classpath 'com.android.tools.build:gradle:3.2.1'//classpath 声明Gradle插件，此处是构建Android项目所需要的插件
     }
 }
 
-allprojects {
-    repositories {
+allprojects {//allprojects{}内部是项目本身需要的依赖
+    repositories {//repositories{}配置远程仓库
         google()
         jcenter()
     }
 }
 
+/**
+ * task任务
+ * 运行gradle clean时，执行此处定义的task任务。
+ * 该任务继承自Delete，删除根目录中的build文件夹内的文件。
+ */
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
