@@ -38,7 +38,7 @@ public class ImageUtil {
         boolean flag = (originWidth > requestWidth * inSampleSize)
                 && (originHeight > requestHeight * inSampleSize);
         do {
-            inSampleSize += 1;
+            inSampleSize *= 2;
         } while (flag);
         return inSampleSize;
     }
