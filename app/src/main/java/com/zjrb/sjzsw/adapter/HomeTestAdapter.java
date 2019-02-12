@@ -27,7 +27,7 @@ public class HomeTestAdapter extends CommonAdapter<GirlsItemModel> {
         name.setText(girlsItemModel.getName());
 
         ViewGroup.LayoutParams imgParams = img.getLayoutParams();
-        imgParams.width = ScreenUtil.getScreenWidth(mContext);
+        imgParams.width = ScreenUtil.getScreenWidth();
         imgParams.height = (int) (imgParams.width * 0.545f);
         img.setLayoutParams(imgParams);
         if (mContext != null) {

@@ -4,22 +4,24 @@ package com.zjrb.sjzsw.widget;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
-import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
+import com.zjrb.sjzsw.utils.ScreenUtil;
+
 /**
  * 测试自定义view
+ * 假设item宽高是相等的
  */
 public class MyView extends LinearLayout {
-    private int touchSlop;
-    private VelocityTracker velocityTracker;
-    private GestureDetector gestureDetector;
-    private Scroller scroller;
+    Scroller scroller;
+    int childWidth;
+    VelocityTracker velocityTracker;
+    int lastTouchX;
+    int nearlyChildIndex;//偏移对应的最近item索引
+    int lastInterceptX, lastInterceptY;
 
     public MyView(Context context) {
         super(context);
@@ -36,77 +38,126 @@ public class MyView extends LinearLayout {
         init(context, attrs, defStyleAttr);
     }
 
-
-    /**
-     * 自定义view初始配置
-     *
-     * @param context
-     * @param attrs
-     * @param defStyleAttr
-     */
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        velocityTracker = VelocityTracker.obtain();
         scroller = new Scroller(context);
-        gestureDetector = new GestureDetector(context,
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                        return super.onFling(e1, e2, velocityX, velocityY);
-                    }
-                });
+        velocityTracker = VelocityTracker.obtain();
     }
 
-    /**
-     * 弹性滑动到指定位置
-     *
-     * @param x
-     * @param y
-     */
-    public void smoothScrollTo(int x, int y) {
-        //根据提供的初始位置、滑动距离和持续时间弹性滑动
-        scroller.startScroll(getScrollX(), getScrollY(),
-                x - getScrollX(), y - getScrollY(), 5000);
-        invalidate();//使得view重绘
-    }
-
-    /**
-     * Scroller类滑动原理(针对view内容的滑动)
-     * 1.invalidate()会促使view的重绘；
-     * 2.view的重绘会在draw方法中调用computeScroll();
-     * 3.外部重写computeScroll()，通过scrollTo将view内容滑动到相应位置，
-     * 并调用postInvalidate触发重绘，123循环执行；
-     */
     @Override
-    public void computeScroll() {
-        super.computeScroll();
-        //类似插值器，true表示滑动未结束，继续滑动
-        if (scroller.computeScrollOffset()) {
-            scrollTo(scroller.getCurrX(), scroller.getCurrY());
-            Log.d("test","scroller.getCurrX() = "+scroller.getCurrX()+"; scroller.getCurrY()="+scroller.getCurrY());
-            postInvalidate();
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        if (getChildCount() > 0) {
+            childWidth = getChildAt(0).getMeasuredWidth();
         }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean isIntercepted = false;
+        int x = (int) ev.getX();
+        int y = (int) ev.getY();
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                isIntercepted = false;
+                if (!scroller.isFinished()) {
+                    scroller.abortAnimation();
+                    isIntercepted = true;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int offsetX = x - lastInterceptX;
+                int offsetY = y - lastInterceptY;
+                //横向滑动大于纵向滑动时 拦截事件
+                if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                    isIntercepted = true;
+                    //记录事件拦截时坐标
+                    lastTouchX = x;
+                } else {
+                    isIntercepted = false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                isIntercepted = false;
+                break;
+        }
+        lastInterceptX = x;
+        lastInterceptY = y;
+        return isIntercepted;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        velocityTracker.addMovement(event);//速度追踪
-        gestureDetector.onTouchEvent(event);
+        velocityTracker.addMovement(event);
+        int touchX = (int) event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                //ViewGroup的ACTION_DOWN事件默认不拦截，不在此捕获事件坐标，
+                // 正确获取时机在ViewGroup开始拦截事件时。
+                if (!scroller.isFinished()) {
+                    scroller.abortAnimation();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-
+                int offsetX = touchX - lastTouchX;
+                scrollBy(-offsetX, 0);  //滑动时偏移
+                //滑动时同步校准临近child索引
+                nearlyChildIndex = getScrollX() / childWidth;
                 break;
             case MotionEvent.ACTION_UP:
-                //获取1000ms内的平均速度(从右向左滑动时，水平方向速度为负值)
                 velocityTracker.computeCurrentVelocity(1000);
-                int xVelocity = (int) velocityTracker.getXVelocity();
-                Log.d("test", "xVelocity=" + xVelocity);
+                int velocityX = (int) velocityTracker.getXVelocity(); //左负右正
+
+                //粗调：滑动抬起时，找到最近的item的索引
+                if (Math.abs(velocityX) >= childWidth / 2) {
+                    nearlyChildIndex = velocityX > 0 ? nearlyChildIndex - 1 : nearlyChildIndex + 1;
+                } else {
+                    //计算出累计偏移量折算成item宽度个数(余数部分超过半个item宽度则+1，未超过为0)
+                    nearlyChildIndex = (getScrollX() + childWidth / 2) / childWidth;
+                }
+                //微优化nearliestchildIndex取值
+                nearlyChildIndex = Math.max(0, Math.min(nearlyChildIndex, getChildCount() - 1));
+                //微调：滑动抬起时，偏移策略——1.临近item置左；2.最右item置右
+
+                int scrollX;
+                //当最右边的item完全可见时，最左边的item索引
+                int resultIndex = getChildCount() - 1 - ScreenUtil.getScreenWidth() / childWidth;
+                if (nearlyChildIndex >= resultIndex) {//左滑过头时
+                    // 左滑过头时，确保最右边的item可见，强制为偏移在最左边的item索引
+                    nearlyChildIndex = resultIndex;
+                    //左边最近item置左后，确保最右边的item置右，需再偏移的量
+                    int result = childWidth - ScreenUtil.getScreenWidth() % childWidth;
+                    scrollX = nearlyChildIndex * childWidth - getScrollX() + result;
+                } else {
+                    //微调到最近item，并置左
+                    scrollX = nearlyChildIndex * childWidth - getScrollX();
+                }
+                //偏移微调，左正右负
+                smoothScrollBy(scrollX, 0);
                 break;
         }
         velocityTracker.clear();
-        //velocityTracker.recycle();
+        lastTouchX = touchX;
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        velocityTracker.recycle();
+    }
+
+    public void smoothScrollBy(int x, int y) {
+        scroller.startScroll(getScrollX(), getScrollY(), x, y, 500);
+        invalidate();
+    }
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (scroller.computeScrollOffset()) {
+            scrollTo(scroller.getCurrX(), scroller.getCurrY());
+            postInvalidate();
+        }
     }
 }

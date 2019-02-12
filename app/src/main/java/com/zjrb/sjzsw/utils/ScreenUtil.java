@@ -25,11 +25,10 @@ public class ScreenUtil {
     /**
      * 获得屏幕宽度
      *
-     * @param context
      * @return
      */
-    public static int getScreenWidth(Context context) {
-        WindowManager wm = (WindowManager) context
+    public static int getScreenWidth() {
+        WindowManager wm = (WindowManager) App.context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
@@ -39,11 +38,10 @@ public class ScreenUtil {
     /**
      * 获得屏幕高度
      *
-     * @param context
      * @return
      */
-    public static int getScreenHeight(Context context) {
-        WindowManager wm = (WindowManager) context
+    public static int getScreenHeight() {
+        WindowManager wm = (WindowManager) App.context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
@@ -81,8 +79,8 @@ public class ScreenUtil {
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap bmp = view.getDrawingCache();
-        int width = getScreenWidth(activity);
-        int height = getScreenHeight(activity);
+        int width = getScreenWidth();
+        int height = getScreenHeight();
         Bitmap bp = null;
         bp = Bitmap.createBitmap(bmp, 0, 0, width, height);
         view.destroyDrawingCache();
@@ -105,8 +103,8 @@ public class ScreenUtil {
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
         int statusBarHeight = frame.top;
 
-        int width = getScreenWidth(activity);
-        int height = getScreenHeight(activity);
+        int width = getScreenWidth();
+        int height = getScreenHeight();
         Bitmap bp = null;
         bp = Bitmap.createBitmap(bmp, 0, statusBarHeight, width, height
                 - statusBarHeight);
@@ -140,7 +138,7 @@ public class ScreenUtil {
 
     public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
         int tabWidth = calculateTabWidth(tabLayout);
-        int screenWidth = getScreenWidth(App.context);
+        int screenWidth = getScreenWidth();
 
         if (tabWidth <= screenWidth) {
             tabLayout.setTabMode(TabLayout.MODE_FIXED);

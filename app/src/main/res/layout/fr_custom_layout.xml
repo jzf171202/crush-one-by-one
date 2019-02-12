@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.zjrb.sjzsw.widget.MyView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="@dimen/dp_200"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="测试" />
-
-        <com.zjrb.sjzsw.widget.MyView
-            android:id="@+id/my_view"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/dp_150"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/color_7AD859"
+            android:text="1" />
 
-            <TextView
-                android:id="@+id/ok"
-                android:layout_width="@dimen/dp_50"
-                android:layout_height="@dimen/dp_50"
-                android:background="@color/color_0000FF"
-                android:gravity="center"
-                android:text="ok"
-                android:textColor="@color/white" />
-        </com.zjrb.sjzsw.widget.MyView>
-    </LinearLayout>
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="match_parent"
+            android:background="@color/color_FF6028"
+            android:text="2" />
+
+        <Button
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="match_parent"
+            android:background="@color/color_DFBC99"
+            android:text="3" />
+
+        <Button
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="match_parent"
+            android:background="@color/color_8666F9"
+            android:text="4" />
+
+        <Button
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="match_parent"
+            android:background="@color/color_37b6ff"
+            android:text="5" />
+    </com.zjrb.sjzsw.widget.MyView>
 </layout>
