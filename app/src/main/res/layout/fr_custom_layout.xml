@@ -4,11 +4,13 @@
     <com.zjrb.sjzsw.widget.MyView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_200"
-        android:orientation="horizontal">
+        android:paddingLeft="@dimen/dp_10">
 
         <Button
             android:layout_width="@dimen/dp_150"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_5"
             android:background="@color/color_7AD859"
             android:text="1" />
 
@@ -16,6 +18,7 @@
             android:id="@+id/button2"
             android:layout_width="@dimen/dp_150"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@color/color_FF6028"
             android:text="2" />
 

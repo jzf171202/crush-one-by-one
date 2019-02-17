@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
-import android.widget.LinearLayout;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.Scroller;
 
 import com.zjrb.sjzsw.utils.ScreenUtil;
@@ -15,40 +17,79 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 测试自定义view
  * 假设item宽高是相等的
  */
-public class MyView extends LinearLayout {
+public class MyView extends ViewGroup {
     Scroller scroller;
     int childWidth;
     VelocityTracker velocityTracker;
     int lastTouchX;
     int nearlyChildIndex;//偏移对应的最近item索引
     int lastInterceptX, lastInterceptY;
-
-    public MyView(Context context) {
-        super(context);
-        init(context, null, 0);
-    }
+    int touchSlop;
 
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public MyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs, defStyleAttr);
-    }
-
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         scroller = new Scroller(context);
         velocityTracker = VelocityTracker.obtain();
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        if (getChildCount() > 0) {
-            childWidth = getChildAt(0).getMeasuredWidth();
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int parentWidth = 0, parentHeight = 0;
+
+        int childrenNum = getChildCount();
+        for (int i = 0; i < childrenNum; i++) {
+            final View child = getChildAt(i);
+            if (child == null || child.getVisibility() == GONE) continue;
+            //测量子元素（含子元素内外边距）
+            measureChildWithMargins(child, widthMeasureSpec, parentWidth,
+                    heightMeasureSpec, 0);
+            //根据子元素计算出父容器宽高期望值
+            parentWidth += child.getMeasuredWidth();
+            parentHeight = Math.max(child.getMeasuredHeight(), parentHeight);
         }
+        //resloveSize()是api内部对不同测量模式下的测量值的获取方式优化并封装
+        setMeasuredDimension(resolveSize(parentWidth, widthMeasureSpec),
+                resolveSize(parentHeight, heightMeasureSpec));
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        int childrenNum = getChildCount();
+        int resultLeft = getPaddingLeft();
+        for (int j = 0; j < childrenNum; j++) {
+            if (j == 0) {
+                childWidth = getChildAt(0).getMeasuredWidth();
+            }
+            final View child = getChildAt(j);
+            if (child == null || child.getVisibility() == GONE) continue;
+
+            MarginLayoutParams params = (MarginLayoutParams) child.getLayoutParams();
+            left = resultLeft + params.leftMargin;//横向列表 left为累加item宽度和左右间距
+            top = params.topMargin + getPaddingTop();
+            right = left + child.getMeasuredWidth();
+            bottom = top + child.getMeasuredHeight();
+
+            child.layout(left, top, right, bottom);
+            resultLeft += params.leftMargin + child.getMeasuredWidth() + params.rightMargin;
+        }
+    }
+
+    /**
+     * 自定义view初始化时执行的是带AttributeSet的构造方法，
+     * 所以支持Magin的generateLayoutParams方法需要是带AttributeSet。
+     *
+     * @param attrs
+     * @return
+     */
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(), attrs);
     }
 
     @Override
@@ -69,7 +110,7 @@ public class MyView extends LinearLayout {
                 int offsetX = x - lastInterceptX;
                 int offsetY = y - lastInterceptY;
                 //横向滑动大于纵向滑动时 拦截事件
-                if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                if (Math.abs(offsetX) > Math.abs(offsetY) && Math.abs(offsetX) > touchSlop) {
                     isIntercepted = true;
                     //记录事件拦截时坐标
                     lastTouchX = x;
