@@ -6,28 +6,27 @@
 apply plugin: 'com.android.application'
 
 
-android {//android{}配置Android项目构建的各种属性
 
-    compileSdkVersion rootProject.compileSdkVersion //设置编译时用的Android版本
+android {//android{}配置Android项目构建的各种属性
+    compileSdkVersion 27 //设置编译时用的Android版本
     //buildToolsVersion 设置编译时使用的构建工具版本，Android Studio 3.0后去除此项配置
     defaultConfig { //defaultConfig{}
         applicationId "com.zjrb.sjzsw"
         minSdkVersion rootProject.minSdkVersion
         versionCode 106
         versionName "1.0.6"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner" //用AndroidJUnitRunner进行单元测试
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //用AndroidJUnitRunner进行单元测试
 
         aaptOptions {
             cruncherEnabled = false
             useNewCruncher = false
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     buildTypes {
         release {
             minifyEnabled true
@@ -40,11 +39,9 @@ android {//android{}配置Android项目构建的各种属性
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     lintOptions {
         abortOnError false
     }
-
     dataBinding {
         enabled = true
     }
@@ -56,9 +53,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'
-
     implementation project(':net')
-
     implementation dep.appcompatV7
     implementation dep.design
     implementation dep.recyclerviewV7
