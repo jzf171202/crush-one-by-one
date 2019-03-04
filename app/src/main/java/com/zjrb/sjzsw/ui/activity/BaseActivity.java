@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.biz.viewBiz.IVBase;
 import com.zjrb.sjzsw.manager.ActivityStackManager;
-import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.presenter.BasePresenter;
 import com.zjrb.sjzsw.presenter.PresenterManager;
 import com.zjrb.sjzsw.utils.ScreenUtil;
@@ -28,7 +27,7 @@ import com.zjrb.sjzsw.utils.ScreenUtil;
  * 业务控制activity基类
  */
 
-public abstract class BaseActivity<T extends ViewDataBinding> extends AppCompatActivity implements IVBase {
+public abstract class BaseActivity<T extends ViewDataBinding> extends SchemeRouterActivity implements IVBase {
     protected final String TAG = getClass().getSimpleName();
     protected Context context;
     private PresenterManager presenterManager = new PresenterManager();

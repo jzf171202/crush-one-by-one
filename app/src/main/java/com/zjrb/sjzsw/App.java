@@ -2,23 +2,35 @@ package com.zjrb.sjzsw;
 
 import android.app.Application;
 import android.content.Context;
+
 import com.jzf.net.api.HttpClient;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.zjrb.sjzsw.jsBridge.module.ForwardPageModule;
 import com.zjrb.sjzsw.utils.AppUtil;
+
+import java.util.HashMap;
 
 /**
  * @author jinzifu
  */
 public class App extends Application {
-
+    public static HashMap<String, Class<?>> bridgeModelMap = new HashMap<>();
     public static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        registerBridgeModel();
         HttpClient.init(this);
         initBugly();
+    }
+
+    /**
+     * 注册jsBridge协议类
+     */
+    private void registerBridgeModel() {
+        bridgeModelMap.put("forward", ForwardPageModule.class);
     }
 
     /**

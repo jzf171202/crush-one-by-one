@@ -11,5 +11,7 @@ public class TestActvity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_test);
+        findViewById(R.id.test).setOnClickListener(v -> {
+        });
     }
 }

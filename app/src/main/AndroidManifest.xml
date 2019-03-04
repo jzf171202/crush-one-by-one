@@ -57,12 +57,28 @@
         <activity
             android:name=".ui.activity.TestActvity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
         <activity
             android:name=".ui.activity.WebViewActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
-        <service android:name=".test.MyService"/>
+        <activity android:name=".ui.activity.SchemeRouterActivity"
+            android:exported="true">
+            <!--Scheme协议配置,intent-filter过滤器支持页面跳转-->
+            <intent-filter>
+                <!--协议部分，path前须加/，除了sheme外其他选填-->
+                <data
+                    android:host="book"
+                    android:scheme="app" />
+                <!--下面也要设置-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".test.MyService" />
     </application>
 
 </manifest>

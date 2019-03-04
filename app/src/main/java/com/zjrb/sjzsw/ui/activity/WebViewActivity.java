@@ -7,12 +7,17 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.zjrb.sjzsw.R;
 import com.zjrb.sjzsw.databinding.AcWebviewBinding;
+import com.zjrb.sjzsw.jsBridge.AppBridgeManager;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
     private String url = "https://www.jianshu.com";
@@ -25,7 +30,6 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
     @Override
     protected void init(Bundle savedInstanceState) {
         initWebSetting();
-        // TODO: 2018/11/7 了解setWebViewClient和setWebChromeClient的用法
         t.webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -33,10 +37,41 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
                 Log.d(TAG, "onPageStarted=" + url);
             }
 
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                    //判定重定向
+//                    WebView.HitTestResult testResult = view.getHitTestResult();
+//                    if (testResult == null ||
+//                            testResult.getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
+//                        return false;
+//                    }
+//                    //解析URL Scheme ,处理点击或跳转事件
+//                    Uri uri = request.getUrl();
+//                    return uri != null ? JsonUrI(uri.toString()) : false;
+//                }
+//                return false;
+//            }
+
+
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Log.d(TAG, "shouldOverrideUrlLoading=" + url);
-                return super.shouldOverrideUrlLoading(view, request);
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                //非UI线程，若return null 则自行请求网络加载资源
+                WebResourceResponse webResourceResponse = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    String url = request.getUrl().toString();
+                    if (url.contains("baidu")) {
+                        try {
+                            InputStream inputStream = getAssets().open("lauch.png");
+                            webResourceResponse =
+                                    new WebResourceResponse("image/png", "UTF-8", inputStream);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+//                return super.shouldInterceptRequest(view, request);
+                return webResourceResponse;
             }
 
             @Override
@@ -45,6 +80,7 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
                 Log.d(TAG, "onPageFinished=" + url);
             }
         });
+
         t.webview.setWebChromeClient(new WebChromeClient() {
 
             @Override
@@ -67,14 +103,19 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
             }
         });
         t.webview.loadUrl(this.url);
+
+        //H5调用Android
+        t.webview.addJavascriptInterface(new AppBridgeManager(t.webview), "app_bridge");
     }
 
     /**
      * 设置WebSettings
      */
     private WebSettings initWebSetting() {
-        WebSettings settings =  t.webview.getSettings();
+        WebSettings settings = t.webview.getSettings();
+        //设置是否允许执行javaScript脚本，默认false
         settings.setJavaScriptEnabled(true);
+        //设置是否支持缩放，默认true
         settings.setSupportZoom(true);
         //扩大比例的缩放
         settings.setUseWideViewPort(true);
@@ -89,6 +130,7 @@ public class WebViewActivity extends BaseActivity<AcWebviewBinding> {
         //自适应屏幕
         settings.setLoadWithOverviewMode(true);
         if (Build.VERSION.SDK_INT >= 19) {
+            //是否下载图片资源，默认true
             settings.setLoadsImagesAutomatically(true);
         } else {
             settings.setLoadsImagesAutomatically(false);
