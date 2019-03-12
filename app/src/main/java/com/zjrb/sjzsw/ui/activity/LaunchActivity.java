@@ -33,9 +33,9 @@ public class LaunchActivity extends BaseActivity<AcLaunchBinding> {
 
     private void toNext() {
         t.lauchText.postDelayed(() -> {
-//            startActivity(new Intent(LaunchActivity.this, WebViewActivity.class));
-            String uri = "app://book:8888/bookDetail?bookId=10011002";
-            jumpActivity(isIntentUri(uri), 100);
+            startActivity(new Intent(LaunchActivity.this, TestActvity.class));
+//            String uri = "app://book:8888/bookDetail?bookId=10011002";
+//            jumpActivity(isIntentUri(uri), 100);
         }, 1000);
     }
 

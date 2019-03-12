@@ -59,7 +59,6 @@ dependencies {
     implementation dep.recyclerviewV7
     implementation dep.glide
     implementation dep.SmartRefreshLayout
-    implementation dep.bugly
     implementation dep.xrefreshview
     implementation dep.mylhyl
     implementation dep.youthbanner

@@ -57,7 +57,7 @@
         <activity
             android:name=".ui.activity.TestActvity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity
             android:name=".ui.activity.WebViewActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />

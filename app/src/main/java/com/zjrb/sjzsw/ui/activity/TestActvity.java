@@ -12,6 +12,7 @@ public class TestActvity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_test);
         findViewById(R.id.test).setOnClickListener(v -> {
+
         });
     }
 }
