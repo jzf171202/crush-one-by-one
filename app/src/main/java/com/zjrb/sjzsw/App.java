@@ -23,7 +23,7 @@ public class App extends Application {
         registerBridgeModel();
         HttpClient.init(this);
 
-        setStrictMode();
+//        setStrictMode();
     }
 
     /**

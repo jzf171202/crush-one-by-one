@@ -6,12 +6,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_title_bar" />
+        <!--<include layout="@layout/layout_title_bar" />-->
 
-        <Button
+        <com.zjrb.sjzsw.widget.animation.AnimationView
             android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="test" />
     </LinearLayout>
 </layout>
