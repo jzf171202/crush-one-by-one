@@ -18,7 +18,8 @@ public class TestActvity extends AppCompatActivity {
         animationView = findViewById(R.id.test);
         animationView.setOnClickListener(v -> {
 //            testMath();
-            testAnimation();
+//            testAnimation();
+            animationView.startAnimation();
         });
     }
 

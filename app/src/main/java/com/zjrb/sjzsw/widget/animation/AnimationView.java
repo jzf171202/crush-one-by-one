@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 
@@ -40,36 +39,36 @@ public class AnimationView extends View {
     }
 
     public PointModel getPointModel() {
-        Log.d("TestActvity", "getPointModel");
         return pointModel;
     }
 
     public void setPointModel(PointModel pointModel) {
         this.pointModel = pointModel;
         invalidate();
-        Log.d("TestActvity", "setPointModel="+pointModel.getY());
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (pointModel == null) {
-            pointModel = new PointModel(RADIUS, RADIUS);
-            canvas.drawCircle(pointModel.getX(), pointModel.getY(), RADIUS, paint);
+            pointModel = new PointModel(getWidth() / 2, RADIUS);
             startAnimation();
-        } else {
-            canvas.drawCircle(pointModel.getX(), pointModel.getY(), RADIUS, paint);
         }
+        canvas.drawCircle(pointModel.getX(), pointModel.getY(), RADIUS, paint);
     }
 
-    private void startAnimation() {
-        PointModel startPoint = new PointModel(RADIUS, RADIUS);
+    public void startAnimation() {
+        if (pointModel != null){
+            pointModel.setY(RADIUS);
+            pointModel.setX(getWidth()/2);
+        }
         ObjectAnimator translate = ObjectAnimator.ofObject(this,
                 "pointModel",
-                new PathAnimEvaluator(startPoint),
-                startPoint, new PointModel(RADIUS, getHeight() - RADIUS));
+                new PathAnimEvaluator(),
+                new PointModel(getWidth() / 2, RADIUS),
+                new PointModel(getWidth() / 2, getHeight() - RADIUS));
 
-        translate.setDuration(10000);
+        translate.setDuration(5000);
         translate.setInterpolator(new BounceInterpolator());
         translate.start();
     }
